@@ -1,0 +1,16 @@
+package app;
+
+import db.DB;
+
+import java.sql.Connection;
+
+public class Main {
+    public static void main(String[] args) {
+
+
+        Connection conn = DB.getConnection();
+        DB.closeConnection();
+
+        System.out.println("Hello world!");
+    }
+}
