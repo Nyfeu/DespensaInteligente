@@ -55,7 +55,6 @@ public class Authenticator {
 
         if (encodedPassword != null) {
             if (encodedPassword.equals(usuario.getSenha())) {
-                usuario.setSenha(encodedPassword);
                 authenticatedUser = usuario;
                 return true;
             }
