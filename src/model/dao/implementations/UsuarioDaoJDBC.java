@@ -19,7 +19,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     }
 
     @Override
-    public Usuario read(Integer user_id) {
+    public Usuario read(String email) {
         return null;
     }
 
@@ -29,7 +29,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     }
 
     @Override
-    public void delete(Integer user_id) {
+    public void delete(String email) {
 
     }
 

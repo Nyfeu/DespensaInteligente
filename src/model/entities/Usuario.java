@@ -13,12 +13,10 @@ public class Usuario {
         this.receitasPublicadas = new ArrayList<>();
     }
 
-    public Usuario(String nome, String email, String senha, Despensa despensa, ArrayList<Receita> receitasPublicadas) {
+    public Usuario(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.despensa = despensa;
-        this.receitasPublicadas = receitasPublicadas;
     }
 
     public String getNome() {

@@ -1,23 +1,84 @@
 package utils;
 
+import model.dao.DAOFactory;
+import model.dao.interfaces.UsuarioDao;
+import model.entities.Usuario;
+
+import javax.swing.*;
+import java.awt.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Authenticator {
 
-    public static String encodePassword(String password) throws NoSuchAlgorithmException {
+    private static Usuario authenticatedUser;
 
-        MessageDigest md = MessageDigest.getInstance("SHA-512");
+    private Authenticator() {}
 
-        byte[] messageDigest = md.digest(password.getBytes());
+    private static String encodePassword(String password)  {
 
-        BigInteger no = new BigInteger(1, messageDigest);
-        StringBuilder hashText = new StringBuilder(no.toString(16));
+        try {
 
-        while (hashText.length() < 32) hashText.insert(0, "0");
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
 
-        return hashText.toString();
+            byte[] messageDigest = md.digest(password.getBytes());
+
+            BigInteger no = new BigInteger(1, messageDigest);
+            StringBuilder hashText = new StringBuilder(no.toString(16));
+
+            while (hashText.length() < 32) hashText.insert(0, "0");
+
+            return hashText.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return null;
+
+    }
+
+    public boolean login(String email, String password, Component component) {
+
+        UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+        Usuario usuario = usuarioDao.read(email);
+
+        if (usuario == null) {
+            JOptionPane.showMessageDialog(component, "Usuário não encontrado!", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        String encodedPassword = encodePassword(password);
+
+        if (encodedPassword != null) {
+            if (encodedPassword.equals(usuario.getSenha())) {
+                usuario.setSenha(encodedPassword);
+                authenticatedUser = usuario;
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public void logout() {
+        authenticatedUser = null;
+    }
+
+    public void registrar(String nome, String email, String password) {
+
+        String encodedPassword = encodePassword(password);
+
+        Usuario usuario = new Usuario(nome, email, encodedPassword);
+
+        UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+        usuarioDao.create(usuario);
+
+        authenticatedUser = usuario;
 
     }
 
