@@ -17,6 +17,7 @@ public class DB {
         }
     }
 
+    private DB() {}
 
     private static Properties loadProperties() {
 
