@@ -1,7 +1,7 @@
 create database despensa_inteligente;
 use despensa_inteligente;
 create table usuario(
-	id SMALLINT UNSIGNED NOT NULL,
+	id SMALLINT AUTO_INCREMENT NOT NULL,
 	nome VARCHAR(60) NOT NULL,
     email VARCHAR(60) NOT NULL,
     senha VARCHAR(60) NOT NULL,
@@ -19,7 +19,7 @@ create table despensa(
     quantidade SMALLINT UNSIGNED NOT NULL
 );
 create table receita(
-	id SMALLINT UNSIGNED NOT NULL,
+	id SMALLINT AUTO_INCREMENT NOT NULL,
     titulo VARCHAR(60) NOT NULL,
     descricao VARCHAR(250) NOT NULL,
     modo_preparo VARCHAR(60) NOT NULL,
