@@ -2,7 +2,7 @@ package model.dao.implementations;
 
 import db.DB;
 import db.DBException;
-import model.dao.interfaces.ReceitaDAO;
+import model.dao.interfaces.ReceitaDao;
 import model.entities.Receita;
 
 import java.sql.Connection;
@@ -12,11 +12,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReceitaDAOImpl implements ReceitaDAO {
+public class ReceitaDaoJDBC implements ReceitaDao {
 
     private Connection conn;
 
-    public ReceitaDAOImpl(Connection conn) {
+    public ReceitaDaoJDBC(Connection conn) {
         this.conn = conn;
     }
 

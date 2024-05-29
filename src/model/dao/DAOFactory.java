@@ -1,25 +1,25 @@
 package model.dao;
 
 import db.DB;
-import model.dao.implementations.IngredienteDAOImpl;
-import model.dao.implementations.ReceitaDAOImpl;
-import model.dao.implementations.UsuarioDAOImpl;
-import model.dao.interfaces.IngredienteDAO;
-import model.dao.interfaces.ReceitaDAO;
-import model.dao.interfaces.UsuarioDAO;
+import model.dao.implementations.IngredienteDaoJDBC;
+import model.dao.implementations.ReceitaDaoJDBC;
+import model.dao.implementations.UsuarioDaoJDBC;
+import model.dao.interfaces.IngredienteDao;
+import model.dao.interfaces.ReceitaDao;
+import model.dao.interfaces.UsuarioDao;
 
 public class DAOFactory {
 
-    public static IngredienteDAO createIngredienteDAO() {
-        return new IngredienteDAOImpl(DB.getConnection());
+    public static IngredienteDao createIngredienteDao() {
+        return new IngredienteDaoJDBC(DB.getConnection());
     }
 
-    public static UsuarioDAO createUsuarioDAO() {
-        return new UsuarioDAOImpl(DB.getConnection());
+    public static UsuarioDao createUsuarioDao() {
+        return new UsuarioDaoJDBC(DB.getConnection());
     }
 
-    public static ReceitaDAO createReceitaDAO() {
-        return new ReceitaDAOImpl(DB.getConnection());
+    public static ReceitaDao createReceitaDao() {
+        return new ReceitaDaoJDBC(DB.getConnection());
     }
 
 }

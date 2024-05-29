@@ -4,7 +4,7 @@ import model.entities.Receita;
 
 import java.util.List;
 
-public interface ReceitaDAO {
+public interface ReceitaDao {
 
     void create(Receita receita);
     Receita read(Integer recipe_id);

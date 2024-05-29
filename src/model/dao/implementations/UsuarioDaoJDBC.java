@@ -1,15 +1,15 @@
 package model.dao.implementations;
 
-import model.dao.interfaces.UsuarioDAO;
+import model.dao.interfaces.UsuarioDao;
 import model.entities.Usuario;
 
 import java.sql.Connection;
 
-public class UsuarioDAOImpl implements UsuarioDAO {
+public class UsuarioDaoJDBC implements UsuarioDao {
 
     private Connection conn;
 
-    public UsuarioDAOImpl(Connection conn) {
+    public UsuarioDaoJDBC(Connection conn) {
         this.conn = conn;
     }
 

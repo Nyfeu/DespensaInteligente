@@ -2,7 +2,7 @@ package model.dao.interfaces;
 
 import model.entities.Usuario;
 
-public interface UsuarioDAO {
+public interface UsuarioDao {
 
     void create(Usuario usuario);
     Usuario read(Integer user_id);

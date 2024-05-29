@@ -1,7 +1,7 @@
 package app;
 
 import model.dao.DAOFactory;
-import model.dao.interfaces.IngredienteDAO;
+import model.dao.interfaces.IngredienteDao;
 import model.entities.Ingrediente;
 import utils.DateParser;
 
@@ -13,7 +13,7 @@ public class Main {
 
         try {
 
-            IngredienteDAO ingredienteDAO = DAOFactory.createIngredienteDAO();
+            IngredienteDao ingredienteDAO = DAOFactory.createIngredienteDao();
 
             Ingrediente ingrediente1 = new Ingrediente("Mussarela", 1, DateParser.parseString("30/05/2024"), 3);
             ingredienteDAO.create(ingrediente1);

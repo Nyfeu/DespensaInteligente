@@ -2,7 +2,7 @@ package model.dao.implementations;
 
 import db.DB;
 import db.DBException;
-import model.dao.interfaces.IngredienteDAO;
+import model.dao.interfaces.IngredienteDao;
 import model.entities.Ingrediente;
 
 import java.sql.Connection;
@@ -12,11 +12,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IngredienteDAOImpl implements IngredienteDAO {
+public class IngredienteDaoJDBC implements IngredienteDao {
 
     private Connection conn;
 
-    public IngredienteDAOImpl(Connection conn) {
+    public IngredienteDaoJDBC(Connection conn) {
         this.conn = conn;
     }
 

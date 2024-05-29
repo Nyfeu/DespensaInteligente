@@ -4,7 +4,7 @@ import model.entities.Ingrediente;
 
 import java.util.List;
 
-public interface IngredienteDAO {
+public interface IngredienteDao {
 
     void create(Ingrediente ingrediente);
     Ingrediente read(String name);
