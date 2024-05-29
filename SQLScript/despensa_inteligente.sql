@@ -4,7 +4,7 @@ create table usuario(
 	id SMALLINT AUTO_INCREMENT NOT NULL,
 	nome VARCHAR(60) NOT NULL,
     email VARCHAR(60) NOT NULL,
-    senha VARCHAR(60) NOT NULL,
+    senha_hash VARCHAR(128) NOT NULL,
     primary key(id)
 );
 create table ingrediente(
