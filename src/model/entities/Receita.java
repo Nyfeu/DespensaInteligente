@@ -1,13 +1,14 @@
 package model.entities;
 
+import model.builder.ReceitaBuilder;
+
 import java.util.ArrayList;
-//*******************************************************************//
-//OBS: tempoPreparo FOI AMASSADO NO LIXO ; INSERI O ID COMO ATRIBUTO
-//*******************************************************************//
+import java.util.List;
+
 public class Receita {
     private String titulo;
     private String descricao;
-    private ArrayList<Ingrediente> ingredientes;
+    private List<Ingrediente> ingredientes;
     private String modoPreparo;
     private Double tempoPreparo;
     private int id;
@@ -16,12 +17,12 @@ public class Receita {
         this.ingredientes = new ArrayList<>();
     }
 
-    public Receita(String titulo, String descricao, ArrayList<Ingrediente> ingredientes, String modoPreparo, Double tempoPreparo) {
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.ingredientes = ingredientes;
-        this.modoPreparo = modoPreparo;
-        this.tempoPreparo = tempoPreparo;
+    public Receita(ReceitaBuilder receitaBuilder) {
+        this.titulo = receitaBuilder.getTitulo();
+        this.descricao = receitaBuilder.getDescricao();
+        this.ingredientes = receitaBuilder.getIngredientes();
+        this.modoPreparo = receitaBuilder.getInstrucoes();
+        this.tempoPreparo = receitaBuilder.getTempoPreparo();
     }
 
     public String getTitulo() {
@@ -40,7 +41,7 @@ public class Receita {
         this.descricao = descricao;
     }
 
-    public ArrayList<Ingrediente> getIngredientes() {
+    public List<Ingrediente> getIngredientes() {
         return ingredientes;
     }
 
