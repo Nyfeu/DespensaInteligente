@@ -130,16 +130,16 @@ public class IngredienteDAOImpl implements IngredienteDAO {
 
         try {
 
-            st = conn.prepareStatement("SELECT * FROM department ORDER BY Name");
+            st = conn.prepareStatement("SELECT * FROM INGREDIENTE ORDER BY Nome");
 
             rs = st.executeQuery();
-            List<Ingrediente> departmentList = new ArrayList<>();
+            List<Ingrediente> ingredienteList = new ArrayList<>();
 
             while(rs.next()) {
-                departmentList.add(instantiateIngrediente(rs));
+                ingredienteList.add(instantiateIngrediente(rs));
             }
 
-            return departmentList;
+            return ingredienteList;
 
         } catch (SQLException e) {
 

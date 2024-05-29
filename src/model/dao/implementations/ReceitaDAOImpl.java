@@ -134,7 +134,7 @@ public class ReceitaDAOImpl implements ReceitaDAO {
 
         try {
 
-            st = conn.prepareStatement("SELECT * FROM RECEITA ORDER BY Name");
+            st = conn.prepareStatement("SELECT * FROM RECEITA ORDER BY Nome");
 
             rs = st.executeQuery();
             List<Receita> departmentList = new ArrayList<>();
