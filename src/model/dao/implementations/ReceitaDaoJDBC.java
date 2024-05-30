@@ -30,9 +30,9 @@ public class ReceitaDaoJDBC implements ReceitaDao {
 
             stm = conn.prepareStatement(sqlInsert);
             stm.setInt(1, receita.getId());
-            stm.setString(1, receita.getTitulo());
-            stm.setString(1, receita.getDescricao());
-            stm.setString(1, receita.getModoPreparo());
+            stm.setString(2, receita.getTitulo());
+            stm.setString(3, receita.getDescricao());
+            stm.setString(4, receita.getModoPreparo());
             stm.execute();
 
         } catch (SQLException e) {
