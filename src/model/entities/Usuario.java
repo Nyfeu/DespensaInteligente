@@ -6,7 +6,7 @@ public class Usuario {
     private String nome;
     private String email;
     private String senha;
-    private Despensa despensa;
+    private ArrayList<Ingrediente> despensa;
     private ArrayList<Receita> receitasPublicadas;
 
     public Usuario(){
@@ -43,11 +43,11 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public Despensa getDespensa() {
+    public ArrayList<Ingrediente> getDespensa() {
         return despensa;
     }
 
-    public void setDespensa(Despensa despensa) {
+    public void setDespensa(ArrayList<Ingrediente> despensa) {
         this.despensa = despensa;
     }
 
