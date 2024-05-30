@@ -1,11 +1,12 @@
 package model.entities;
 
 import model.builder.ReceitaBuilder;
+import strategies.Filterable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Receita {
+public class Receita implements Filterable {
     private String titulo;
     private String descricao;
     private List<Ingrediente> ingredientes;
