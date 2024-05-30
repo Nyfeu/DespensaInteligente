@@ -57,6 +57,8 @@ public class Authenticator {
             if (encodedPassword.equals(usuario.getSenha())) {
                 authenticatedUser = usuario;
                 return true;
+            } else {
+                JOptionPane.showMessageDialog(component, "Senha inválida!", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
             }
         }
 
