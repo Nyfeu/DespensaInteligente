@@ -46,7 +46,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     @Override
     public Usuario read(String email) {
-        String sqlCarregar = "SELECT Nome, Senha_Hash FROM USUARIO WHERE Email = ?";
+        String sqlCarregar = "SELECT Nome, Email, Senha_Hash FROM USUARIO WHERE Email = ?";
         ResultSet rs = null;
         PreparedStatement stm = null;
 

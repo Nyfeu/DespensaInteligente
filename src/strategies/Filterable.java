@@ -1,3 +1,7 @@
 package strategies;
 
-public interface Filterable {}
+public interface Filterable {
+
+    int getId();
+
+}

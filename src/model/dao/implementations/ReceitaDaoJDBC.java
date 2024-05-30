@@ -4,6 +4,8 @@ import db.DB;
 import db.DBException;
 import model.dao.interfaces.ReceitaDao;
 import model.entities.Receita;
+import strategies.FilterStrategy;
+import strategies.Filterable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,7 +52,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public Receita read(Integer recipe_id) {
 
-        String sqlCarregar = "SELECT titulo, descricao, modo_preparo FROM RECEITA WHERE id = ?";
+        String sqlCarregar = "SELECT id, titulo, descricao, modo_preparo FROM RECEITA WHERE id = ?";
         ResultSet rs = null;
         PreparedStatement stm = null;
 
@@ -156,6 +158,10 @@ public class ReceitaDaoJDBC implements ReceitaDao {
 
         }
 
+    }
+
+    public List<Filterable> filter(FilterStrategy filterStrategy, Integer LIMIT, Integer OFFSET) {
+        return filterStrategy.filter(conn, LIMIT, OFFSET);
     }
 
     private Receita instantiateReceita(ResultSet rs) throws SQLException {

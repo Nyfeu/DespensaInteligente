@@ -41,7 +41,7 @@ public class Authenticator {
 
     }
 
-    public boolean login(String email, String password, Component component) {
+    public static boolean login(String email, String password, Component component) {
 
         UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
         Usuario usuario = usuarioDao.read(email);
@@ -64,11 +64,11 @@ public class Authenticator {
 
     }
 
-    public void logout() {
+    public static void logout() {
         authenticatedUser = null;
     }
 
-    public void registrar(String nome, String email, String password) {
+    public static void registrar(String nome, String email, String password) {
 
         String encodedPassword = encodePassword(password);
 
@@ -79,6 +79,10 @@ public class Authenticator {
 
         authenticatedUser = usuario;
 
+    }
+
+    public static Usuario getAuthenticatedUser() {
+        return authenticatedUser;
     }
 
 }

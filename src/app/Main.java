@@ -1,11 +1,12 @@
 package app;
 
 import model.dao.DAOFactory;
-import model.dao.interfaces.IngredienteDao;
-import model.entities.Ingrediente;
-import utils.DateParser;
+import model.dao.interfaces.ReceitaDao;
+import model.entities.Receita;
+import strategies.FilterReceitasByIngredientes;
+import strategies.Filterable;
+import utils.Authenticator;
 
-import java.text.ParseException;
 import java.util.List;
 
 public class Main {
@@ -13,21 +14,23 @@ public class Main {
 
         try {
 
-            IngredienteDao ingredienteDAO = DAOFactory.createIngredienteDao();
+            boolean logado = Authenticator.login("maria.silva@example.com", "hash_senha_123", null);
 
-            Ingrediente ingrediente1 = new Ingrediente("Mussarela", 1, DateParser.parseString("30/05/2024"), 3);
-            ingredienteDAO.create(ingrediente1);
+            System.out.println(logado ? "Logado" : "Falhou");
 
-            Ingrediente ingrediente2 = new Ingrediente("Pepperoni", 2, DateParser.parseString("01/06/2024"), 6);
-            ingredienteDAO.create(ingrediente2);
+            ReceitaDao receitaDao = DAOFactory.createReceitaDao();
 
-            Ingrediente ingrediente3 = new Ingrediente("Atum", 3, DateParser.parseString("01/06/2024"), 6);
-            ingredienteDAO.create(ingrediente3);
+            FilterReceitasByIngredientes filterReceitasByIngredientes = new FilterReceitasByIngredientes();
+            List<Filterable> receitas = receitaDao.filter(filterReceitasByIngredientes, 10, 0);
 
-            List<Ingrediente> ingredientes = ingredienteDAO.readAll();
-            for (Ingrediente ingrediente : ingredientes) System.out.println(ingrediente);
+            for(Filterable filterable : receitas) {
+                Receita receita = receitaDao.read(filterable.getId());
+                System.out.println(receita);
+            }
 
-        } catch (RuntimeException | ParseException e) {
+            Authenticator.logout();
+
+        } catch (RuntimeException e) {
 
             System.out.println(e.getMessage());
 

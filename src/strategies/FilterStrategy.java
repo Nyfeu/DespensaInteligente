@@ -1,12 +1,10 @@
 package strategies;
 
-import model.entities.Receita;
-
 import java.sql.Connection;
 import java.util.List;
 
 public interface FilterStrategy {
 
-    List<Receita> filtrar(List<Filterable> filterableList, Connection conn);
+    List<Filterable> filter(Connection conn, Integer LIMIT, Integer OFFSET);
 
 }
