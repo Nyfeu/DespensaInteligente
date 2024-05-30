@@ -1,26 +1,104 @@
+-- Inserir usuários
 INSERT INTO usuario (nome, email, senha_hash) VALUES
 ('Maria Silva', 'maria.silva@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
 ('João Santos', 'joao.santos@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
-('Ana Pereira', 'ana.pereira@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5');
+('Ana Pereira', 'ana.pereira@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
+('Carlos Lima', 'carlos.lima@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
+('Luciana Alves', 'luciana.alves@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
+('Pedro Souza', 'pedro.souza@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
+('Carla Mendes', 'carla.mendes@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
+('Bruno Costa', 'bruno.costa@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5'),
+('Fernanda Lima', 'fernanda.lima@example.com', '1819aab14c4bed2d4f4476e4e5f1e598a59cbf72ca04840850c42738352a5d74ee2a90b8e1747957adac70a44a148c0193d3929af79ecda3074fc47f31e204c5');
 
+-- Inserir ingredientes
 INSERT INTO ingrediente (nome, categoria) VALUES
 ('Farinha de Trigo', 1),
-('Açúcar', 1),
-('Leite', 2),
-('Ovo', 2);
+('Açúcar', 2),
+('Leite', 3),
+('Ovo', 4),
+('Manteiga', 3),
+('Fermento', 1),
+('Cacau em Pó', 5),
+('Sal', 2),
+('Tomate', 6),
+('Queijo', 3),
+('Presunto', 7),
+('Cenoura', 6),
+('Batata', 6),
+('Frango', 7),
+('Maçã', 8),
+('Pão', 1);
 
+-- Inserir itens na despensa
 INSERT INTO despensa (email, nome_ingrediente, validade, quantidade) VALUES
 ('maria.silva@example.com', 'Farinha de Trigo', '2024-12-01', 2),
 ('maria.silva@example.com', 'Açúcar', '2024-11-15', 1),
+('maria.silva@example.com', 'Ovo', '2024-11-15', 2),
+('maria.silva@example.com', 'Manteiga', '2024-11-15', 1),
+('maria.silva@example.com', 'Cacau em Pó', '2024-11-15', 1),
 ('joao.santos@example.com', 'Leite', '2024-06-10', 3),
-('ana.pereira@example.com', 'Ovo', '2024-07-20', 12);
+('ana.pereira@example.com', 'Ovo', '2024-07-20', 12),
+('maria.silva@example.com', 'Ovo', '2024-07-20', 6),
+('joao.santos@example.com', 'Farinha de Trigo', '2024-12-01', 1),
+('carlos.lima@example.com', 'Manteiga', '2024-08-15', 1),
+('luciana.alves@example.com', 'Cacau em Pó', '2024-10-01', 1),
+('luciana.alves@example.com', 'Fermento', '2024-09-01', 2),
+('luciana.alves@example.com', 'Sal', '2024-11-01', 1),
+('maria.silva@example.com', 'Tomate', '2024-08-01', 5),
+('joao.santos@example.com', 'Queijo', '2024-07-15', 2),
+('ana.pereira@example.com', 'Presunto', '2024-07-20', 3),
+('carlos.lima@example.com', 'Cenoura', '2024-06-15', 10),
+('luciana.alves@example.com', 'Batata', '2024-06-30', 8),
+('pedro.souza@example.com', 'Frango', '2024-07-10', 4),
+('carla.mendes@example.com', 'Maçã', '2024-09-01', 6),
+('bruno.costa@example.com', 'Pão', '2024-07-05', 10),
+('fernanda.lima@example.com', 'Farinha de Trigo', '2024-12-01', 5),
+('fernanda.lima@example.com', 'Ovo', '2024-07-20', 12);
 
+-- Inserir receitas
 INSERT INTO receita (titulo, descricao, modo_preparo) VALUES
 ('Bolo de Chocolate', 'Um delicioso bolo de chocolate', 'Assar por 45 minutos'),
-('Panqueca', 'Panqueca simples e rápida', 'Cozinhar por 10 minutos');
+('Panqueca', 'Panqueca simples e rápida', 'Cozinhar por 10 minutos'),
+('Leite Quente', 'Um extraordinário leite que passou pelo microondas', 'Passar o leite pelo microondas'),
+('Omelete', 'Omelete fácil e rápida', 'Cozinhar por 5 minutos'),
+('Biscoito de Manteiga', 'Biscoitos crocantes e deliciosos', 'Assar por 20 minutos'),
+('Salada de Tomate', 'Uma salada fresca de tomate', 'Misturar os ingredientes'),
+('Sanduíche de Presunto e Queijo', 'Sanduíche simples e rápido', 'Montar e servir'),
+('Frango Assado', 'Frango assado delicioso', 'Assar por 60 minutos'),
+('Purê de Batata', 'Purê de batata cremoso', 'Cozinhar e amassar'),
+('Bolo de Cenoura', 'Bolo de cenoura com cobertura de chocolate', 'Assar por 50 minutos'),
+('Suco de Maçã', 'Suco de maçã natural', 'Liquidificar e coar');
 
+-- Inserir ingredientes das receitas
 INSERT INTO receita_ingrediente (id_receita, nome_ingrediente, quantidade) VALUES
 (1, 'Farinha de Trigo', 2),
 (1, 'Açúcar', 1),
+(1, 'Ovo', 2),
+(1, 'Manteiga', 1),
+(1, 'Cacau em Pó', 1),
 (2, 'Leite', 1),
-(2, 'Ovo', 2);
+(2, 'Ovo', 2),
+(3, 'Leite', 4),
+(4, 'Ovo', 3),
+(4, 'Sal', 1),
+(5, 'Farinha de Trigo', 2),
+(5, 'Manteiga', 1),
+(5, 'Açúcar', 1),
+(5, 'Fermento', 1),
+(6, 'Tomate', 4),
+(6, 'Sal', 1),
+(7, 'Pão', 2),
+(7, 'Presunto', 1),
+(7, 'Queijo', 1),
+(8, 'Frango', 1),
+(8, 'Sal', 1),
+(9, 'Batata', 6),
+(9, 'Sal', 1),
+(10, 'Farinha de Trigo', 2),
+(10, 'Cenoura', 3),
+(10, 'Açúcar', 1),
+(10, 'Ovo', 3),
+(10, 'Fermento', 1),
+(11, 'Maçã', 4),
+(11, 'Açúcar', 1),
+(11, 'Água', 2);

@@ -7,7 +7,7 @@ public class Main {
 
         try {
 
-            boolean logado = Authenticator.login("maria.silva@example.com", "hash_senha_123", null);
+            boolean logado = Authenticator.login("joao.santos@example.com", "hash_senha_123", null);
 
             System.out.println(logado ? "Logado" : "Falhou");
 
