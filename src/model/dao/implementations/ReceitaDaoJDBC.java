@@ -2,7 +2,10 @@ package model.dao.implementations;
 
 import db.DB;
 import db.DBException;
+import model.dao.DAOFactory;
+import model.dao.interfaces.IngredienteDao;
 import model.dao.interfaces.ReceitaDao;
+import model.entities.Ingrediente;
 import model.entities.Receita;
 import strategies.FilterStrategy;
 import strategies.Filterable;
@@ -53,16 +56,20 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     public Receita read(Integer recipe_id) {
 
         String sqlCarregar = "SELECT id, titulo, descricao, modo_preparo FROM RECEITA WHERE id = ?";
-        ResultSet rs = null;
+        ResultSet rs1 = null, rs2 = null;
         PreparedStatement stm = null;
 
         try{
 
             stm = conn.prepareStatement(sqlCarregar);
             stm.setInt(1, recipe_id);
-            rs = stm.executeQuery();
+            rs1 = stm.executeQuery();
 
-            if(rs.next()) return instantiateReceita(rs);
+            stm = conn.prepareStatement("SELECT nome_ingrediente, quantidade FROM receita_ingrediente WHERE id_receita = ?");
+            stm.setInt(1, recipe_id);
+            rs2 = stm.executeQuery();
+
+            if(rs1.next()) return instantiateReceita(rs1, rs2);
             return null;
 
         } catch (SQLException e) {
@@ -72,7 +79,8 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         } finally{
 
             DB.closeStatement(stm);
-            DB.closeResultSet(rs);
+            DB.closeResultSet(rs1);
+            DB.closeResultSet(rs2);
 
         }
     }
@@ -132,17 +140,22 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     public List<Receita> readAll() {
 
         PreparedStatement st = null;
-        ResultSet rs = null;
+        ResultSet rs1 = null, rs2 = null;
 
         try {
 
-            st = conn.prepareStatement("SELECT * FROM RECEITA ORDER BY Nome");
+            st = conn.prepareStatement("SELECT * FROM RECEITA ORDER BY id");
 
-            rs = st.executeQuery();
+            rs1 = st.executeQuery();
             List<Receita> departmentList = new ArrayList<>();
 
-            while(rs.next()) {
-                departmentList.add(instantiateReceita(rs));
+            while(rs1.next()) {
+
+                st = conn.prepareStatement("SELECT nome_ingrediente, quantidade FROM receita_ingrediente WHERE id_receita = ?");
+                st.setInt(1, rs1.getInt(1));
+                rs2 = st.executeQuery();
+
+                departmentList.add(instantiateReceita(rs1, rs2));
             }
 
             return departmentList;
@@ -154,7 +167,8 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         } finally {
 
             DB.closeStatement(st);
-            DB.closeResultSet(rs);
+            DB.closeResultSet(rs1);
+            DB.closeResultSet(rs2);
 
         }
 
@@ -164,13 +178,24 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         return filterStrategy.filter(conn, LIMIT, OFFSET);
     }
 
-    private Receita instantiateReceita(ResultSet rs) throws SQLException {
+    private Receita instantiateReceita(ResultSet rs1, ResultSet rs2) throws SQLException {
 
         Receita receita = new Receita();
-        receita.setId(rs.getInt(1));
-        receita.setTitulo(rs.getString(2));
-        receita.setDescricao(rs.getString(3));
-        receita.setModoPreparo(rs.getString(4));
+        receita.setId(rs1.getInt(1));
+        receita.setTitulo(rs1.getString(2));
+        receita.setDescricao(rs1.getString(3));
+        receita.setModoPreparo(rs1.getString(4));
+
+        IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
+        ArrayList<Ingrediente> ingredientes = new ArrayList<>();
+        while (rs2.next()) {
+            Ingrediente ingrediente = ingredienteDao.read(rs2.getString(1));
+            ingrediente.setQuantidade(rs2.getInt(2));
+            ingredientes.add(ingrediente);
+        }
+
+        receita.setIngredientes(ingredientes);
+
         return receita;
 
     }

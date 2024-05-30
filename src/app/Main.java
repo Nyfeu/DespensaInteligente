@@ -1,13 +1,6 @@
 package app;
 
-import model.dao.DAOFactory;
-import model.dao.interfaces.ReceitaDao;
-import model.entities.Receita;
-import strategies.FilterReceitasByIngredientes;
-import strategies.Filterable;
 import utils.Authenticator;
-
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,15 +11,7 @@ public class Main {
 
             System.out.println(logado ? "Logado" : "Falhou");
 
-            ReceitaDao receitaDao = DAOFactory.createReceitaDao();
-
-            FilterReceitasByIngredientes filterReceitasByIngredientes = new FilterReceitasByIngredientes();
-            List<Filterable> receitas = receitaDao.filter(filterReceitasByIngredientes, 10, 0);
-
-            for(Filterable filterable : receitas) {
-                Receita receita = receitaDao.read(filterable.getId());
-                System.out.println(receita);
-            }
+            System.out.println(Authenticator.getAuthenticatedUser());
 
             Authenticator.logout();
 
