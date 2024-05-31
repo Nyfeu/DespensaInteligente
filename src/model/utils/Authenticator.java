@@ -1,4 +1,4 @@
-package utils;
+package model.utils;
 
 import model.dao.DAOFactory;
 import model.dao.interfaces.UsuarioDao;

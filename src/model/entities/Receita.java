@@ -1,7 +1,7 @@
 package model.entities;
 
 import model.builder.ReceitaBuilder;
-import strategies.Filterable;
+import model.strategies.Filterable;
 
 import java.util.ArrayList;
 import java.util.List;

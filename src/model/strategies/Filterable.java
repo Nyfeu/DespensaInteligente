@@ -1,4 +1,4 @@
-package strategies;
+package model.strategies;
 
 public interface Filterable {
 

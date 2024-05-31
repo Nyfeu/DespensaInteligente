@@ -1,7 +1,7 @@
-package strategies;
+package model.strategies;
 
-import db.DB;
-import db.DBException;
+import model.db.DB;
+import model.db.DBException;
 import model.dao.DAOFactory;
 import model.dao.interfaces.ReceitaDao;
 import model.entities.Receita;

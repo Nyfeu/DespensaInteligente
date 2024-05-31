@@ -1,6 +1,6 @@
 package model.dao;
 
-import db.DB;
+import model.db.DB;
 import model.dao.implementations.IngredienteDaoJDBC;
 import model.dao.implementations.ReceitaDaoJDBC;
 import model.dao.implementations.UsuarioDaoJDBC;

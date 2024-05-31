@@ -1,10 +1,11 @@
-package strategies;
+package model.strategies;
 
-import db.DB;
-import db.DBException;
+import model.db.DB;
+import model.db.DBException;
 import model.dao.DAOFactory;
 import model.dao.interfaces.ReceitaDao;
 import model.entities.Receita;
+import model.utils.Authenticator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,11 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilterReceitasByNome implements FilterStrategy {
-
-    private String nome_receita;
-
-    public FilterReceitasByNome(String nome_receita) { this.nome_receita = nome_receita; }
+public class FilterReceitasByIngredientes implements FilterStrategy {
 
     @Override
     public List<Filterable> filter(Connection conn, Integer LIMIT, Integer OFFSET) {
@@ -25,7 +22,10 @@ public class FilterReceitasByNome implements FilterStrategy {
         String filterSQL = """
                 SELECT r.id
                 FROM receita r
-                WHERE r.titulo LIKE CONCAT('%', ?, '%')
+                JOIN receita_ingrediente ri ON r.id = ri.id_receita
+                LEFT JOIN despensa d ON ri.nome_ingrediente = d.nome_ingrediente AND d.email = ?
+                GROUP BY r.id
+                HAVING SUM(CASE WHEN d.quantidade IS NULL OR d.quantidade < ri.quantidade THEN 1 ELSE 0 END) = 0
                 LIMIT ? OFFSET ?;""";
 
         ResultSet rs = null;
@@ -34,7 +34,7 @@ public class FilterReceitasByNome implements FilterStrategy {
         try {
 
             stm = conn.prepareStatement(filterSQL);
-            stm.setString(1, nome_receita);
+            stm.setString(1, Authenticator.getAuthenticatedUser().getEmail());
             stm.setInt(2, LIMIT);
             stm.setInt(3, OFFSET);
             rs = stm.executeQuery();

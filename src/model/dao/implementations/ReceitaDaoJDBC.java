@@ -1,14 +1,14 @@
 package model.dao.implementations;
 
-import db.DB;
-import db.DBException;
+import model.db.DB;
+import model.db.DBException;
 import model.dao.DAOFactory;
 import model.dao.interfaces.IngredienteDao;
 import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
-import strategies.FilterStrategy;
-import strategies.Filterable;
+import model.strategies.FilterStrategy;
+import model.strategies.Filterable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

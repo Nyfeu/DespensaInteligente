@@ -1,6 +1,6 @@
 package app;
 
-import utils.Authenticator;
+import model.utils.Authenticator;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package db;
+package model.db;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class DB {
 
     private static Properties loadProperties() {
 
-        try(FileInputStream fis = new FileInputStream("src/db/db.properties")) {
+        try(FileInputStream fis = new FileInputStream("src/model/db/db.properties")) {
 
             Properties props = new Properties();
             props.load(fis);

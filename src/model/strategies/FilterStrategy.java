@@ -1,4 +1,4 @@
-package strategies;
+package model.strategies;
 
 import java.sql.Connection;
 import java.util.List;

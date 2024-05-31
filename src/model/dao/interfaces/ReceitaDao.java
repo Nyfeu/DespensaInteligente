@@ -1,8 +1,8 @@
 package model.dao.interfaces;
 
 import model.entities.Receita;
-import strategies.FilterStrategy;
-import strategies.Filterable;
+import model.strategies.FilterStrategy;
+import model.strategies.Filterable;
 
 import java.util.List;
 

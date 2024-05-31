@@ -1,7 +1,7 @@
 package model.dao.implementations;
 
-import db.DB;
-import db.DBException;
+import model.db.DB;
+import model.db.DBException;
 import model.dao.interfaces.IngredienteDao;
 import model.entities.Ingrediente;
 
