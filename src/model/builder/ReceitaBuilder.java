@@ -11,7 +11,7 @@ public class ReceitaBuilder {
     private List<Ingrediente> ingredientes;
     private String instrucoes;
     private Double tempoPreparo;
-    private String autor;
+    private String emailAutor;
 
     public ReceitaBuilder(String titulo) {
         this.titulo = titulo;
@@ -37,8 +37,8 @@ public class ReceitaBuilder {
         return titulo;
     }
 
-    public String getAutor() {
-        return autor;
+    public String getEmailAutor() {
+        return emailAutor;
     }
 
     public ReceitaBuilder descricao(String descricao) {
@@ -61,8 +61,8 @@ public class ReceitaBuilder {
         return this;
     }
 
-    public ReceitaBuilder autor(String autor) {
-        this.autor = autor;
+    public ReceitaBuilder emailAutor(String autor) {
+        this.emailAutor = autor;
         return this;
     }
 

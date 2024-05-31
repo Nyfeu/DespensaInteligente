@@ -65,7 +65,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public Receita read(Integer recipe_id) {
 
-        String sqlCarregar = "SELECT id, titulo, descricao, modo_preparo FROM RECEITA WHERE id = ?";
+        String sqlCarregar = "SELECT id, titulo, descricao, modo_preparo, email_usuario FROM RECEITA WHERE id = ?";
         ResultSet rs1 = null, rs2 = null;
         PreparedStatement stm = null;
 
@@ -98,7 +98,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public void update(Receita receita) {
 
-        String sqlUpdate = "UPDATE RECEITA SET Titulo = ?, Descricao = ?, modo_preparo = ? WHERE id = ?";
+        String sqlUpdate = "UPDATE RECEITA SET Titulo = ?, Descricao = ?, modo_preparo = ?, email_usuario = ? WHERE id = ?";
         PreparedStatement stm = null;
 
         try{
@@ -107,7 +107,8 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             stm.setString(1, receita.getTitulo());
             stm.setString(2, receita.getDescricao());
             stm.setString(3, receita.getModoPreparo());
-            stm.setInt(4, receita.getId());
+            stm.setString(4, receita.getEmailAutor());
+            stm.setInt(5, receita.getId());
             stm.execute();
 
             stm = conn.prepareStatement("DELETE FROM receita_ingrediente WHERE id_receita = ?");
@@ -212,6 +213,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         receita.setTitulo(rs1.getString(2));
         receita.setDescricao(rs1.getString(3));
         receita.setModoPreparo(rs1.getString(4));
+        receita.setEmailAutor(rs1.getString(5));
 
         IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
         ArrayList<Ingrediente> ingredientes = new ArrayList<>();

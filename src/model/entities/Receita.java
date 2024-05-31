@@ -25,6 +25,7 @@ public class Receita implements Filterable {
         this.ingredientes = receitaBuilder.getIngredientes();
         this.modoPreparo = receitaBuilder.getInstrucoes();
         this.tempoPreparo = receitaBuilder.getTempoPreparo();
+        this.emailAutor = receitaBuilder.getEmailAutor();
     }
 
     public String getTitulo() {
