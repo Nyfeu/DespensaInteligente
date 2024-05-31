@@ -28,7 +28,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public void create(Receita receita) {
 
-        String sqlInsert = "INSERT INTO RECEITA(id, titulo, descricao, modo_preparo) VALUES(?,?,?,?)";
+        String sqlInsert = "INSERT INTO RECEITA(id, titulo, descricao, modo_preparo, email_usuario) VALUES(?,?,?,?,?)";
 
         PreparedStatement stm = null;
         try{
@@ -38,6 +38,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             stm.setString(2, receita.getTitulo());
             stm.setString(3, receita.getDescricao());
             stm.setString(4, receita.getModoPreparo());
+            stm.setString(5, receita.getEmailAutor());
             stm.execute();
 
             stm = conn.prepareStatement("INSERT INTO receita_ingrediente(id_receita, nome_ingrediente, quantidade) VALUES (?,?,?)");
@@ -46,7 +47,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 stm.setInt(1, receita.getId());
                 stm.setString(2, ingrediente.getNome());
                 stm.setInt(3, ingrediente.getQuantidade());
-                stm.executeQuery();
+                stm.execute();
             }
 
         } catch (SQLException e) {
@@ -109,6 +110,19 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             stm.setInt(4, receita.getId());
             stm.execute();
 
+            stm = conn.prepareStatement("DELETE FROM receita_ingrediente WHERE id_receita = ?");
+            stm.setInt(1, receita.getId());
+            stm.execute();
+
+            stm = conn.prepareStatement("INSERT INTO receita_ingrediente(id_receita, nome_ingrediente, quantidade) VALUES (?,?,?)");
+
+            for (Ingrediente ingrediente : receita.getIngredientes()) {
+                stm.setInt(1, receita.getId());
+                stm.setString(2, ingrediente.getNome());
+                stm.setInt(3, ingrediente.getQuantidade());
+                stm.execute();
+            }
+
         } catch (SQLException e) {
 
             throw new DBException(e.getMessage());
@@ -130,6 +144,10 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         try{
 
             stm = conn.prepareStatement(sqlExcluir);
+            stm.setInt(1, recipe_id);
+            stm.execute();
+
+            stm = conn.prepareStatement("DELETE FROM receita_ingrediente WHERE id_receita = ?");
             stm.setInt(1, recipe_id);
             stm.execute();
 
