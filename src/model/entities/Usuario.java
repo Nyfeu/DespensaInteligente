@@ -69,5 +69,5 @@ public class Usuario {
                 ", receitasPublicadas=" + receitasPublicadas +
                 '}';
     }
-    //CRUD AQUI
+
 }

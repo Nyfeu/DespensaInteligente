@@ -56,18 +56,18 @@ INSERT INTO despensa (email, nome_ingrediente, validade, quantidade) VALUES
 ('fernanda.lima@example.com', 'Ovo', '2024-07-20', 12);
 
 -- Inserir receitas
-INSERT INTO receita (titulo, descricao, modo_preparo) VALUES
-('Bolo de Chocolate', 'Um delicioso bolo de chocolate', 'Assar por 45 minutos'),
-('Panqueca', 'Panqueca simples e rápida', 'Cozinhar por 10 minutos'),
-('Leite Quente', 'Um extraordinário leite que passou pelo microondas', 'Passar o leite pelo microondas'),
-('Omelete', 'Omelete fácil e rápida', 'Cozinhar por 5 minutos'),
-('Biscoito de Manteiga', 'Biscoitos crocantes e deliciosos', 'Assar por 20 minutos'),
-('Salada de Tomate', 'Uma salada fresca de tomate', 'Misturar os ingredientes'),
-('Sanduíche de Presunto e Queijo', 'Sanduíche simples e rápido', 'Montar e servir'),
-('Frango Assado', 'Frango assado delicioso', 'Assar por 60 minutos'),
-('Purê de Batata', 'Purê de batata cremoso', 'Cozinhar e amassar'),
-('Bolo de Cenoura', 'Bolo de cenoura com cobertura de chocolate', 'Assar por 50 minutos'),
-('Suco de Maçã', 'Suco de maçã natural', 'Liquidificar e coar');
+INSERT INTO receita (titulo, descricao, modo_preparo, email_usuario) VALUES
+('Bolo de Chocolate', 'Um delicioso bolo de chocolate', 'Assar por 45 minutos','joao.santos@example.com'),
+('Panqueca', 'Panqueca simples e rápida', 'Cozinhar por 10 minutos','joao.santos@example.com'),
+('Leite Quente', 'Um extraordinário leite que passou pelo microondas', 'Passar o leite pelo microondas','joao.santos@example.com'),
+('Omelete', 'Omelete fácil e rápida', 'Cozinhar por 5 minutos','fernanda.lima@example.com'),
+('Biscoito de Manteiga', 'Biscoitos crocantes e deliciosos', 'Assar por 20 minutos','fernanda.lima@example.com'),
+('Salada de Tomate', 'Uma salada fresca de tomate', 'Misturar os ingredientes','fernanda.lima@example.com'),
+('Sanduíche de Presunto e Queijo', 'Sanduíche simples e rápido', 'Montar e servir','carlos.lima@example.com'),
+('Frango Assado', 'Frango assado delicioso', 'Assar por 60 minutos','carlos.lima@example.com'),
+('Purê de Batata', 'Purê de batata cremoso', 'Cozinhar e amassar','carlos.lima@example.com'),
+('Bolo de Cenoura', 'Bolo de cenoura com cobertura de chocolate', 'Assar por 50 minutos','bruno.costa@example.com'),
+('Suco de Maçã', 'Suco de maçã natural', 'Liquidificar e coar','bruno.costa@example.com');
 
 -- Inserir ingredientes das receitas
 INSERT INTO receita_ingrediente (id_receita, nome_ingrediente, quantidade) VALUES

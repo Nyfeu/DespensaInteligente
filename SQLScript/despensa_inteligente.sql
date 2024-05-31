@@ -22,6 +22,7 @@ create table receita(
     titulo VARCHAR(60) NOT NULL,
     descricao VARCHAR(250) NOT NULL,
     modo_preparo VARCHAR(60) NOT NULL,
+    email_usuario VARCHAR(60) NOT NULL,
     primary key(id)
 );
 create table receita_ingrediente(
