@@ -13,6 +13,7 @@ public class Receita implements Filterable {
     private String modoPreparo;
     private Double tempoPreparo;
     private int id;
+    private String emailAutor;
 
     public Receita(){
         this.ingredientes = new ArrayList<>();
@@ -72,6 +73,14 @@ public class Receita implements Filterable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getEmailAutor() {
+        return emailAutor;
+    }
+
+    public void setEmailAutor(String emailAutor) {
+        this.emailAutor = emailAutor;
     }
 
     @Override

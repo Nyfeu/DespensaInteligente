@@ -40,6 +40,15 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             stm.setString(4, receita.getModoPreparo());
             stm.execute();
 
+            stm = conn.prepareStatement("INSERT INTO receita_ingrediente(id_receita, nome_ingrediente, quantidade) VALUES (?,?,?)");
+
+            for (Ingrediente ingrediente : receita.getIngredientes()) {
+                stm.setInt(1, receita.getId());
+                stm.setString(2, ingrediente.getNome());
+                stm.setInt(3, ingrediente.getQuantidade());
+                stm.executeQuery();
+            }
+
         } catch (SQLException e) {
 
             throw new DBException(e.getMessage());
