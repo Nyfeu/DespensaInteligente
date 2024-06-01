@@ -2,7 +2,7 @@ package controller;
 
 import model.utils.Authenticator;
 import view.AuthenticationView;
-import view.MainScreen;
+import view.MainView;
 import view.utils.viewUtils;
 
 public class AuthenticationController {
@@ -60,7 +60,7 @@ public class AuthenticationController {
         if (authenticated) {
             System.out.println("Usuário Autenticado!");
             viewUtils.closeView(view);
-            new MainScreen();
+            new MainView().setVisible(true);
         } else {
             System.out.println("Falha na autenticação...");
         }
