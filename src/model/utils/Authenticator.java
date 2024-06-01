@@ -70,16 +70,28 @@ public class Authenticator {
         authenticatedUser = null;
     }
 
-    public static void registrar(String nome, String email, String password) {
+    public static boolean registrar(String nome, String email, String password) {
 
-        String encodedPassword = encodePassword(password);
+        try {
 
-        Usuario usuario = new Usuario(nome, email, encodedPassword);
+            String encodedPassword = encodePassword(password);
 
-        UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-        usuarioDao.create(usuario);
+            Usuario usuario = new Usuario(nome, email, encodedPassword);
 
-        authenticatedUser = usuario;
+            UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+
+            usuarioDao.create(usuario);
+
+            authenticatedUser = usuario;
+
+            return true;
+
+        } catch (RuntimeException e) {
+
+            System.out.println(e.getMessage());
+            return false;
+
+        }
 
     }
 
