@@ -13,19 +13,26 @@ public class MainScreen extends JFrame {
     public MainScreen() {
         btnDespensa = new JButton("Minha Despensa");
         btnReceitas = new JButton("Receitas");
-        panelMain = new JPanel(new GridBagLayout());
+        panelMain = new JPanel(new BorderLayout());
         despensaScreen = new DespensaScreen(this);
         receitasScreen = new ReceitasScreen(this);
 
+        JLabel lblTitle = new JLabel("Despensa Inteligente", JLabel.CENTER);
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
+        panelMain.add(lblTitle, BorderLayout.NORTH);
+
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Add padding
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panelMain.add(btnDespensa, gbc);
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        panelMain.add(btnReceitas, gbc);
+        gbc.gridy = 0;
+        buttonPanel.add(btnDespensa, gbc);
+
+        gbc.gridx = 1;
+        buttonPanel.add(btnReceitas, gbc);
+
+        panelMain.add(buttonPanel, BorderLayout.CENTER);
 
         btnDespensa.addActionListener(e -> showDespensa());
         btnReceitas.addActionListener(e -> showReceitas());
@@ -59,8 +66,7 @@ public class MainScreen extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MainScreen::new);
     }
-
-    public void init() {
-        throw new UnsupportedOperationException("Unimplemented method 'init'");
-    }
 }
+
+
+
