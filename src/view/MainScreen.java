@@ -1,5 +1,7 @@
 package view;
 
+import view.utils.viewUtils;
+
 import javax.swing.*;
 import java.awt.*;
 

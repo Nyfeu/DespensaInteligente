@@ -12,7 +12,7 @@ public class AdicionarIngredientesScreen extends JPanel {
 
     public AdicionarIngredientesScreen(MainScreen mainScreen) {
         this.mainScreen = mainScreen;
-        txtIngredientes = new JTextField(20);
+        txtIngredientes = new JTextField(30);
         btnAdicionar = new JButton("Adicionar");
         btnVoltar = new JButton("Voltar");
 
@@ -36,7 +36,7 @@ public class AdicionarIngredientesScreen extends JPanel {
 
         btnAdicionar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // adicionar lógica para adicionar o ingrediente
+                // lógica para adicionar o ingrediente
                 String nomeIngrediente = txtIngredientes.getText();
                 // lógica para adicionar o ingrediente à lista de ingredientes
                 JOptionPane.showMessageDialog(AdicionarIngredientesScreen.this, "Ingrediente adicionado: " + nomeIngrediente);

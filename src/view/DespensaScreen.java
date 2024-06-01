@@ -1,5 +1,7 @@
 package view;
 
+import view.utils.viewUtils;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,7 +18,7 @@ public class DespensaScreen extends JPanel {
         btnVoltar = new JButton("Voltar");
 
         JPanel titlePanel = new JPanel(new BorderLayout());
-        JLabel lblTitle = new JLabel("Despensa Inteligente", JLabel.CENTER);
+        JLabel lblTitle = viewUtils.createTitleLabel("Despensa Inteligente");
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         JLabel lblSubtitle = new JLabel("Minha Despensa", JLabel.CENTER);
         lblSubtitle.setFont(new Font("Arial", Font.PLAIN, 18));
