@@ -1,6 +1,7 @@
 package view;
 
 import controller.AuthenticationController;
+import view.utils.viewUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -49,9 +50,9 @@ public class AuthenticationView extends JFrame {
         JButton button2 = new JButton("Login");
         submit = new JButton("Submeter!");
 
-        configureButton(button1);
-        configureButton(button2);
-        configureButton(submit);
+        viewUtils.configureButton(button1);
+        viewUtils.configureButton(button2);
+        viewUtils.configureButton(submit);
 
         buttonPanel.setBackground(Color.GRAY);
         buttonPanel.setBorder(new EmptyBorder(5, 0, 5, 0));
@@ -70,7 +71,7 @@ public class AuthenticationView extends JFrame {
     private JPanel createRegistrationPanel() {
 
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = createTitleLabel("Registro");
+        JLabel label = viewUtils.createTitleLabel("Registro");
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -103,7 +104,7 @@ public class AuthenticationView extends JFrame {
     private JPanel createLoginPanel() {
 
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = createTitleLabel("Login");
+        JLabel label = viewUtils.createTitleLabel("Login");
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -126,23 +127,6 @@ public class AuthenticationView extends JFrame {
         panel.add(label, BorderLayout.NORTH);
         panel.add(formPanel, BorderLayout.CENTER);
         return panel;
-    }
-
-    private JLabel createTitleLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setOpaque(true);
-        label.setBackground(Color.GRAY);
-        label.setForeground(Color.WHITE);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        label.setBorder(new EmptyBorder(10, 20, 10, 20));
-        return label;
-    }
-
-    private void configureButton(JButton button) {
-        button.setBackground(Color.white);
-        button.setFocusable(false);
-        button.setBorderPainted(false);
     }
 
     private void switchPanel(String panelName) {

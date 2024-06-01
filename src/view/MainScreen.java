@@ -1,5 +1,7 @@
 package view;
 
+import view.utils.viewUtils;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,7 +19,7 @@ public class MainScreen extends JFrame {
         despensaScreen = new DespensaScreen(this);
         receitasScreen = new ReceitasScreen(this);
 
-        JLabel lblTitle = new JLabel("Despensa Inteligente", JLabel.CENTER);
+        JLabel lblTitle = viewUtils.createTitleLabel("Despensa Inteligente");
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         panelMain.add(lblTitle, BorderLayout.NORTH);
 

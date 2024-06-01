@@ -2,6 +2,8 @@ package controller;
 
 import model.utils.Authenticator;
 import view.AuthenticationView;
+import view.MainScreen;
+import view.utils.viewUtils;
 
 public class AuthenticationController {
 
@@ -57,6 +59,8 @@ public class AuthenticationController {
     private void verifyAuthentication(boolean authenticated) {
         if (authenticated) {
             System.out.println("Usuário Autenticado!");
+            viewUtils.closeView(view);
+            new MainScreen();
         } else {
             System.out.println("Falha na autenticação...");
         }
