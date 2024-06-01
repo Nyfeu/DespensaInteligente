@@ -51,13 +51,11 @@ public class DespensaScreen extends JPanel {
     }
 
     private void showIngredientes() {
-        // Placeholder para mostrar ingredientes
-        JOptionPane.showMessageDialog(this, "Mostrar Ingredientes");
+        mainScreen.showMeusIngredientes();
     }
 
     private void showAdicionarIngredientes() {
-        // Placeholder para adicionar ingredientes
-        JOptionPane.showMessageDialog(this, "Adicionar Ingredientes");
+        mainScreen.showAdicionarIngredientes();
     }
 }
 

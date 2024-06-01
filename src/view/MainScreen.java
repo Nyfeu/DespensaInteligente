@@ -9,6 +9,8 @@ public class MainScreen extends JFrame {
     private JPanel panelMain;
     private DespensaScreen despensaScreen;
     private ReceitasScreen receitasScreen;
+    private AdicionarIngredientesScreen adicionarIngredientesScreen;
+    private MeusIngredientesScreen meusIngredientesScreen;
 
     public MainScreen() {
         btnDespensa = new JButton("Minha Despensa");
@@ -16,10 +18,13 @@ public class MainScreen extends JFrame {
         panelMain = new JPanel(new BorderLayout());
         despensaScreen = new DespensaScreen(this);
         receitasScreen = new ReceitasScreen(this);
+        adicionarIngredientesScreen = new AdicionarIngredientesScreen(this);
+        meusIngredientesScreen = new MeusIngredientesScreen(this);
 
+        JPanel titlePanel = new JPanel(new BorderLayout());
         JLabel lblTitle = new JLabel("Despensa Inteligente", JLabel.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
-        panelMain.add(lblTitle, BorderLayout.NORTH);
+        titlePanel.add(lblTitle, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -32,6 +37,7 @@ public class MainScreen extends JFrame {
         gbc.gridx = 1;
         buttonPanel.add(btnReceitas, gbc);
 
+        panelMain.add(titlePanel, BorderLayout.NORTH);
         panelMain.add(buttonPanel, BorderLayout.CENTER);
 
         btnDespensa.addActionListener(e -> showDespensa());
@@ -40,12 +46,12 @@ public class MainScreen extends JFrame {
         setContentPane(panelMain);
         setTitle("Despensa Inteligente");
         setSize(400, 300);
-        setLocationRelativeTo(null); // Center the frame on the screen
+        setLocationRelativeTo(null); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
-    private void showDespensa() {
+    public void showDespensa() {
         setContentPane(despensaScreen);
         invalidate();
         validate();
@@ -63,10 +69,23 @@ public class MainScreen extends JFrame {
         validate();
     }
 
+    public void showAdicionarIngredientes() {
+        setContentPane(adicionarIngredientesScreen);
+        invalidate();
+        validate();
+    }
+
+    public void showMeusIngredientes() {
+        setContentPane(meusIngredientesScreen);
+        invalidate();
+        validate();
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MainScreen::new);
     }
 }
+
 
 
 
