@@ -7,10 +7,13 @@ import model.strategies.*;
 import view.AuthenticationView;
 import view.MainView;
 import model.utils.Authenticator;
+import view.utils.FilterListCellRenderer;
 import view.utils.viewUtils;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainViewController {
 
@@ -56,8 +59,24 @@ public class MainViewController {
         mainView.addRightButtonListener(e -> updateReceitasList(offset + 12));
 
         mainView.addFilterByIngredienteButtonListener(e -> {
-            filterStrategy = new FilterReceitasByIngredientes();
-            updateReceitasList(0);
+
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            model.addElement("Por Ingredientes");
+            model.addElement("Por Data de Validade");
+
+            JComboBox<String> cb = new JComboBox<>(model);
+            cb.setRenderer(new FilterListCellRenderer());
+
+            int result = JOptionPane.showConfirmDialog(mainView, cb, "Selecione o método de filtragem", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (result == JOptionPane.OK_OPTION) {
+
+                if (Objects.equals(cb.getSelectedItem(), "Por Ingredientes")) filterStrategy = new FilterReceitasByIngredientes();
+                else filterStrategy = new FilterReceitasByDataValidadeAndIngredientes();
+
+                updateReceitasList(0);
+
+            }
+
         });
 
         mainView.addFilterReceitaButtonListener(e -> {
