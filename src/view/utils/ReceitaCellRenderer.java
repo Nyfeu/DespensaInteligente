@@ -26,7 +26,7 @@ public class ReceitaCellRenderer extends JPanel implements ListCellRenderer<Rece
     @Override
     public Component getListCellRendererComponent(JList<? extends Receita> list, Receita value, int index, boolean isSelected, boolean cellHasFocus) {
         lblNome.setText("Título: " + value.getTitulo());
-        lblDescription.setText("Descrição: " + truncateString(value.getDescricao(),45));
+        lblDescription.setText("Descrição: " + truncateString(value.getDescricao(),40));
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());

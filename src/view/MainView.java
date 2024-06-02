@@ -24,8 +24,95 @@ public class MainView extends JFrame {
     private JList<Receita> listaReceitas;
     private JTextField txtFiltro;
     private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn;
+    private ReceitaDao receitaDao;
+    private FilterStrategy filterStrategy;
+    private int offset = 0;
 
     public MainView() {
+
+        initComponents();
+        configureMainView();
+        addComponentsToPane();
+        fetchInitialReceitas();
+
+    }
+
+    private void addComponentsToPane() {
+        // Criar e configurar o JSplitPane
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setDividerSize(0);
+        splitPane.setLeftComponent(createDespensaPanel());
+        splitPane.setRightComponent(createReceitasPanel());
+
+        // Posicionar o divisor do JSplitPane ao centro
+        SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5));
+
+        // Adicionar componentes ao frame principal
+        JLabel titleLabel = viewUtils.createTitleLabel("Despensa Inteligente");
+        add(titleLabel, BorderLayout.NORTH);
+        add(splitPane);
+    }
+
+    private JPanel createDespensaPanel() {
+        JPanel painelDespensa = new JPanel(new BorderLayout());
+        JScrollPane scrollPaneDespensa = new JScrollPane(listaDespensa);
+        JLabel suaDespensa = createLabel("Sua Despensa");
+
+        JPanel painelDespensaButtons = new JPanel(new FlowLayout());
+        painelDespensaButtons.setBackground(Color.GRAY);
+        painelDespensaButtons.add(addIngrediente);
+        painelDespensaButtons.add(removeIngrediente);
+        painelDespensaButtons.add(filterByIngrediente);
+
+        painelDespensa.setBorder(new EmptyBorder(10, 10, 10, 5));
+        painelDespensa.add(suaDespensa, BorderLayout.NORTH);
+        painelDespensa.add(scrollPaneDespensa, BorderLayout.CENTER);
+        painelDespensa.add(painelDespensaButtons, BorderLayout.SOUTH);
+
+        setListaDespensaData(Authenticator.getAuthenticatedUser().getDespensa());
+        return painelDespensa;
+    }
+
+    private JPanel createReceitasPanel() {
+        JPanel painelReceitas = new JPanel(new BorderLayout());
+        JScrollPane scrollPaneReceitas = new JScrollPane(listaReceitas);
+        JPanel painelReceitasButtons = new JPanel(new FlowLayout());
+        painelReceitasButtons.setBackground(Color.GRAY);
+
+        painelReceitasButtons.add(leftBtn);
+        painelReceitasButtons.add(rightBtn);
+        painelReceitasButtons.add(publishReceita);
+
+        JPanel filterOptionsPanel = createFilterOptionsPanel();
+
+        painelReceitas.setBorder(new EmptyBorder(10, 5, 10, 10));
+        painelReceitas.add(filterOptionsPanel, BorderLayout.NORTH);
+        painelReceitas.add(scrollPaneReceitas, BorderLayout.CENTER);
+        painelReceitas.add(painelReceitasButtons, BorderLayout.SOUTH);
+
+        return painelReceitas;
+    }
+
+    private JPanel createFilterOptionsPanel() {
+        JPanel filterOptionsPanel = new JPanel();
+        filterOptionsPanel.setBackground(Color.GRAY);
+        String[] options = {"Autor", "Nome"};
+        JComboBox<String> dropdown = new JComboBox<>(options);
+        dropdown.setBackground(Color.white);
+        dropdown.setFocusable(false);
+
+        filterOptionsPanel.add(dropdown);
+        filterOptionsPanel.add(txtFiltro);
+        filterOptionsPanel.add(filterReceita);
+
+        return filterOptionsPanel;
+    }
+
+    private void fetchInitialReceitas() {
+        updateReceitasList(0);
+    }
+
+    private void configureMainView() {
 
         // Configurações gerais
         setTitle("Despensa Inteligente");
@@ -33,93 +120,61 @@ public class MainView extends JFrame {
         setSize(800, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        add(titleLabel, BorderLayout.NORTH);
 
-        // Criar o JSplitPane
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5));
-        splitPane.setDividerSize(0);
+    }
 
-        // Criar componentes da lista da despensa
-        JPanel painelDespensa = new JPanel(new BorderLayout());
+    private void initComponents() {
+        // Instanciar objetos necessários
+        receitaDao = DAOFactory.createReceitaDao();
+        filterStrategy = new FilterReceitasByPage();
+
+        // Configuração dos componentes da interface gráfica
         listaDespensa = new JList<>();
-        listaDespensa.setCellRenderer(new IngredienteCellRenderer());
-        setListaDespensaData(Authenticator.getAuthenticatedUser().getDespensa());
-        JScrollPane scrollPaneDespensa = new JScrollPane(listaDespensa);
-        painelDespensa.setBorder(new EmptyBorder(10,10,10,5));
-        JLabel suaDespensa = new JLabel("Sua Despensa", SwingConstants.CENTER);
-        suaDespensa.setOpaque(true);
-        suaDespensa.setBackground(Color.GRAY);
-        suaDespensa.setForeground(Color.WHITE);
-        suaDespensa.setFont(new Font("Arial", Font.BOLD, 20));
-        suaDespensa.setBorder(new EmptyBorder(5,10,5,10));
-        addIngrediente = new JButton("Adicionar");
-        viewUtils.configureButton(addIngrediente);
-        removeIngrediente = new JButton("Remover");
-        viewUtils.configureButton(removeIngrediente);
-        filterByIngrediente = new JButton("Filtrar Receitas");
-        viewUtils.configureButton(filterByIngrediente);
-        JPanel painelDespensaButtons = new JPanel(new FlowLayout());
-        painelDespensaButtons.setBackground(Color.GRAY);
-        painelDespensaButtons.add(addIngrediente);
-        painelDespensaButtons.add(removeIngrediente);
-        painelDespensaButtons.add(filterByIngrediente);
-        painelDespensa.add(painelDespensaButtons, BorderLayout.SOUTH);
-        painelDespensa.add(scrollPaneDespensa, BorderLayout.CENTER);
-        painelDespensa.add(suaDespensa, BorderLayout.NORTH);
-
-        // Criar componentes da lista de receitas
-        JPanel painelReceitas = new JPanel(new BorderLayout());
         listaReceitas = new JList<>();
+        txtFiltro = new JTextField(20);
+        addIngrediente = new JButton("Adicionar");
+        removeIngrediente = new JButton("Remover");
+        filterByIngrediente = new JButton("Filtrar Receitas");
+        filterReceita = new JButton("Buscar!");
+        publishReceita = new JButton("Publicar!");
+        leftBtn = new JButton("<");
+        rightBtn = new JButton(">");
 
+        // Configurar componentes
+        listaDespensa.setCellRenderer(new IngredienteCellRenderer());
         listaReceitas.setCellRenderer(new ReceitaCellRenderer());
-        ReceitaDao receitaDao = DAOFactory.createReceitaDao();
-        FilterStrategy filterStrategy = new FilterReceitasByPage();
-        List<Filterable> filterableList = receitaDao.filter(filterStrategy, 12, 0);
+        configureButtons();
+    }
+
+    private void configureButtons() {
+        viewUtils.configureButton(addIngrediente);
+        viewUtils.configureButton(removeIngrediente);
+        viewUtils.configureButton(filterByIngrediente);
+        viewUtils.configureButton(publishReceita);
+        viewUtils.configureButton(leftBtn);
+        viewUtils.configureButton(rightBtn);
+        viewUtils.configureButton(filterReceita);
+
+        leftBtn.addActionListener(e -> {
+            if (offset >= 12) {
+                updateReceitasList(offset - 12);
+            }
+        });
+
+        rightBtn.addActionListener(e -> updateReceitasList(offset + 12));
+
+    }
+
+    private void updateReceitasList(int newOffset) {
+        offset = newOffset;
+        List<Filterable> filterableList = receitaDao.filter(filterStrategy, 12, offset);
         ArrayList<Receita> receitaList = new ArrayList<>();
         for (Filterable filterable : filterableList) {
             Receita receita = receitaDao.read(filterable.getId());
             receitaList.add(receita);
         }
         setListaReceitasData(receitaList);
-
-        JScrollPane scrollPaneReceitas = new JScrollPane(listaReceitas);
-        painelReceitas.setBorder(new EmptyBorder(10,5,10,10));
-        publishReceita = new JButton("Publicar!");
-        viewUtils.configureButton(publishReceita);
-        JPanel painelReceitasButtons = new JPanel(new FlowLayout());
-        painelReceitasButtons.setBackground(Color.GRAY);
-        leftBtn = new JButton("<");
-        rightBtn = new JButton(">");
-        viewUtils.configureButton(leftBtn);
-        viewUtils.configureButton(rightBtn);
-        painelReceitasButtons.add(leftBtn);
-        painelReceitasButtons.add(rightBtn);
-        painelReceitasButtons.add(publishReceita);
-        JPanel filterOptionsPanel = new JPanel();
-        filterOptionsPanel.setBackground(Color.GRAY);
-        String[] options = {"Autor", "Nome"};
-        JComboBox<String> dropdown = new JComboBox<>(options);
-        dropdown.setBackground(Color.white);
-        dropdown.setFocusable(false);
-        filterOptionsPanel.add(dropdown);
-        txtFiltro = new JTextField(20);
-        filterOptionsPanel.add(txtFiltro);
-        filterReceita = new JButton("Buscar!");
-        viewUtils.configureButton(filterReceita);
-        filterOptionsPanel.add(filterReceita);
-
-        // Adicione outros componentes, como filtros e botões para publicar novas receitas
-        painelReceitas.add(filterOptionsPanel, BorderLayout.NORTH);
-        painelReceitas.add(scrollPaneReceitas, BorderLayout.CENTER);
-        painelReceitas.add(painelReceitasButtons, BorderLayout.SOUTH);
-
-        // Adicionar os painéis ao JSplitPane
-        splitPane.setLeftComponent(painelDespensa);
-        splitPane.setRightComponent(painelReceitas);
-
-        // Colocando na View corretamente
-        add(titleLabel, BorderLayout.NORTH);
-        add(splitPane);
     }
 
     private void setListaDespensaData(ArrayList<Ingrediente> ingredientes) {
@@ -128,6 +183,16 @@ public class MainView extends JFrame {
             model.addElement(ingrediente);
         }
         listaDespensa.setModel(model);
+    }
+
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        label.setOpaque(true);
+        label.setBackground(Color.GRAY);
+        label.setForeground(Color.WHITE);
+        label.setFont(new Font("Arial", Font.BOLD, 20));
+        label.setBorder(new EmptyBorder(5, 10, 5, 10));
+        return label;
     }
 
     private void setListaReceitasData(ArrayList<Receita> receitas) {
