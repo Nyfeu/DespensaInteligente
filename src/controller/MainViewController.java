@@ -2,6 +2,7 @@ package controller;
 
 import model.dao.DAOFactory;
 import model.dao.interfaces.ReceitaDao;
+import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.strategies.*;
 import view.AuthenticationView;
@@ -101,16 +102,25 @@ public class MainViewController {
         });
 
         mainView.addAddIngredienteButtonListener(e -> {
-            IngredienteView dialog = new IngredienteView(mainView);
+            IngredienteView dialog = new IngredienteView(mainView, null);
             dialog.setVisible(true);
         });
 
         mainView.addPublishReceitaButtonListener(e -> {
-
             ReceitaView dialog = new ReceitaView(mainView);
             dialog.setVisible(true);
         });
 
+
+        mainView.addUpdateIngredienteListener(e -> {
+            Ingrediente ingrediente = mainView.getIngredienteSelected();
+            if (ingrediente == null) {
+                JOptionPane.showMessageDialog(mainView, "Nenhum ingrediente foi selecionado!", "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
+            } else {
+                IngredienteView dialog = new IngredienteView(mainView, ingrediente);
+                dialog.setVisible(true);
+            }
+        });
 
     }
 }

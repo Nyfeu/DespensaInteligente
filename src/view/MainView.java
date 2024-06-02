@@ -290,6 +290,10 @@ public class MainView extends JFrame {
         logout.addActionListener(listener);
     }
 
+    public void addUpdateIngredienteListener(ActionListener listener) {
+        updateIngrediente.addActionListener(listener);
+    }
+
     public int getDropdown() {
         return dropdown.getSelectedIndex();
     }
@@ -297,4 +301,6 @@ public class MainView extends JFrame {
     public String getTxtFiltro() {
         return txtFiltro.getText();
     }
+
+    public Ingrediente getIngredienteSelected() { return listaDespensa.getSelectedValue(); }
 }
