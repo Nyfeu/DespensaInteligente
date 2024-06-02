@@ -3,10 +3,7 @@ package controller;
 import model.dao.DAOFactory;
 import model.dao.interfaces.ReceitaDao;
 import model.entities.Receita;
-import model.strategies.FilterReceitasByIngredientes;
-import model.strategies.FilterReceitasByPage;
-import model.strategies.FilterStrategy;
-import model.strategies.Filterable;
+import model.strategies.*;
 import view.MainView;
 import model.utils.Authenticator;
 
@@ -60,5 +57,19 @@ public class MainViewController {
             filterStrategy = new FilterReceitasByIngredientes();
             updateReceitasList(0);
         });
+
+        mainView.addFilterReceitaButtonListener(e -> {
+
+            if (mainView.getDropdown() == 0) filterStrategy = new FilterReceitasByAutor(mainView.getTxtFiltro());
+            else filterStrategy = new FilterReceitasByNome(mainView.getTxtFiltro());
+            updateReceitasList(0);
+
+        });
+
+        mainView.addClearButtonListener(e -> {
+            filterStrategy = new FilterReceitasByPage();
+            updateReceitasList(0);
+        });
+
     }
 }

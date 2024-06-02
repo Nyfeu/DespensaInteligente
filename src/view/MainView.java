@@ -19,8 +19,9 @@ public class MainView extends JFrame {
     private JList<Ingrediente> listaDespensa;
     private JList<Receita> listaReceitas;
     private JTextField txtFiltro;
-    private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn;
+    private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn, clearBtn;
     private MainViewController mainViewController;
+    private JComboBox<String> dropdown;
 
     public MainView() {
 
@@ -73,6 +74,7 @@ public class MainView extends JFrame {
         JPanel painelReceitasButtons = new JPanel(new FlowLayout());
         painelReceitasButtons.setBackground(Color.GRAY);
 
+        painelReceitasButtons.add(clearBtn);
         painelReceitasButtons.add(leftBtn);
         painelReceitasButtons.add(rightBtn);
         painelReceitasButtons.add(publishReceita);
@@ -91,7 +93,7 @@ public class MainView extends JFrame {
         JPanel filterOptionsPanel = new JPanel();
         filterOptionsPanel.setBackground(Color.GRAY);
         String[] options = {"Autor", "Nome"};
-        JComboBox<String> dropdown = new JComboBox<>(options);
+        dropdown = new JComboBox<>(options);
         dropdown.setBackground(Color.white);
         dropdown.setFocusable(false);
 
@@ -131,6 +133,7 @@ public class MainView extends JFrame {
         publishReceita = new JButton("Publicar!");
         leftBtn = new JButton("<");
         rightBtn = new JButton(">");
+        clearBtn = new JButton("Limpar");
 
         // Configurar componentes
         listaDespensa.setCellRenderer(new IngredienteCellRenderer());
@@ -151,6 +154,7 @@ public class MainView extends JFrame {
         viewUtils.configureButton(leftBtn);
         viewUtils.configureButton(rightBtn);
         viewUtils.configureButton(filterReceita);
+        viewUtils.configureButton(clearBtn);
     }
 
     public void setListaDespensaData(ArrayList<Ingrediente> ingredientes) {
@@ -207,4 +211,15 @@ public class MainView extends JFrame {
         filterReceita.addActionListener(listener);
     }
 
+    public void addClearButtonListener(ActionListener listener) {
+        clearBtn.addActionListener(listener);
+    }
+
+    public int getDropdown() {
+        return dropdown.getSelectedIndex();
+    }
+
+    public String getTxtFiltro() {
+        return txtFiltro.getText();
+    }
 }
