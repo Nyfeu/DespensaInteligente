@@ -99,4 +99,21 @@ public class Authenticator {
         return authenticatedUser;
     }
 
+    public static void changePassword(String newPassword) {
+
+        try {
+
+            String encodedPassword = encodePassword(newPassword);
+            authenticatedUser.setSenha(encodedPassword);
+            UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+            usuarioDao.update(authenticatedUser);
+
+        } catch (RuntimeException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+    }
+
 }

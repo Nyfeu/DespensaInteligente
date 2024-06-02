@@ -140,5 +140,18 @@ public class MainViewController {
 
         });
 
+        mainView.addAlterarSenhaListener(e -> {
+            JPasswordField jPasswordField = new JPasswordField(10);
+            JPanel jPanel = new JPanel();
+            jPanel.add(new JLabel("Digite a nova senha: "));
+            jPanel.add(jPasswordField);
+            int option = JOptionPane.showConfirmDialog(mainView, jPanel, "Alteração de senha", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (option == JOptionPane.OK_OPTION) {
+                String password = new String(jPasswordField.getPassword()).trim();
+                Authenticator.changePassword(password);
+            }
+
+        });
+
     }
 }
