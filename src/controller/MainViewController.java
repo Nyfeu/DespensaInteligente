@@ -2,8 +2,10 @@ package controller;
 
 import model.dao.DAOFactory;
 import model.dao.interfaces.ReceitaDao;
+import model.dao.interfaces.UsuarioDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
+import model.entities.Usuario;
 import model.strategies.*;
 import view.AuthenticationView;
 import view.IngredienteView;
@@ -120,6 +122,22 @@ public class MainViewController {
                 IngredienteView dialog = new IngredienteView(mainView, ingrediente);
                 dialog.setVisible(true);
             }
+        });
+
+        mainView.addRemoveIngredienteButtonListener(e -> {
+
+            Ingrediente ingrediente = mainView.getIngredienteSelected();
+            if (ingrediente == null) {
+                JOptionPane.showMessageDialog(mainView, "Nenhum ingrediente foi selecionado!", "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
+            } else {
+                UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+                Usuario usuario = Authenticator.getAuthenticatedUser();
+                ArrayList<Ingrediente> novaDespensa = usuario.getDespensa();
+                novaDespensa.remove(ingrediente);
+                usuarioDao.update(usuario);
+                mainView.setListaDespensaData(novaDespensa);
+            }
+
         });
 
     }
