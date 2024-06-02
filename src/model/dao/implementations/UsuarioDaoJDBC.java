@@ -6,8 +6,10 @@ import model.dao.interfaces.UsuarioDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.entities.Usuario;
+import model.utils.DateParser;
 
 import java.sql.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -258,11 +260,14 @@ public class UsuarioDaoJDBC implements UsuarioDao {
             while (rsDespensa.next()) {
                 Ingrediente ingrediente = new Ingrediente();
                 ingrediente.setNome(rsDespensa.getString("nome_ingrediente"));
-                ingrediente.setValidade(Date.valueOf(rsDespensa.getString("validade")));
+                System.out.println(DateParser.parseString(rsDespensa.getString("validade")));
+                ingrediente.setValidade(DateParser.parseString(rsDespensa.getString("validade")));
                 ingrediente.setQuantidade(rsDespensa.getInt("quantidade"));
                 despensa.add(ingrediente);
             }
             return despensa;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         } finally {
             DB.closeStatement(stmDespensa);
             DB.closeResultSet(rsDespensa);
