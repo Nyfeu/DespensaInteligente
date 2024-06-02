@@ -1,12 +1,8 @@
 package view;
 
-import model.dao.DAOFactory;
-import model.dao.interfaces.ReceitaDao;
+import controller.MainViewController;
 import model.entities.Ingrediente;
 import model.entities.Receita;
-import model.strategies.FilterReceitasByPage;
-import model.strategies.FilterStrategy;
-import model.strategies.Filterable;
 import model.utils.Authenticator;
 import view.utils.IngredienteCellRenderer;
 import view.utils.ReceitaCellRenderer;
@@ -15,8 +11,8 @@ import view.utils.viewUtils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainView extends JFrame {
 
@@ -24,9 +20,7 @@ public class MainView extends JFrame {
     private JList<Receita> listaReceitas;
     private JTextField txtFiltro;
     private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn;
-    private ReceitaDao receitaDao;
-    private FilterStrategy filterStrategy;
-    private int offset = 0;
+    private MainViewController mainViewController;
 
     public MainView() {
 
@@ -109,7 +103,7 @@ public class MainView extends JFrame {
     }
 
     private void fetchInitialReceitas() {
-        updateReceitasList(0);
+        mainViewController.updateReceitasList(0);
     }
 
     private void configureMainView() {
@@ -125,9 +119,6 @@ public class MainView extends JFrame {
     }
 
     private void initComponents() {
-        // Instanciar objetos necessários
-        receitaDao = DAOFactory.createReceitaDao();
-        filterStrategy = new FilterReceitasByPage();
 
         // Configuração dos componentes da interface gráfica
         listaDespensa = new JList<>();
@@ -144,6 +135,11 @@ public class MainView extends JFrame {
         // Configurar componentes
         listaDespensa.setCellRenderer(new IngredienteCellRenderer());
         listaReceitas.setCellRenderer(new ReceitaCellRenderer());
+
+        // Inicializando o controlador
+        mainViewController = new MainViewController(this);
+
+        // Configurando a aparência dos botões
         configureButtons();
     }
 
@@ -155,29 +151,9 @@ public class MainView extends JFrame {
         viewUtils.configureButton(leftBtn);
         viewUtils.configureButton(rightBtn);
         viewUtils.configureButton(filterReceita);
-
-        leftBtn.addActionListener(e -> {
-            if (offset >= 12) {
-                updateReceitasList(offset - 12);
-            }
-        });
-
-        rightBtn.addActionListener(e -> updateReceitasList(offset + 12));
-
     }
 
-    private void updateReceitasList(int newOffset) {
-        offset = newOffset;
-        List<Filterable> filterableList = receitaDao.filter(filterStrategy, 12, offset);
-        ArrayList<Receita> receitaList = new ArrayList<>();
-        for (Filterable filterable : filterableList) {
-            Receita receita = receitaDao.read(filterable.getId());
-            receitaList.add(receita);
-        }
-        setListaReceitasData(receitaList);
-    }
-
-    private void setListaDespensaData(ArrayList<Ingrediente> ingredientes) {
+    public void setListaDespensaData(ArrayList<Ingrediente> ingredientes) {
         DefaultListModel<Ingrediente> model = new DefaultListModel<>();
         for (Ingrediente ingrediente : ingredientes) {
             model.addElement(ingrediente);
@@ -195,12 +171,40 @@ public class MainView extends JFrame {
         return label;
     }
 
-    private void setListaReceitasData(ArrayList<Receita> receitas) {
+    public void setListaReceitasData(ArrayList<Receita> receitas) {
         DefaultListModel<Receita> model = new DefaultListModel<>();
         for (Receita receita : receitas) {
             model.addElement(receita);
         }
         listaReceitas.setModel(model);
+    }
+
+    public void addLeftButtonListener(ActionListener listener) {
+        leftBtn.addActionListener(listener);
+    }
+
+    public void addRightButtonListener(ActionListener listener) {
+        rightBtn.addActionListener(listener);
+    }
+
+    public void addAddIngredienteButtonListener(ActionListener listener) {
+        addIngrediente.addActionListener(listener);
+    }
+
+    public void addRemoveIngredienteButtonListener(ActionListener listener) {
+        removeIngrediente.addActionListener(listener);
+    }
+
+    public void addFilterByIngredienteButtonListener(ActionListener listener) {
+        filterByIngrediente.addActionListener(listener);
+    }
+
+    public void addPublishReceitaButtonListener(ActionListener listener) {
+        publishReceita.addActionListener(listener);
+    }
+
+    public void addFilterReceitaButtonListener(ActionListener listener) {
+        filterReceita.addActionListener(listener);
     }
 
 }
