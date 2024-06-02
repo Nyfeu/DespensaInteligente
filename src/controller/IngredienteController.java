@@ -3,6 +3,7 @@ package controller;
 import model.dao.DAOFactory;
 import model.dao.interfaces.UsuarioDao;
 import model.entities.Ingrediente;
+import model.entities.Usuario;
 import model.utils.Authenticator;
 import view.IngredienteView;
 
@@ -32,7 +33,8 @@ public class IngredienteController {
                 Ingrediente ingrediente = new Ingrediente(nome,0,dataValidade,quantidade);
                 Authenticator.getAuthenticatedUser().addIngredienteDespensa(ingrediente);
                 UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-                usuarioDao.update(Authenticator.getAuthenticatedUser());
+                Usuario usuario = Authenticator.getAuthenticatedUser();
+                usuarioDao.update(usuario);
                 ArrayList<Ingrediente> novaDespensa = Authenticator.getAuthenticatedUser().getDespensa();
                 ingredienteView.getMainView().setListaDespensaData(novaDespensa);
                 ingredienteView.dispose();
