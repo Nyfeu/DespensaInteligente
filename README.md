@@ -30,13 +30,3 @@ Alinhado com os objetivos para o desenvolvimento sustentável (ODSs) estabelecid
 - **Banco de Dados**: MySQL utilizado para persistência de dados.
 
 ---
-
-## To-do List
-
-- [x] Implementação das classes (Leo)
-- [ ] Padrão de projeto DAO (André)
-- [ ] Padrão de projeto MVC (André)
-- [ ] Graphical User Interface (Durval)
-- [ ] Teste
-- [ ] \>.<
----
