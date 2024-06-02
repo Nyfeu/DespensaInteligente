@@ -19,7 +19,7 @@ public class MainView extends JFrame {
     private JList<Ingrediente> listaDespensa;
     private JList<Receita> listaReceitas;
     private JTextField txtFiltro;
-    private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn, clearBtn;
+    private JButton addIngrediente, removeIngrediente, updateIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn, clearBtn;
     private MainViewController mainViewController;
     private JComboBox<String> dropdown;
     private JMenuItem logout;
@@ -58,7 +58,7 @@ public class MainView extends JFrame {
         painelDespensaButtons.setBackground(Color.GRAY);
         painelDespensaButtons.add(addIngrediente);
         painelDespensaButtons.add(removeIngrediente);
-        painelDespensaButtons.add(filterByIngrediente);
+        painelDespensaButtons.add(updateIngrediente);
 
         painelDespensa.setBorder(new EmptyBorder(10, 10, 10, 5));
         painelDespensa.add(suaDespensa, BorderLayout.NORTH);
@@ -75,6 +75,7 @@ public class MainView extends JFrame {
         JPanel painelReceitasButtons = new JPanel(new FlowLayout());
         painelReceitasButtons.setBackground(Color.GRAY);
 
+        painelReceitasButtons.add(filterByIngrediente);
         painelReceitasButtons.add(clearBtn);
         painelReceitasButtons.add(leftBtn);
         painelReceitasButtons.add(rightBtn);
@@ -114,7 +115,7 @@ public class MainView extends JFrame {
         // Configurações gerais
         setTitle("Despensa Inteligente");
         JLabel titleLabel = viewUtils.createTitleLabel("Despensa Inteligente");
-        setSize(800, 650);
+        setSize(1000, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         add(titleLabel, BorderLayout.NORTH);
@@ -135,6 +136,7 @@ public class MainView extends JFrame {
         leftBtn = new JButton("<");
         rightBtn = new JButton(">");
         clearBtn = new JButton("Limpar");
+        updateIngrediente = new JButton("Atualizar");
 
         // Configurar componentes
         listaDespensa.setCellRenderer(new IngredienteCellRenderer());
@@ -223,6 +225,7 @@ public class MainView extends JFrame {
         viewUtils.configureButton(rightBtn);
         viewUtils.configureButton(filterReceita);
         viewUtils.configureButton(clearBtn);
+        viewUtils.configureButton(updateIngrediente);
     }
 
     public void setListaDespensaData(ArrayList<Ingrediente> ingredientes) {
