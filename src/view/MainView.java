@@ -163,13 +163,6 @@ public class MainView extends JFrame {
 
         editMenu.add(preferenciasItem);
 
-        // Menu "Visualizar"
-        JMenu visualizarMenu = new JMenu("Visualizar");
-
-        JMenuItem atualizarItem = new JMenuItem("Atualizar");
-
-        visualizarMenu.add(atualizarItem);
-
         // Menu "Tools"
         JMenu toolsMenu = new JMenu("Tools");
 
@@ -205,7 +198,6 @@ public class MainView extends JFrame {
 
         // Adicionando os menus à barra de menu
         menuBar.add(editMenu);
-        menuBar.add(visualizarMenu);
         menuBar.add(toolsMenu);
         menuBar.add(helpMenu);
         menuBar.add(accountMenu);
