@@ -219,8 +219,10 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         ArrayList<Ingrediente> ingredientes = new ArrayList<>();
         while (rs2.next()) {
             Ingrediente ingrediente = ingredienteDao.read(rs2.getString(1));
-            ingrediente.setQuantidade(rs2.getInt(2));
-            ingredientes.add(ingrediente);
+            if (ingrediente != null) {
+                ingrediente.setQuantidade(rs2.getInt(2));
+                ingredientes.add(ingrediente);
+            }
         }
 
         receita.setIngredientes(ingredientes);

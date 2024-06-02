@@ -1,29 +1,36 @@
 package view;
 
+import model.dao.DAOFactory;
+import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
+import model.strategies.FilterReceitasByPage;
+import model.strategies.FilterStrategy;
+import model.strategies.Filterable;
 import model.utils.Authenticator;
 import view.utils.IngredienteCellRenderer;
+import view.utils.ReceitaCellRenderer;
 import view.utils.viewUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainView extends JFrame {
 
     private JList<Ingrediente> listaDespensa;
     private JList<Receita> listaReceitas;
     private JTextField txtFiltro;
-    private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita;
+    private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn;
 
     public MainView() {
 
         // Configurações gerais
         setTitle("Despensa Inteligente");
         JLabel titleLabel = viewUtils.createTitleLabel("Despensa Inteligente");
-        setSize(800, 600);
+        setSize(800, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -63,12 +70,30 @@ public class MainView extends JFrame {
         // Criar componentes da lista de receitas
         JPanel painelReceitas = new JPanel(new BorderLayout());
         listaReceitas = new JList<>();
+
+        listaReceitas.setCellRenderer(new ReceitaCellRenderer());
+        ReceitaDao receitaDao = DAOFactory.createReceitaDao();
+        FilterStrategy filterStrategy = new FilterReceitasByPage();
+        List<Filterable> filterableList = receitaDao.filter(filterStrategy, 12, 0);
+        ArrayList<Receita> receitaList = new ArrayList<>();
+        for (Filterable filterable : filterableList) {
+            Receita receita = receitaDao.read(filterable.getId());
+            receitaList.add(receita);
+        }
+        setListaReceitasData(receitaList);
+
         JScrollPane scrollPaneReceitas = new JScrollPane(listaReceitas);
         painelReceitas.setBorder(new EmptyBorder(10,5,10,10));
         publishReceita = new JButton("Publicar!");
         viewUtils.configureButton(publishReceita);
         JPanel painelReceitasButtons = new JPanel(new FlowLayout());
         painelReceitasButtons.setBackground(Color.GRAY);
+        leftBtn = new JButton("<");
+        rightBtn = new JButton(">");
+        viewUtils.configureButton(leftBtn);
+        viewUtils.configureButton(rightBtn);
+        painelReceitasButtons.add(leftBtn);
+        painelReceitasButtons.add(rightBtn);
         painelReceitasButtons.add(publishReceita);
         JPanel filterOptionsPanel = new JPanel();
         filterOptionsPanel.setBackground(Color.GRAY);
@@ -103,6 +128,14 @@ public class MainView extends JFrame {
             model.addElement(ingrediente);
         }
         listaDespensa.setModel(model);
+    }
+
+    private void setListaReceitasData(ArrayList<Receita> receitas) {
+        DefaultListModel<Receita> model = new DefaultListModel<>();
+        for (Receita receita : receitas) {
+            model.addElement(receita);
+        }
+        listaReceitas.setModel(model);
     }
 
 }
