@@ -22,7 +22,7 @@ public class MainView extends JFrame {
     private JButton addIngrediente, removeIngrediente, updateIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn, clearBtn;
     private MainViewController mainViewController;
     private JComboBox<String> dropdown;
-    private JMenuItem logout, alterarSenhaItem;
+    private JMenuItem logout, alterarSenhaItem, sobreItem;
 
     public MainView() {
 
@@ -159,10 +159,8 @@ public class MainView extends JFrame {
         // Menu "Edit"
         JMenu editMenu = new JMenu("Edit");
 
-        JMenuItem editarPerfilItem = new JMenuItem("Editar Perfil");
         JMenuItem preferenciasItem = new JMenuItem("Preferências");
 
-        editMenu.add(editarPerfilItem);
         editMenu.add(preferenciasItem);
 
         // Menu "Visualizar"
@@ -188,7 +186,7 @@ public class MainView extends JFrame {
 
         JMenuItem documentacaoItem = new JMenuItem("Documentação");
         JMenuItem suporteItem = new JMenuItem("Suporte");
-        JMenuItem sobreItem = new JMenuItem("Sobre");
+        sobreItem = new JMenuItem("Sobre");
 
         helpMenu.add(documentacaoItem);
         helpMenu.add(suporteItem);
@@ -296,6 +294,10 @@ public class MainView extends JFrame {
 
     public void addAlterarSenhaListener(ActionListener listener) {
         alterarSenhaItem.addActionListener(listener);
+    }
+
+    public void addSobreListener(ActionListener listener) {
+        sobreItem.addActionListener(listener);
     }
 
     public int getDropdown() {
