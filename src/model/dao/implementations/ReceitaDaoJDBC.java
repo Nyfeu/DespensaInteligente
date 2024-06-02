@@ -175,7 +175,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             st = conn.prepareStatement("SELECT * FROM RECEITA ORDER BY id");
 
             rs1 = st.executeQuery();
-            List<Receita> departmentList = new ArrayList<>();
+            List<Receita> receitaList = new ArrayList<>();
 
             while(rs1.next()) {
 
@@ -183,10 +183,10 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 st.setInt(1, rs1.getInt(1));
                 rs2 = st.executeQuery();
 
-                departmentList.add(instantiateReceita(rs1, rs2));
+                receitaList.add(instantiateReceita(rs1, rs2));
             }
 
-            return departmentList;
+            return receitaList;
 
         } catch (SQLException e) {
 
