@@ -116,4 +116,20 @@ public class Authenticator {
 
     }
 
+    public static void changeNome(String newNome) {
+
+        try {
+
+            authenticatedUser.setNome(newNome);
+            UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+            usuarioDao.update(authenticatedUser);
+
+        } catch (RuntimeException e) {
+
+            System.out.println(e.getMessage());
+
+        }
+
+    }
+
 }

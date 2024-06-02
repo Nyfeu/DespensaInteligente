@@ -170,5 +170,20 @@ public class MainViewController {
 
         });
 
+        mainView.addAlterarDadosListener(e -> {
+
+            try {
+
+                String novoNome = JOptionPane.showInputDialog(mainView, "Digite o novo nome: ", "");
+                if (!novoNome.isEmpty()) Authenticator.changeNome(novoNome.trim());
+
+            } catch (RuntimeException exception) {
+
+                System.out.println(exception.getMessage());
+
+            }
+
+        });
+
     }
 }
