@@ -33,7 +33,7 @@ public class IngredienteView extends JDialog {
         // Labels
         JLabel lblNome = new JLabel("Nome:");
         JLabel lblQuantidade = new JLabel("Quantidade:");
-        JLabel lblDataValidade = new JLabel("Data de Validade (opcional):");
+        JLabel lblDataValidade = new JLabel("Data de Validade:");
 
         // TextFields
         txtNome = new JTextField(20);

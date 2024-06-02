@@ -28,6 +28,8 @@ public class Receita implements Filterable {
         this.emailAutor = receitaBuilder.getEmailAutor();
     }
 
+
+
     public String getTitulo() {
         return titulo;
     }

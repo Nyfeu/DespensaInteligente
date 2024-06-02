@@ -8,6 +8,7 @@ import view.AuthenticationView;
 import view.IngredienteView;
 import view.MainView;
 import model.utils.Authenticator;
+import view.ReceitaView;
 import view.utils.FilterListCellRenderer;
 import view.utils.viewUtils;
 
@@ -101,6 +102,12 @@ public class MainViewController {
 
         mainView.addAddIngredienteButtonListener(e -> {
             IngredienteView dialog = new IngredienteView(mainView);
+            dialog.setVisible(true);
+        });
+
+        mainView.addPublishReceitaButtonListener(e -> {
+
+            ReceitaView dialog = new ReceitaView(mainView);
             dialog.setVisible(true);
         });
 
