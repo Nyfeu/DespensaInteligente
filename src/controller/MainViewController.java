@@ -5,7 +5,7 @@ import model.dao.interfaces.ReceitaDao;
 import model.entities.Receita;
 import model.strategies.*;
 import view.AuthenticationView;
-import view.IngredientView;
+import view.IngredienteView;
 import view.MainView;
 import model.utils.Authenticator;
 import view.utils.FilterListCellRenderer;
@@ -100,7 +100,7 @@ public class MainViewController {
         });
 
         mainView.addAddIngredienteButtonListener(e -> {
-            IngredientView dialog = new IngredientView(mainView);
+            IngredienteView dialog = new IngredienteView(mainView);
             dialog.setVisible(true);
         });
 

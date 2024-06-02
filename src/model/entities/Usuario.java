@@ -61,6 +61,10 @@ public class Usuario {
         this.receitasPublicadas = receitasPublicadas;
     }
 
+    public void addIngredienteDespensa(Ingrediente ingrediente) {
+        this.despensa.add(ingrediente);
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
