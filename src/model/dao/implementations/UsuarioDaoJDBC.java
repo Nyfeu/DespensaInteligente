@@ -39,7 +39,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 try (PreparedStatement stmtDespensa = conn.prepareStatement(sqlInsertDespensa)) {
                     stmtDespensa.setString(1, usuario.getEmail());
                     stmtDespensa.setString(2, ingrediente.getNome());
-                    stmtDespensa.setString(3, ingrediente.getValidade().toString());
+                    stmtDespensa.setString(3, DateParser.parseDate(ingrediente.getValidade()));
                     stmtDespensa.setInt(4, ingrediente.getQuantidade());
                     stmtDespensa.executeUpdate();
                 }
@@ -134,7 +134,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 try (PreparedStatement stmtDespensa = conn.prepareStatement(sqlInsertDespensa)) {
                     stmtDespensa.setString(1, usuario.getEmail());
                     stmtDespensa.setString(2, ingrediente.getNome());
-                    stmtDespensa.setString(3, ingrediente.getValidade().toString());
+                    stmtDespensa.setString(3, DateParser.parseDate(ingrediente.getValidade()));
                     stmtDespensa.setInt(4, ingrediente.getQuantidade());
                     stmtDespensa.executeUpdate();
                 }

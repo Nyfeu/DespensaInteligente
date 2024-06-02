@@ -6,10 +6,17 @@ import java.util.Date;
 
 public class DateParser {
 
+    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
     public static Date parseString(String date) throws ParseException {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.parse(date);
+
+    }
+
+    public static String parseDate(Date date) {
+
+        return sdf.format(date);
 
     }
 
