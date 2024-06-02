@@ -22,6 +22,7 @@ public class MainView extends JFrame {
     private JButton addIngrediente, removeIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn, clearBtn;
     private MainViewController mainViewController;
     private JComboBox<String> dropdown;
+    private JMenuItem logout;
 
     public MainView() {
 
@@ -139,11 +140,78 @@ public class MainView extends JFrame {
         listaDespensa.setCellRenderer(new IngredienteCellRenderer());
         listaReceitas.setCellRenderer(new ReceitaCellRenderer());
 
+        // Adicionando JMenuBar
+        setJMenuBar(createMenuBar());
+
         // Inicializando o controlador
         mainViewController = new MainViewController(this);
 
         // Configurando a aparência dos botões
         configureButtons();
+    }
+
+    private JMenuBar createMenuBar() {
+
+        JMenuBar menuBar = new JMenuBar();
+
+        // Menu "Edit"
+        JMenu editMenu = new JMenu("Edit");
+
+        JMenuItem editarPerfilItem = new JMenuItem("Editar Perfil");
+        JMenuItem preferenciasItem = new JMenuItem("Preferências");
+
+        editMenu.add(editarPerfilItem);
+        editMenu.add(preferenciasItem);
+
+        // Menu "Visualizar"
+        JMenu visualizarMenu = new JMenu("Visualizar");
+
+        JMenuItem atualizarItem = new JMenuItem("Atualizar");
+
+        visualizarMenu.add(atualizarItem);
+
+        // Menu "Tools"
+        JMenu toolsMenu = new JMenu("Tools");
+
+        JMenuItem calculadoraMedidasItem = new JMenuItem("Calculadora de Medidas");
+        JMenuItem planejadorRefeicoesItem = new JMenuItem("Planejador de Refeições");
+        JMenuItem listaComprasItem = new JMenuItem("Lista de Compras");
+
+        toolsMenu.add(calculadoraMedidasItem);
+        toolsMenu.add(planejadorRefeicoesItem);
+        toolsMenu.add(listaComprasItem);
+
+        // Menu "Help"
+        JMenu helpMenu = new JMenu("Help");
+
+        JMenuItem documentacaoItem = new JMenuItem("Documentação");
+        JMenuItem suporteItem = new JMenuItem("Suporte");
+        JMenuItem sobreItem = new JMenuItem("Sobre");
+
+        helpMenu.add(documentacaoItem);
+        helpMenu.add(suporteItem);
+        helpMenu.add(sobreItem);
+
+        // Menu "Account"
+        JMenu accountMenu = new JMenu("Account");
+
+        JMenuItem alterarSenhaItem = new JMenuItem("Alterar Senha");
+        JMenuItem alterarDadosItem = new JMenuItem("Alterar Dados");
+        logout = new JMenuItem("Logout");
+
+        accountMenu.add(alterarSenhaItem);
+        accountMenu.add(alterarDadosItem);
+        accountMenu.add(logout);
+
+        // Adicionando os menus à barra de menu
+        menuBar.add(editMenu);
+        menuBar.add(visualizarMenu);
+        menuBar.add(toolsMenu);
+        menuBar.add(helpMenu);
+        menuBar.add(accountMenu);
+
+        return menuBar;
+
     }
 
     private void configureButtons() {
@@ -213,6 +281,10 @@ public class MainView extends JFrame {
 
     public void addClearButtonListener(ActionListener listener) {
         clearBtn.addActionListener(listener);
+    }
+
+    public void addLogoutListener(ActionListener listener) {
+        logout.addActionListener(listener);
     }
 
     public int getDropdown() {

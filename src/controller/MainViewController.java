@@ -4,8 +4,10 @@ import model.dao.DAOFactory;
 import model.dao.interfaces.ReceitaDao;
 import model.entities.Receita;
 import model.strategies.*;
+import view.AuthenticationView;
 import view.MainView;
 import model.utils.Authenticator;
+import view.utils.viewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,12 @@ public class MainViewController {
         mainView.addClearButtonListener(e -> {
             filterStrategy = new FilterReceitasByPage();
             updateReceitasList(0);
+        });
+
+        mainView.addLogoutListener(e -> {
+            Authenticator.logout();
+            viewUtils.closeView(mainView);
+            new AuthenticationView().setVisible(true);
         });
 
     }
