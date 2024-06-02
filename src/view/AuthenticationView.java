@@ -1,7 +1,7 @@
 package view;
 
 import controller.AuthenticationController;
-import view.utils.viewUtils;
+import view.utils.ViewUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -50,9 +50,9 @@ public class AuthenticationView extends JFrame {
         JButton button2 = new JButton("Login");
         submit = new JButton("Submeter!");
 
-        viewUtils.configureButton(button1);
-        viewUtils.configureButton(button2);
-        viewUtils.configureButton(submit);
+        ViewUtils.configureButton(button1);
+        ViewUtils.configureButton(button2);
+        ViewUtils.configureButton(submit);
 
         buttonPanel.setBackground(Color.GRAY);
         buttonPanel.setBorder(new EmptyBorder(5, 0, 5, 0));
@@ -71,7 +71,7 @@ public class AuthenticationView extends JFrame {
     private JPanel createRegistrationPanel() {
 
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = viewUtils.createTitleLabel("Registro");
+        JLabel label = ViewUtils.createTitleLabel("Registro");
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -104,7 +104,7 @@ public class AuthenticationView extends JFrame {
     private JPanel createLoginPanel() {
 
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = viewUtils.createTitleLabel("Login");
+        JLabel label = ViewUtils.createTitleLabel("Login");
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

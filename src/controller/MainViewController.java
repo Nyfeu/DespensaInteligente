@@ -13,7 +13,7 @@ import view.MainView;
 import model.utils.Authenticator;
 import view.ReceitaView;
 import view.utils.FilterListCellRenderer;
-import view.utils.viewUtils;
+import view.utils.ViewUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class MainViewController {
 
         mainView.addLogoutListener(e -> {
             Authenticator.logout();
-            viewUtils.closeView(mainView);
+            ViewUtils.closeView(mainView);
             new AuthenticationView().setVisible(true);
         });
 

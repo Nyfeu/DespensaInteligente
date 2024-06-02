@@ -6,7 +6,7 @@ import model.entities.Receita;
 import model.utils.Authenticator;
 import view.utils.IngredienteCellRenderer;
 import view.utils.ReceitaCellRenderer;
-import view.utils.viewUtils;
+import view.utils.ViewUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -44,7 +44,7 @@ public class MainView extends JFrame {
         SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5));
 
         // Adicionar componentes ao frame principal
-        JLabel titleLabel = viewUtils.createTitleLabel("Despensa Inteligente");
+        JLabel titleLabel = ViewUtils.createTitleLabel("Despensa Inteligente");
         add(titleLabel, BorderLayout.NORTH);
         add(splitPane);
     }
@@ -114,7 +114,7 @@ public class MainView extends JFrame {
 
         // Configurações gerais
         setTitle("Despensa Inteligente");
-        JLabel titleLabel = viewUtils.createTitleLabel("Despensa Inteligente");
+        JLabel titleLabel = ViewUtils.createTitleLabel("Despensa Inteligente");
         setSize(1000, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -217,15 +217,15 @@ public class MainView extends JFrame {
     }
 
     private void configureButtons() {
-        viewUtils.configureButton(addIngrediente);
-        viewUtils.configureButton(removeIngrediente);
-        viewUtils.configureButton(filterByIngrediente);
-        viewUtils.configureButton(publishReceita);
-        viewUtils.configureButton(leftBtn);
-        viewUtils.configureButton(rightBtn);
-        viewUtils.configureButton(filterReceita);
-        viewUtils.configureButton(clearBtn);
-        viewUtils.configureButton(updateIngrediente);
+        ViewUtils.configureButton(addIngrediente);
+        ViewUtils.configureButton(removeIngrediente);
+        ViewUtils.configureButton(filterByIngrediente);
+        ViewUtils.configureButton(publishReceita);
+        ViewUtils.configureButton(leftBtn);
+        ViewUtils.configureButton(rightBtn);
+        ViewUtils.configureButton(filterReceita);
+        ViewUtils.configureButton(clearBtn);
+        ViewUtils.configureButton(updateIngrediente);
     }
 
     public void setListaDespensaData(ArrayList<Ingrediente> ingredientes) {

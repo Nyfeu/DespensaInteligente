@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class viewUtils {
+public class ViewUtils {
 
     public static JLabel createTitleLabel(String text) {
         JLabel label = new JLabel(text);
