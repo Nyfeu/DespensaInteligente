@@ -27,50 +27,11 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         PreparedStatement stm = null;
         try {
 
-
             stm = conn.prepareStatement(sqlInsert);
             stm.setString(1, usuario.getNome());
             stm.setString(2, usuario.getEmail());
             stm.setString(3, usuario.getSenha());
             stm.execute();
-
-            for (Ingrediente ingrediente : usuario.getDespensa()) {
-                String sqlInsertDespensa = "INSERT INTO despensa(email, nome_ingrediente, validade, quantidade) VALUES (?,?,?,?)";
-                try (PreparedStatement stmtDespensa = conn.prepareStatement(sqlInsertDespensa)) {
-                    stmtDespensa.setString(1, usuario.getEmail());
-                    stmtDespensa.setString(2, ingrediente.getNome());
-                    stmtDespensa.setString(3, DateParser.parseDate(ingrediente.getValidade()));
-                    stmtDespensa.setInt(4, ingrediente.getQuantidade());
-                    stmtDespensa.executeUpdate();
-                }
-            }
-
-            for (Receita receita : usuario.getReceitasPublicadas()) {
-                String sqlInsertReceita = "INSERT INTO receita(titulo, descricao, modo_preparo,email_usuario) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement stmtReceita = conn.prepareStatement(sqlInsertReceita, Statement.RETURN_GENERATED_KEYS)) {
-                    stmtReceita.setString(1, receita.getTitulo());
-                    stmtReceita.setString(2, receita.getDescricao());
-                    stmtReceita.setString(3, receita.getModoPreparo());
-                    stmtReceita.setString(4,receita.getEmailAutor());
-                    stmtReceita.executeUpdate();
-
-                    ResultSet rs = stmtReceita.getGeneratedKeys();
-                    if (rs.next()) {
-                        receita.setId(rs.getInt(1));
-                    }
-
-                    for (Ingrediente ingrediente : receita.getIngredientes()) {
-                        String sqlInsertReceitaIngrediente = "INSERT INTO receita_ingrediente(id_receita, nome_ingrediente, quantidade) VALUES (?, ?, ?)";
-                        try (PreparedStatement stmtReceitaIngrediente = conn.prepareStatement(sqlInsertReceitaIngrediente)) {
-                            stmtReceitaIngrediente.setInt(1, receita.getId());
-                            stmtReceitaIngrediente.setString(2, ingrediente.getNome());
-                            stmtReceitaIngrediente.setInt(3, ingrediente.getQuantidade());
-                            stmtReceitaIngrediente.executeUpdate();
-                        }
-                    }
-                }
-            }
-
 
         } catch (SQLException e) {
 
@@ -113,7 +74,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     public void update(Usuario usuario) {
         String sqlUpdateUsuario = "UPDATE usuario SET nome = ?, senha_hash = ? WHERE email = ?";
         String sqlDeleteDespensa = "DELETE FROM despensa WHERE email = ?";
-        String sqlDeleteReceitas = "DELETE FROM receita WHERE id IN (SELECT id_receita FROM receita_ingrediente)";
+        String sqlDeleteReceitas = "DELETE FROM receita WHERE email_usuario = ?";
         PreparedStatement stm = null;
 
         try {
@@ -127,44 +88,72 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             stm = conn.prepareStatement(sqlDeleteDespensa);
             stm.setString(1, usuario.getEmail());
-            stm.executeUpdate();
+            stm.execute();
 
             for (Ingrediente ingrediente : usuario.getDespensa()) {
                 String sqlInsertDespensa = "INSERT INTO despensa(email, nome_ingrediente, validade, quantidade) VALUES (?,?,?,?)";
-                try (PreparedStatement stmtDespensa = conn.prepareStatement(sqlInsertDespensa)) {
+                try {
+
+                    PreparedStatement stmtDespensa = conn.prepareStatement(sqlInsertDespensa);
                     stmtDespensa.setString(1, usuario.getEmail());
                     stmtDespensa.setString(2, ingrediente.getNome());
                     stmtDespensa.setString(3, DateParser.parseDate(ingrediente.getValidade()));
                     stmtDespensa.setInt(4, ingrediente.getQuantidade());
-                    stmtDespensa.executeUpdate();
+                    stmtDespensa.execute();
+
+                } catch (SQLException e) {
+
+                    throw new DBException(e.getMessage());
+
+                } finally {
+
+                    DB.closeStatement(stm);
+
                 }
             }
 
             stm = conn.prepareStatement(sqlDeleteReceitas);
-            stm.executeUpdate();
+            stm.setString(1, usuario.getEmail());
+            stm.execute();
 
             for (Receita receita : usuario.getReceitasPublicadas()) {
                 String sqlInsertReceita = "INSERT INTO receita(titulo, descricao, modo_preparo,email_usuario) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement stmtReceita = conn.prepareStatement(sqlInsertReceita, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                try {
+
+                    PreparedStatement stmtReceita = conn.prepareStatement(sqlInsertReceita);
                     stmtReceita.setString(1, receita.getTitulo());
                     stmtReceita.setString(2, receita.getDescricao());
                     stmtReceita.setString(3, receita.getModoPreparo());
-                    stmtReceita.executeUpdate();
-
-                    ResultSet rs = stmtReceita.getGeneratedKeys();
-                    if (rs.next()) {
-                        receita.setId(rs.getInt(1));
-                    }
+                    stmtReceita.setString(4, receita.getEmailAutor());
+                    stmtReceita.execute();
 
                     for (Ingrediente ingrediente : receita.getIngredientes()) {
                         String sqlInsertReceitaIngrediente = "INSERT INTO receita_ingrediente(id_receita, nome_ingrediente, quantidade) VALUES (?, ?, ?)";
-                        try (PreparedStatement stmtReceitaIngrediente = conn.prepareStatement(sqlInsertReceitaIngrediente)) {
+                        try {
+                            PreparedStatement stmtReceitaIngrediente = conn.prepareStatement(sqlInsertReceitaIngrediente);
                             stmtReceitaIngrediente.setInt(1, receita.getId());
                             stmtReceitaIngrediente.setString(2, ingrediente.getNome());
                             stmtReceitaIngrediente.setInt(3, ingrediente.getQuantidade());
-                            stmtReceitaIngrediente.executeUpdate();
+                            stmtReceitaIngrediente.execute();
+                        } catch (SQLException e) {
+
+                            throw new DBException(e.getMessage());
+
+                        } finally {
+
+                            DB.closeStatement(stm);
+
                         }
                     }
+
+                } catch (SQLException e) {
+
+                    throw new DBException(e.getMessage());
+
+                } finally {
+
+                    DB.closeStatement(stm);
+
                 }
             }
 
