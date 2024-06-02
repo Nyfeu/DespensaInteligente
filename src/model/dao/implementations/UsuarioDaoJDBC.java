@@ -260,7 +260,6 @@ public class UsuarioDaoJDBC implements UsuarioDao {
             while (rsDespensa.next()) {
                 Ingrediente ingrediente = new Ingrediente();
                 ingrediente.setNome(rsDespensa.getString("nome_ingrediente"));
-                System.out.println(DateParser.parseString(rsDespensa.getString("validade")));
                 ingrediente.setValidade(DateParser.parseString(rsDespensa.getString("validade")));
                 ingrediente.setQuantidade(rsDespensa.getInt("quantidade"));
                 despensa.add(ingrediente);
