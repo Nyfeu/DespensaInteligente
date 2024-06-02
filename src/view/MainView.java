@@ -3,6 +3,7 @@ package view;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
+import view.utils.IngredienteCellRenderer;
 import view.utils.viewUtils;
 
 import javax.swing.*;
@@ -26,8 +27,10 @@ public class MainView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Configuração dos componentes da interface gráfica
-        JPanel painelPrincipal = new JPanel(new GridBagLayout());
+        // Criar o JSplitPane
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5));
+        splitPane.setDividerSize(0);
 
         // Criar componentes da lista da despensa
         JPanel painelDespensa = new JPanel(new BorderLayout());
@@ -85,29 +88,13 @@ public class MainView extends JFrame {
         painelReceitas.add(scrollPaneReceitas, BorderLayout.CENTER);
         painelReceitas.add(painelReceitasButtons, BorderLayout.SOUTH);
 
-        // Colocando na View corretamente
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.5;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        painelPrincipal.add(painelDespensa, gbc);
-        gbc.gridx = 1;
-        painelPrincipal.add(painelReceitas, gbc);
-        add(titleLabel, BorderLayout.NORTH);
-        add(painelPrincipal);
-    }
+        // Adicionar os painéis ao JSplitPane
+        splitPane.setLeftComponent(painelDespensa);
+        splitPane.setRightComponent(painelReceitas);
 
-    private static class IngredienteCellRenderer extends DefaultListCellRenderer {
-        @Override
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value instanceof Ingrediente ingrediente) {
-                label.setText(ingrediente.getNome() + " | " + ingrediente.getValidade() + " | " + ingrediente.getQuantidade());
-            }
-            return label;
-        }
+        // Colocando na View corretamente
+        add(titleLabel, BorderLayout.NORTH);
+        add(splitPane);
     }
 
     private void setListaDespensaData(ArrayList<Ingrediente> ingredientes) {
