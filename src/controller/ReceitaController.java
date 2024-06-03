@@ -8,6 +8,7 @@ import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
 import view.ReceitaView;
+import view.utils.VerifyCadastro;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -45,6 +46,7 @@ public class ReceitaController {
             ReceitaDao receitaDao = DAOFactory.createReceitaDao();
             receitaDao.create(receita);
 
+            receitaView.getMainView().getMainViewController().updateReceitasList(0);
             receitaView.dispose();
         });
 
@@ -52,7 +54,13 @@ public class ReceitaController {
 
             IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
 
-            ingredienteBuilder.nome(receitaView.getTxtNome());
+            String nome = receitaView.getTxtNome();
+
+            boolean continuar = VerifyCadastro.ingrediente(nome, receitaView);
+
+            if (!continuar) return;
+
+            ingredienteBuilder.nome(nome);
             ingredienteBuilder.quantidade(Integer.parseInt(receitaView.getTxtQuantidade()));
 
             ingredientes.add(ingredienteBuilder.build());

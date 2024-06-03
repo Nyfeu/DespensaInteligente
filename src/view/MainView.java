@@ -311,4 +311,8 @@ public class MainView extends JFrame {
     }
 
     public Ingrediente getIngredienteSelected() { return listaDespensa.getSelectedValue(); }
+
+    public MainViewController getMainViewController() {
+        return mainViewController;
+    }
 }

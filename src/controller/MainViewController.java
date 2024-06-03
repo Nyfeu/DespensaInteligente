@@ -1,8 +1,6 @@
 package controller;
 
-import model.builder.IngredienteBuilder;
 import model.dao.DAOFactory;
-import model.dao.interfaces.IngredienteDao;
 import model.dao.interfaces.ReceitaDao;
 import model.dao.interfaces.UsuarioDao;
 import model.entities.Ingrediente;
@@ -15,6 +13,7 @@ import view.MainView;
 import model.utils.Authenticator;
 import view.ReceitaView;
 import view.utils.FilterListCellRenderer;
+import view.utils.VerifyCadastro;
 import view.utils.ViewUtils;
 
 import javax.swing.*;
@@ -198,29 +197,14 @@ public class MainViewController {
             gbc.gridy = 0;
             jPanel.add(new JLabel("Nome: "), gbc);
 
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            jPanel.add(new JLabel("Categoria: "), gbc);
-
             JTextField nomeTxt = new JTextField(30);
             gbc.weightx = 0.7;
             gbc.gridx = 1;
             gbc.gridy = 0;
             jPanel.add(nomeTxt, gbc);
 
-            JTextField categoriaTxt = new JTextField(30);
-            gbc.gridx = 1;
-            gbc.gridy = 1;
-            jPanel.add(categoriaTxt, gbc);
-
             int option = JOptionPane.showConfirmDialog(mainView, jPanel, "Adicionar Ingrediente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (option == JOptionPane.OK_OPTION) {
-                IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
-                IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
-                ingredienteBuilder.nome(nomeTxt.getText())
-                        .categoria(Integer.parseInt(categoriaTxt.getText()));
-                ingredienteDao.create(ingredienteBuilder.build());
-            }
+            if (option == JOptionPane.OK_OPTION) VerifyCadastro.ingrediente(nomeTxt.getText(), mainView);
 
         });
 
