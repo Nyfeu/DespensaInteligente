@@ -7,7 +7,7 @@ import model.entities.Ingrediente;
 import model.entities.Usuario;
 import model.utils.Authenticator;
 import view.IngredienteView;
-import view.utils.VerifyCadastro;
+import view.utils.Validator;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class IngredienteController {
 
                 String nome = ingredienteView.getTxtNome();
 
-                boolean continuar = VerifyCadastro.ingrediente(nome, ingredienteView);
+                boolean continuar = Validator.verifyIngrediente(nome, ingredienteView);
 
                 if (!continuar) return;
 

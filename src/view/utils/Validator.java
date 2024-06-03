@@ -9,10 +9,12 @@ import model.utils.CategoriaIngrediente;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class VerifyCadastro {
+public class Validator {
 
-    public static boolean ingrediente(String nome, Component component) {
+    public static boolean verifyIngrediente(String nome, Component component) {
 
         IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
         Ingrediente ingredienteVerify = ingredienteDao.read(nome);
@@ -57,6 +59,21 @@ public class VerifyCadastro {
             categoriaNomes.add(categoria.getNome());
         }
         return categoriaNomes;
+    }
+
+    public static boolean isValidEmail(String email) {
+
+        String EMAIL_PATTERN = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
+
+        if (email == null) {
+            return false;
+        }
+
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+
     }
 
 }

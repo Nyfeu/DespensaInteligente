@@ -13,7 +13,7 @@ import view.MainView;
 import model.utils.Authenticator;
 import view.ReceitaView;
 import view.utils.FilterListCellRenderer;
-import view.utils.VerifyCadastro;
+import view.utils.Validator;
 import view.utils.ViewUtils;
 
 import javax.swing.*;
@@ -205,7 +205,7 @@ public class MainViewController {
 
             int option = JOptionPane.showConfirmDialog(mainView, jPanel, "Adicionar Ingrediente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (option == JOptionPane.OK_OPTION) {
-                if (VerifyCadastro.ingrediente(nomeTxt.getText(), mainView)) JOptionPane.showMessageDialog(mainView,"Ingrediente já cadastrado no banco de dados.");
+                if (Validator.verifyIngrediente(nomeTxt.getText(), mainView)) JOptionPane.showMessageDialog(mainView,"Ingrediente já cadastrado no banco de dados.");
             }
 
         });

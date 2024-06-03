@@ -3,7 +3,10 @@ package controller;
 import model.utils.Authenticator;
 import view.AuthenticationView;
 import view.MainView;
+import view.utils.Validator;
 import view.utils.ViewUtils;
+
+import javax.swing.*;
 
 public class AuthenticationController {
 
@@ -50,6 +53,11 @@ public class AuthenticationController {
         if (view.getEmail().isEmpty() ||
             view.getPassword().isEmpty() ||
             view.getNome().isEmpty()) return;
+
+        if (!Validator.isValidEmail(view.getEmail())) {
+            JOptionPane.showMessageDialog(view,"Formato de email inválido!");
+            return;
+        }
 
         boolean authenticated = Authenticator.registrar(nome, email, senha);
         verifyAuthentication(authenticated);

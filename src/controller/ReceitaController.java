@@ -8,7 +8,7 @@ import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
 import view.ReceitaView;
-import view.utils.VerifyCadastro;
+import view.utils.Validator;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -56,7 +56,7 @@ public class ReceitaController {
 
             String nome = receitaView.getTxtNome();
 
-            boolean continuar = VerifyCadastro.ingrediente(nome, receitaView);
+            boolean continuar = Validator.verifyIngrediente(nome, receitaView);
 
             if (!continuar) return;
 
