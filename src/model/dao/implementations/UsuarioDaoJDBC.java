@@ -13,7 +13,6 @@ import model.utils.DateParser;
 
 
 import java.sql.*;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,7 +152,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
 
                 ingredienteBuilder.nome(rs.getString("nome_ingrediente"))
-                        .validade(DateParser.parseString(rs.getString("validade")))
+                        .validade(rs.getDate("validade"))
                         .quantidade(rs.getInt("quantidade"));
 
                 despensa.add(ingredienteBuilder.build());
@@ -165,10 +164,6 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } catch (SQLException e) {
 
             throw new DBException(e.getMessage());
-
-        } catch (ParseException e) {
-
-            throw new RuntimeException(e);
 
         } finally {
 
@@ -266,7 +261,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
                 stm = conn.prepareStatement(sqlInsert);
                 stm.setString(1, email);
                 stm.setString(2, ingrediente.getNome());
-                stm.setString(3, DateParser.parseDate(ingrediente.getValidade()));
+                stm.setString(3, DateParser.parseDateDB(ingrediente.getValidade()));
                 stm.setInt(4, ingrediente.getQuantidade());
                 stm.execute();
 

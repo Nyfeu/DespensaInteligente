@@ -13,10 +13,16 @@ public class DateParser {
         return sdf.parse(date);
 
     }
-
     public static String parseDate(Date date) {
 
         return sdf.format(date);
+
+    }
+
+    public static String parseDateDB(Date date) {
+
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf2.format(date);
 
     }
 

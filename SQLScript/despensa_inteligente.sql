@@ -14,7 +14,7 @@ create table ingrediente(
 create table despensa(
 	email VARCHAR(60) NOT NULL,
     nome_ingrediente VARCHAR(60) NOT NULL,
-    validade VARCHAR(60) NOT NULL,
+    validade DATE NOT NULL,
     quantidade SMALLINT UNSIGNED NOT NULL
 );
 create table receita(
