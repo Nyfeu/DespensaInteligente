@@ -1,5 +1,6 @@
 package model.dao.implementations;
 
+import model.builder.ReceitaBuilder;
 import model.db.DB;
 import model.db.DBException;
 import model.dao.DAOFactory;
@@ -208,12 +209,14 @@ public class ReceitaDaoJDBC implements ReceitaDao {
 
     private Receita instantiateReceita(ResultSet rs1, ResultSet rs2) throws SQLException {
 
-        Receita receita = new Receita();
-        receita.setId(rs1.getInt(1));
-        receita.setTitulo(rs1.getString(2));
-        receita.setDescricao(rs1.getString(3));
-        receita.setModoPreparo(rs1.getString(4));
-        receita.setEmailAutor(rs1.getString(5));
+        ReceitaBuilder receitaBuilder = new ReceitaBuilder(rs1.getInt(1));
+
+        receitaBuilder.titulo(rs1.getString(2))
+                .descricao(rs1.getString(3))
+                .instrucoes(rs1.getString(4))
+                .emailAutor(rs1.getString(5));
+
+        Receita receita = receitaBuilder.build();
 
         IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
         ArrayList<Ingrediente> ingredientes = new ArrayList<>();

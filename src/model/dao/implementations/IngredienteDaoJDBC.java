@@ -1,5 +1,6 @@
 package model.dao.implementations;
 
+import model.builder.IngredienteBuilder;
 import model.db.DB;
 import model.db.DBException;
 import model.dao.interfaces.IngredienteDao;
@@ -155,10 +156,12 @@ public class IngredienteDaoJDBC implements IngredienteDao {
 
     private Ingrediente instantiateIngrediente(ResultSet rs) throws SQLException {
 
-        Ingrediente ingrediente = new Ingrediente();
-        ingrediente.setNome(rs.getString(1));
-        ingrediente.setCategoria(rs.getInt(2));
-        return ingrediente;
+        IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
+
+        String nome = rs.getString(1);
+        int categoria = rs.getInt(2);
+
+        return ingredienteBuilder.nome(nome).categoria(categoria).build();
 
     }
 

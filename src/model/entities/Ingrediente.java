@@ -1,27 +1,21 @@
 package model.entities;
 
+import model.builder.IngredienteBuilder;
+
 import java.util.Date;
 
 public class Ingrediente {
 
     private String nome;
-    private int categoria;
+    private Integer categoria;
     private Date validade;
-    private int quantidade;
+    private Integer quantidade;
 
-    public Ingrediente(){
-
-    }
-
-    public Ingrediente(String nome) {
-        this.nome = nome;
-    }
-
-    public Ingrediente(String nome, int categoria, Date validade, int quantidade) {
-        this.nome = nome;
-        this.categoria = categoria;
-        this.validade = validade;
-        this.quantidade = quantidade;
+    public Ingrediente(IngredienteBuilder ingredienteBuilder) {
+        this.nome = ingredienteBuilder.getNome();
+        this.categoria = ingredienteBuilder.getCategoria();
+        this.validade = ingredienteBuilder.getValidade();
+        this.quantidade = ingredienteBuilder.getQuantidade();
     }
 
     public String getNome() {

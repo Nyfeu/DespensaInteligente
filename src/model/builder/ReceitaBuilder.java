@@ -6,6 +6,8 @@ import model.entities.Receita;
 import java.util.List;
 
 public class ReceitaBuilder {
+
+    private int id;
     private String titulo;
     private String descricao;
     private List<Ingrediente> ingredientes;
@@ -13,8 +15,12 @@ public class ReceitaBuilder {
     private Double tempoPreparo;
     private String emailAutor;
 
-    public ReceitaBuilder(String titulo) {
-        this.titulo = titulo;
+    public ReceitaBuilder(int id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Double getTempoPreparo() {
@@ -39,6 +45,16 @@ public class ReceitaBuilder {
 
     public String getEmailAutor() {
         return emailAutor;
+    }
+
+    public ReceitaBuilder id(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public ReceitaBuilder titulo(String titulo) {
+        this.titulo = titulo;
+        return this;
     }
 
     public ReceitaBuilder descricao(String descricao) {

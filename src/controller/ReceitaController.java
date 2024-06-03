@@ -1,12 +1,11 @@
 package controller;
 
+import model.builder.IngredienteBuilder;
 import model.entities.Ingrediente;
-import model.utils.DateParser;
 import view.ReceitaView;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ReceitaController {
@@ -43,15 +42,18 @@ public class ReceitaController {
 
             ArrayList<Ingrediente> ingredientes = new ArrayList<>();
 
-            try {
-                Ingrediente ingrediente = new Ingrediente("Teste1", 1, DateParser.parseString("02/06/2024"), 2);
-                ingredientes.add(ingrediente);
-                ingrediente = new Ingrediente("Teste2", 2, DateParser.parseString("02/06/2024"), 3);
-                ingredientes.add(ingrediente);
-                receitaView.setListaIngredientesData(ingredientes);
-            } catch (ParseException ex) {
-                throw new RuntimeException(ex);
-            }
+            IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
+
+            ingredienteBuilder.nome("Teste1");
+            ingredienteBuilder.quantidade(2);
+
+            ingredientes.add(ingredienteBuilder.build());
+
+            ingredienteBuilder.nome("Teste2");
+
+            ingredientes.add(ingredienteBuilder.build());
+
+            receitaView.setListaIngredientesData(ingredientes);
 
         });
 

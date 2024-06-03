@@ -12,14 +12,11 @@ public class Receita implements Filterable {
     private List<Ingrediente> ingredientes;
     private String modoPreparo;
     private Double tempoPreparo;
-    private int id;
+    private Integer id;
     private String emailAutor;
 
-    public Receita(){
-        this.ingredientes = new ArrayList<>();
-    }
-
     public Receita(ReceitaBuilder receitaBuilder) {
+        this.id = receitaBuilder.getId();
         this.titulo = receitaBuilder.getTitulo();
         this.descricao = receitaBuilder.getDescricao();
         this.ingredientes = receitaBuilder.getIngredientes();
@@ -27,8 +24,6 @@ public class Receita implements Filterable {
         this.tempoPreparo = receitaBuilder.getTempoPreparo();
         this.emailAutor = receitaBuilder.getEmailAutor();
     }
-
-
 
     public String getTitulo() {
         return titulo;

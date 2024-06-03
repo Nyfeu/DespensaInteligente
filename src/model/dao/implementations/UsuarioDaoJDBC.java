@@ -1,6 +1,8 @@
 package model.dao.implementations;
 
 
+import model.builder.IngredienteBuilder;
+import model.builder.ReceitaBuilder;
 import model.dao.interfaces.UsuarioDao;
 import model.db.DB;
 import model.db.DBException;
@@ -105,13 +107,14 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             while (rs.next()) {
 
-                Receita receita = new Receita();
-                receita.setId(rs.getInt("id"));
-                receita.setTitulo(rs.getString("titulo"));
-                receita.setDescricao(rs.getString("descricao"));
-                receita.setModoPreparo(rs.getString("modo_preparo"));
-                receita.setEmailAutor(rs.getString("email_usuario"));
-                receitasPublicadas.add(receita);
+                ReceitaBuilder receitaBuilder = new ReceitaBuilder(rs.getInt("id"));
+
+                receitaBuilder.titulo(rs.getString("titulo"))
+                        .descricao(rs.getString("descricao"))
+                        .instrucoes(rs.getString("modo_preparo"))
+                        .emailAutor(rs.getString("email_usuario"));
+
+                receitasPublicadas.add(receitaBuilder.build());
 
             }
 
@@ -147,11 +150,13 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             while (rs.next()) {
 
-                Ingrediente ingrediente = new Ingrediente();
-                ingrediente.setNome(rs.getString("nome_ingrediente"));
-                ingrediente.setValidade(DateParser.parseString(rs.getString("validade")));
-                ingrediente.setQuantidade(rs.getInt("quantidade"));
-                despensa.add(ingrediente);
+                IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
+
+                ingredienteBuilder.nome(rs.getString("nome_ingrediente"))
+                        .validade(DateParser.parseString(rs.getString("validade")))
+                        .quantidade(rs.getInt("quantidade"));
+
+                despensa.add(ingredienteBuilder.build());
 
             }
 
