@@ -7,6 +7,7 @@ import model.entities.Ingrediente;
 import model.entities.Usuario;
 import model.utils.Authenticator;
 import view.IngredienteView;
+import view.utils.VerifyCadastro;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -32,6 +33,11 @@ public class IngredienteController {
             ingredienteView.addAdicionarButtonActionListener(e -> {
 
                 String nome = ingredienteView.getTxtNome();
+
+                boolean continuar = VerifyCadastro.ingrediente(nome, ingredienteView);
+
+                if (!continuar) return;
+
                 int quantidade = ingredienteView.getQuantidade();
 
                 try {
