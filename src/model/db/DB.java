@@ -62,7 +62,7 @@ public class DB {
         try {
 
             if (conn != null) conn.close();
-
+            System.out.println("Conexão com banco de dados fechada.");
 
         } catch (SQLException e) {
 
