@@ -27,7 +27,8 @@ INSERT INTO ingrediente (nome, categoria) VALUES
 ('Batata', 6),
 ('Frango', 7),
 ('Maçã', 8),
-('Pão', 1);
+('Pão', 1),
+('Água', 3);
 
 -- Inserir itens na despensa
 INSERT INTO despensa (email, nome_ingrediente, validade, quantidade) VALUES

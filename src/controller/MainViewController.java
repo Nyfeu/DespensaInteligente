@@ -1,6 +1,8 @@
 package controller;
 
+import model.builder.IngredienteBuilder;
 import model.dao.DAOFactory;
+import model.dao.interfaces.IngredienteDao;
 import model.dao.interfaces.ReceitaDao;
 import model.dao.interfaces.UsuarioDao;
 import model.entities.Ingrediente;
@@ -16,6 +18,7 @@ import view.utils.FilterListCellRenderer;
 import view.utils.ViewUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -181,6 +184,42 @@ public class MainViewController {
 
                 System.out.println(exception.getMessage());
 
+            }
+
+        });
+
+        mainView.addIngredientePadrao(e -> {
+
+            JPanel jPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+
+            gbc.weightx = 0.3;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            jPanel.add(new JLabel("Nome: "), gbc);
+
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            jPanel.add(new JLabel("Categoria: "), gbc);
+
+            JTextField nomeTxt = new JTextField(30);
+            gbc.weightx = 0.7;
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            jPanel.add(nomeTxt, gbc);
+
+            JTextField categoriaTxt = new JTextField(30);
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            jPanel.add(categoriaTxt, gbc);
+
+            int option = JOptionPane.showConfirmDialog(mainView, jPanel, "Adicionar Ingrediente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (option == JOptionPane.OK_OPTION) {
+                IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
+                IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
+                ingredienteBuilder.nome(nomeTxt.getText())
+                        .categoria(Integer.parseInt(categoriaTxt.getText()));
+                ingredienteDao.create(ingredienteBuilder.build());
             }
 
         });
