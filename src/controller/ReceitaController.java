@@ -1,7 +1,12 @@
 package controller;
 
 import model.builder.IngredienteBuilder;
+import model.builder.ReceitaBuilder;
+import model.dao.DAOFactory;
+import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
+import model.entities.Receita;
+import model.utils.Authenticator;
 import view.ReceitaView;
 
 import java.awt.event.FocusEvent;
@@ -11,9 +16,11 @@ import java.util.ArrayList;
 public class ReceitaController {
 
     private ReceitaView receitaView;
+    private ArrayList<Ingrediente> ingredientes;
 
     public ReceitaController(ReceitaView receitaView) {
         this.receitaView = receitaView;
+        this.ingredientes = new ArrayList<>();
         initButtonListeners();
     }
 
@@ -23,37 +30,37 @@ public class ReceitaController {
 
         receitaView.addPublicarButtonActionListener(e -> {
 
-            /* ----------------------------------------------
+            ReceitaBuilder receitaBuilder = new ReceitaBuilder();
 
-                Modificar lógica para publicação de receita!
+            receitaBuilder.titulo(receitaView.getTxtTitulo())
+                    .descricao(receitaView.getTxtDescricao())
+                    .instrucoes(receitaView.getTxtModoPreparo())
+                    .tempoPreparo(0.0)
+                    .ingredientes(ingredientes)
+                    .emailAutor(Authenticator.getAuthenticatedUser().getEmail());
 
-            ----------------------------------------------- */
+            Receita receita = receitaBuilder.build();
+
+
+            ReceitaDao receitaDao = DAOFactory.createReceitaDao();
+            receitaDao.create(receita);
 
             receitaView.dispose();
         });
 
         receitaView.addAdicionarButtonActionListener(e -> {
 
-            /* ----------------------------------------------
-
-                Modificar lógica de adição de ingredientes!
-
-            ----------------------------------------------- */
-
-            ArrayList<Ingrediente> ingredientes = new ArrayList<>();
-
             IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
 
-            ingredienteBuilder.nome("Teste1");
-            ingredienteBuilder.quantidade(2);
-
-            ingredientes.add(ingredienteBuilder.build());
-
-            ingredienteBuilder.nome("Teste2");
+            ingredienteBuilder.nome(receitaView.getTxtNome());
+            ingredienteBuilder.quantidade(Integer.parseInt(receitaView.getTxtQuantidade()));
 
             ingredientes.add(ingredienteBuilder.build());
 
             receitaView.setListaIngredientesData(ingredientes);
+
+            receitaView.setTxtNome("Nome do ingrediente");
+            receitaView.setTxtQuantidade("Quantidade");
 
         });
 

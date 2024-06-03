@@ -160,6 +160,9 @@ public class ReceitaView extends JDialog {
     public String getTxtQuantidade() {
         return txtQuantidade.getText();
     }
+    public String getTxtModoPreparo(){
+        return txtModoPreparo.getText();
+    }
     public void setTxtNome(String text) {
         txtNome.setText(text);
     }

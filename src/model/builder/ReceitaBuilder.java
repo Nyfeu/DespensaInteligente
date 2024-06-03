@@ -15,6 +15,9 @@ public class ReceitaBuilder {
     private Double tempoPreparo;
     private String emailAutor;
 
+
+    public ReceitaBuilder() {
+    }
     public ReceitaBuilder(int id) {
         this.id = id;
     }

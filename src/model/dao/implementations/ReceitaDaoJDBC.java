@@ -11,10 +11,7 @@ import model.entities.Receita;
 import model.strategies.FilterStrategy;
 import model.strategies.Filterable;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,26 +26,31 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public void create(Receita receita) {
 
-        String sqlInsert = "INSERT INTO RECEITA(id, titulo, descricao, modo_preparo, email_usuario) VALUES(?,?,?,?,?)";
+        String sqlInsert = "INSERT INTO RECEITA(titulo, descricao, modo_preparo, email_usuario) VALUES(?,?,?,?)";
 
         PreparedStatement stm = null;
+        ResultSet rs = null;
         try{
 
-            stm = conn.prepareStatement(sqlInsert);
-            stm.setInt(1, receita.getId());
-            stm.setString(2, receita.getTitulo());
-            stm.setString(3, receita.getDescricao());
-            stm.setString(4, receita.getModoPreparo());
-            stm.setString(5, receita.getEmailAutor());
-            stm.execute();
+            stm = conn.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            stm.setString(1, receita.getTitulo());
+            stm.setString(2, receita.getDescricao());
+            stm.setString(3, receita.getModoPreparo());
+            stm.setString(4, receita.getEmailAutor());
+            stm.executeUpdate();
 
-            stm = conn.prepareStatement("INSERT INTO receita_ingrediente(id_receita, nome_ingrediente, quantidade) VALUES (?,?,?)");
+            rs = stm.getGeneratedKeys();
+            if(rs.next()) {
+                int idGerado = rs.getInt(1);
 
-            for (Ingrediente ingrediente : receita.getIngredientes()) {
-                stm.setInt(1, receita.getId());
-                stm.setString(2, ingrediente.getNome());
-                stm.setInt(3, ingrediente.getQuantidade());
-                stm.execute();
+                stm = conn.prepareStatement("INSERT INTO receita_ingrediente(id_receita, nome_ingrediente, quantidade) VALUES (?,?,?)");
+
+                for (Ingrediente ingrediente : receita.getIngredientes()) {
+                    stm.setInt(1, idGerado);
+                    stm.setString(2, ingrediente.getNome());
+                    stm.setInt(3, ingrediente.getQuantidade());
+                    stm.execute();
+                }
             }
 
         } catch (SQLException e) {
@@ -58,7 +60,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         } finally {
 
             DB.closeStatement(stm);
-
+            DB.closeResultSet(rs);
         }
 
     }
