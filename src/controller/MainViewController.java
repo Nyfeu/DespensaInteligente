@@ -204,7 +204,9 @@ public class MainViewController {
             jPanel.add(nomeTxt, gbc);
 
             int option = JOptionPane.showConfirmDialog(mainView, jPanel, "Adicionar Ingrediente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (option == JOptionPane.OK_OPTION) VerifyCadastro.ingrediente(nomeTxt.getText(), mainView);
+            if (option == JOptionPane.OK_OPTION) {
+                if (VerifyCadastro.ingrediente(nomeTxt.getText(), mainView)) JOptionPane.showMessageDialog(mainView,"Ingrediente já cadastrado no banco de dados.");
+            }
 
         });
 
