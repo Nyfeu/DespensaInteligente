@@ -39,29 +39,52 @@ public class IngredienteController {
                 if (!continuar) return;
 
                 int quantidade = ingredienteView.getQuantidade();
-
+                Date dataValidade;
                 try {
-
-                    Date dataValidade = ingredienteView.getData();
-
-                    IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
-                    ingredienteBuilder.nome(nome).validade(dataValidade).quantidade(quantidade);
-                    Ingrediente ingrediente = ingredienteBuilder.build();
-
-                    Authenticator.getAuthenticatedUser().addIngredienteDespensa(ingrediente);
-                    UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-                    Usuario usuario = Authenticator.getAuthenticatedUser();
-                    usuarioDao.update(usuario);
-
-                    ArrayList<Ingrediente> novaDespensa = Authenticator.getAuthenticatedUser().getDespensa();
-                    ingredienteView.getMainView().setListaDespensaData(novaDespensa);
-                    ingredienteView.dispose();
-
+                    dataValidade = ingredienteView.getData();
                 } catch (ParseException ex) {
-
                     throw new RuntimeException(ex);
+                }
+
+                UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+                Usuario usuario = Authenticator.getAuthenticatedUser();
+                ArrayList<Ingrediente> novaDespensa = usuario.getDespensa();
+
+                IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
+
+                ingredienteBuilder.nome(nome)
+                        .validade(dataValidade)
+                        .quantidade(quantidade);
+
+                Ingrediente ingrediente = ingredienteBuilder.build();
+
+                ArrayList<String> ingredientesNome = new ArrayList<>();
+                for (Ingrediente ingred : novaDespensa) ingredientesNome.add(ingred.getNome());
+
+                int index = ingredientesNome.indexOf(nome);
+
+                if (index == -1) {
+
+                        Authenticator.getAuthenticatedUser().addIngredienteDespensa(ingrediente);
+                        usuarioDao.update(usuario);
+
+                } else {
+
+                        Ingrediente ingredienteEncontrado = novaDespensa.get(index);
+
+                        int novaQuantidade = ingredienteEncontrado.getQuantidade() + ingrediente.getQuantidade();
+                        ingredienteEncontrado.setQuantidade(novaQuantidade);
+
+                        Date validade = dataValidade.before(ingredienteEncontrado.getValidade()) ? dataValidade : ingredienteEncontrado.getValidade();
+                        ingredienteEncontrado.setValidade(validade);
+
+                        usuario.setDespensa(novaDespensa);
+                        usuarioDao.update(usuario);
 
                 }
+
+                ingredienteView.getMainView().setListaDespensaData(novaDespensa);
+                ingredienteView.dispose();
 
             });
 
