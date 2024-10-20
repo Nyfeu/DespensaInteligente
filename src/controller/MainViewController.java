@@ -106,12 +106,12 @@ public class MainViewController {
         });
 
         mainView.addAddIngredienteButtonListener(e -> {
-            IngredienteView dialog = new IngredienteView(mainView, null);
+            IngredienteView dialog = new IngredienteView(mainView, null,AuthenticationView.getResourceBundle());
             dialog.setVisible(true);
         });
 
         mainView.addPublishReceitaButtonListener(e -> {
-            ReceitaView dialog = new ReceitaView(mainView);
+            ReceitaView dialog = new ReceitaView(mainView, AuthenticationView.getResourceBundle());
             dialog.setVisible(true);
         });
 
@@ -121,7 +121,7 @@ public class MainViewController {
             if (ingrediente == null) {
                 JOptionPane.showMessageDialog(mainView, "Nenhum ingrediente foi selecionado!", "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
             } else {
-                IngredienteView dialog = new IngredienteView(mainView, ingrediente);
+                IngredienteView dialog = new IngredienteView(mainView, ingrediente,AuthenticationView.getResourceBundle());
                 dialog.setVisible(true);
             }
         });

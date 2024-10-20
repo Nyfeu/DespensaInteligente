@@ -6,6 +6,10 @@ import view.utils.ViewUtils;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class AuthenticationView extends JFrame {
     private JPanel cardPanel;
@@ -14,6 +18,12 @@ public class AuthenticationView extends JFrame {
     private JPasswordField password1, password2;
     private JButton submit;
     private boolean isLogin = false;
+    private JLabel email_login, password_login,titulo_login;
+    private JLabel email_registro, password_registro,nome_registro, titulo_registro;
+    private JButton botao_login, botao_registro;
+    private JMenu alteralinguagem;
+    private static ResourceBundle bn;
+    private Locale idiomaSelecionado;
 
     public AuthenticationView() {
         // Configurações da janela
@@ -25,6 +35,22 @@ public class AuthenticationView extends JFrame {
         // Inicializa o CardLayout e o painel de cartões
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
+
+        alteralinguagem = new JMenu("Linguagem");
+        JMenuItem port = new JMenuItem("Português");
+        JMenuItem eng = new JMenuItem("English");
+        JMenuItem ita = new JMenuItem("Italiano");
+        JMenuItem esp = new JMenuItem("Español");
+        JMenuItem fra = new JMenuItem("Français");
+        alteralinguagem.add(port);
+        alteralinguagem.add(eng);
+        alteralinguagem.add(ita);
+        alteralinguagem.add(esp);
+        alteralinguagem.add(fra);
+
+        JMenuBar barra = new JMenuBar();
+        setJMenuBar(barra);
+        barra.add(alteralinguagem);
 
         // Cria textFields e passwordField
         nome = new JTextField(30);
@@ -46,32 +72,70 @@ public class AuthenticationView extends JFrame {
 
         // Cria e adiciona os botões de navegação
         JPanel buttonPanel = new JPanel();
-        JButton button1 = new JButton("Registrar-se");
-        JButton button2 = new JButton("Login");
+        botao_registro = new JButton("Registrar-se");
+        botao_login = new JButton("Login");
         submit = new JButton("Submeter!");
 
-        ViewUtils.configureButton(button1);
-        ViewUtils.configureButton(button2);
+        ViewUtils.configureButton(botao_registro);
+        ViewUtils.configureButton(botao_login);
         ViewUtils.configureButton(submit);
 
         buttonPanel.setBackground(Color.GRAY);
         buttonPanel.setBorder(new EmptyBorder(5, 0, 5, 0));
 
-        button1.addActionListener(e -> switchPanel("Registrar-se"));
-        button2.addActionListener(e -> switchPanel("Login"));
+        botao_registro.addActionListener(e -> switchPanel("Registrar-se"));
+        botao_login.addActionListener(e -> switchPanel("Login"));
 
-        buttonPanel.add(button1);
-        buttonPanel.add(button2);
+        buttonPanel.add(botao_registro);
+        buttonPanel.add(botao_login);
         buttonPanel.add(submit);
 
         add(buttonPanel, BorderLayout.SOUTH);
         AuthenticationController controller = new AuthenticationController(this);
+
+        atualizarIdioma(new Locale("pt", "BR"));
+        port.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarIdioma(new Locale("pt", "BR"));
+            }
+        });
+
+        eng.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarIdioma(Locale.US);
+            }
+        });
+
+        ita.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarIdioma(new Locale("it", "IT"));
+            }
+        });
+
+        fra.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarIdioma(new Locale("fr", "FR"));
+            }
+        });
+
+        esp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarIdioma(new Locale("es", "ES"));
+            }
+        });
+
+
     }
 
     private JPanel createRegistrationPanel() {
 
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = ViewUtils.createTitleLabel("Registro");
+        titulo_registro = ViewUtils.createTitleLabel("Registro");
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -81,11 +145,14 @@ public class AuthenticationView extends JFrame {
         // Adiciona os componentes ao painel com o GridBagLayout
         gbc.gridx = 0;
         gbc.gridy = 0;
-        formPanel.add(new JLabel("Nome:"), gbc);
+        nome_registro = new JLabel("Nome:");
+        formPanel.add(nome_registro, gbc);
         gbc.gridy++;
-        formPanel.add(new JLabel("Email:"), gbc);
+        email_registro = new JLabel("Email:");
+        formPanel.add(email_registro, gbc);
         gbc.gridy++;
-        formPanel.add(new JLabel("Senha:"), gbc);
+        password_registro = new JLabel("Senha:");
+        formPanel.add(password_registro, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -95,7 +162,7 @@ public class AuthenticationView extends JFrame {
         gbc.gridy++;
         formPanel.add(password1, gbc);
 
-        panel.add(label, BorderLayout.NORTH);
+        panel.add(titulo_registro, BorderLayout.NORTH);
         panel.add(formPanel, BorderLayout.CENTER);
         return panel;
 
@@ -104,7 +171,7 @@ public class AuthenticationView extends JFrame {
     private JPanel createLoginPanel() {
 
         JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = ViewUtils.createTitleLabel("Login");
+        titulo_login = ViewUtils.createTitleLabel("Login");
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -114,9 +181,11 @@ public class AuthenticationView extends JFrame {
         // Adiciona os componentes ao painel com o GridBagLayout
         gbc.gridx = 0;
         gbc.gridy = 0;
-        formPanel.add(new JLabel("Email:"), gbc);
+        email_login = new JLabel("Email:");
+        password_login = new JLabel("Senha:");
+        formPanel.add(email_login, gbc);
         gbc.gridy++;
-        formPanel.add(new JLabel("Senha:"), gbc);
+        formPanel.add(password_login, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -124,7 +193,7 @@ public class AuthenticationView extends JFrame {
         gbc.gridy++;
         formPanel.add(password2, gbc);
 
-        panel.add(label, BorderLayout.NORTH);
+        panel.add(titulo_login, BorderLayout.NORTH);
         panel.add(formPanel, BorderLayout.CENTER);
         return panel;
     }
@@ -138,12 +207,12 @@ public class AuthenticationView extends JFrame {
         return nome.getText();
     }
 
-    public String getPassword() {
+    public String getPassword_login() {
         if (isLogin) return String.valueOf(password2.getPassword());
         return String.valueOf(password1.getPassword());
     }
 
-    public String getEmail() {
+    public String getEmail_login() {
         if (isLogin) return email2.getText();
         return email1.getText();
     }
@@ -154,6 +223,29 @@ public class AuthenticationView extends JFrame {
 
     public boolean isLogin() {
         return isLogin;
+    }
+
+    public static ResourceBundle getResourceBundle() {
+        return bn;
+    }
+
+    private void atualizarIdioma(Locale locale) {
+        bn = ResourceBundle.getBundle("DespensaInteligente", locale);
+        idiomaSelecionado = locale;
+
+        setTitle(bn.getString("autenticacao.titulo"));
+        submit.setText(bn.getString("autenticacao.botao.submeter"));
+        email_login.setText(bn.getString("autenticacao.login.email"));
+        password_login.setText(bn.getString("autenticacao.login.senha"));
+        titulo_login.setText(bn.getString("autenticacao.login.label.titulo"));
+        password_registro.setText(bn.getString("autenticacao.registro.senha"));
+        nome_registro.setText(bn.getString("autenticacao.registro.nome"));
+        email_registro.setText(bn.getString("autenticacao.registro.email"));
+        titulo_registro.setText(bn.getString("autenticacao.registro.label.titulo"));
+        botao_registro.setText(bn.getString("autenticacao.botao.registro"));
+        botao_login.setText(bn.getString("autenticacao.botao.login"));
+        revalidate();
+        repaint();
     }
 
     public static void main(String[] args) {

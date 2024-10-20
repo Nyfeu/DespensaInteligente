@@ -1,19 +1,23 @@
 package view.utils;
 
+import controller.ReceitaController;
 import model.entities.Ingrediente;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.util.ResourceBundle;
 
 public class IngredienteReceitaCellRenderer extends JPanel implements ListCellRenderer<Ingrediente> {
 
     private JLabel lblNome;
     private JLabel lblQuantidade;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private ResourceBundle bn;
 
-    public IngredienteReceitaCellRenderer() {
+    public IngredienteReceitaCellRenderer(ResourceBundle bn) {
+        this.bn = bn;
         setLayout(new BorderLayout(5, 5));
         lblNome = new JLabel();
         lblQuantidade = new JLabel();

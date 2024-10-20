@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class MainView extends JFrame {
 
@@ -23,9 +24,12 @@ public class MainView extends JFrame {
     private MainViewController mainViewController;
     private JComboBox<String> dropdown;
     private JMenuItem logout, alterarSenhaItem, sobreItem, alterarDadosItem, addIngredientePadrao;
+    private ResourceBundle bn;
 
-    public MainView() {
+    private JLabel titulo_mainView, sua_despensa;
 
+    public MainView(ResourceBundle bn) {
+        this.bn = bn;
         initComponents();
         configureMainView();
         addComponentsToPane();
@@ -44,15 +48,15 @@ public class MainView extends JFrame {
         SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5));
 
         // Adicionar componentes ao frame principal
-        JLabel titleLabel = ViewUtils.createTitleLabel("Despensa Inteligente");
-        add(titleLabel, BorderLayout.NORTH);
+        titulo_mainView = ViewUtils.createTitleLabel(bn.getString("main.label.titulo"));
+        add(titulo_mainView, BorderLayout.NORTH);
         add(splitPane);
     }
 
     private JPanel createDespensaPanel() {
         JPanel painelDespensa = new JPanel(new BorderLayout());
         JScrollPane scrollPaneDespensa = new JScrollPane(listaDespensa);
-        JLabel suaDespensa = createLabel("Sua Despensa");
+        sua_despensa = createLabel(bn.getString("main.despensa.titulo"));
 
         JPanel painelDespensaButtons = new JPanel(new FlowLayout());
         painelDespensaButtons.setBackground(Color.GRAY);
@@ -61,7 +65,7 @@ public class MainView extends JFrame {
         painelDespensaButtons.add(updateIngrediente);
 
         painelDespensa.setBorder(new EmptyBorder(10, 10, 10, 5));
-        painelDespensa.add(suaDespensa, BorderLayout.NORTH);
+        painelDespensa.add(sua_despensa, BorderLayout.NORTH);
         painelDespensa.add(scrollPaneDespensa, BorderLayout.CENTER);
         painelDespensa.add(painelDespensaButtons, BorderLayout.SOUTH);
 
@@ -94,7 +98,7 @@ public class MainView extends JFrame {
     private JPanel createFilterOptionsPanel() {
         JPanel filterOptionsPanel = new JPanel();
         filterOptionsPanel.setBackground(Color.GRAY);
-        String[] options = {"Autor", "Nome"};
+        String[] options = {bn.getString("main.receita.autor"), bn.getString("main.receita.nome")};
         dropdown = new JComboBox<>(options);
         dropdown.setBackground(Color.white);
         dropdown.setFocusable(false);
@@ -113,8 +117,8 @@ public class MainView extends JFrame {
     private void configureMainView() {
 
         // Configurações gerais
-        setTitle("Despensa Inteligente");
-        JLabel titleLabel = ViewUtils.createTitleLabel("Despensa Inteligente");
+        setTitle(bn.getString("main.titulo"));
+        JLabel titleLabel = ViewUtils.createTitleLabel(bn.getString("main.label.titulo"));
         setSize(1000, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -128,18 +132,18 @@ public class MainView extends JFrame {
         listaDespensa = new JList<>();
         listaReceitas = new JList<>();
         txtFiltro = new JTextField(20);
-        addIngrediente = new JButton("Adicionar");
-        removeIngrediente = new JButton("Remover");
-        filterByIngrediente = new JButton("Filtrar Receitas");
-        filterReceita = new JButton("Buscar!");
-        publishReceita = new JButton("Publicar!");
+        addIngrediente = new JButton(bn.getString("main.despensa.botao.adicionar"));
+        removeIngrediente = new JButton(bn.getString("main.despensa.botao.remover"));
+        filterByIngrediente = new JButton(bn.getString("main.receita.botao.filtrarreceitas"));
+        filterReceita = new JButton(bn.getString("main.receita.botao.buscar"));
+        publishReceita = new JButton(bn.getString("main.receita.botao.publicar"));
         leftBtn = new JButton("<");
         rightBtn = new JButton(">");
-        clearBtn = new JButton("Limpar");
-        updateIngrediente = new JButton("Atualizar");
+        clearBtn = new JButton(bn.getString("main.receita.botao.limpar"));
+        updateIngrediente = new JButton(bn.getString("main.despensa.botao.atualizar"));
 
         // Configurar componentes
-        listaDespensa.setCellRenderer(new IngredienteCellRenderer());
+        listaDespensa.setCellRenderer(new IngredienteCellRenderer(AuthenticationView.getResourceBundle()));
         listaReceitas.setCellRenderer(new ReceitaCellRenderer());
 
         // Adicionando JMenuBar
@@ -157,42 +161,42 @@ public class MainView extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         // Menu "Edit"
-        JMenu editMenu = new JMenu("Edit");
+        JMenu editMenu = new JMenu(bn.getString("main.menu.edit"));
 
-        JMenuItem preferenciasItem = new JMenuItem("Preferências");
-        addIngredientePadrao = new JMenuItem("Adicionar Ingrediente");
+        JMenuItem preferenciasItem = new JMenuItem(bn.getString("main.menu.edit.preferencias"));
+        addIngredientePadrao = new JMenuItem(bn.getString("main.menu.edit.adicionaringrediente"));
 
         editMenu.add(preferenciasItem);
         editMenu.add(addIngredientePadrao);
 
         // Menu "Tools"
-        JMenu toolsMenu = new JMenu("Tools");
+        JMenu toolsMenu = new JMenu(bn.getString("main.menu.tools"));
 
-        JMenuItem calculadoraMedidasItem = new JMenuItem("Calculadora de Medidas");
-        JMenuItem planejadorRefeicoesItem = new JMenuItem("Planejador de Refeições");
-        JMenuItem listaComprasItem = new JMenuItem("Lista de Compras");
+        JMenuItem calculadoraMedidasItem = new JMenuItem(bn.getString("main.menu.tools.calculadorademedidas"));
+        JMenuItem planejadorRefeicoesItem = new JMenuItem(bn.getString("main.menu.tools.planejadorderefeicoes"));
+        JMenuItem listaComprasItem = new JMenuItem(bn.getString("main.menu.tools.listadecompras"));
 
         toolsMenu.add(calculadoraMedidasItem);
         toolsMenu.add(planejadorRefeicoesItem);
         toolsMenu.add(listaComprasItem);
 
         // Menu "Help"
-        JMenu helpMenu = new JMenu("Help");
+        JMenu helpMenu = new JMenu(bn.getString("main.menu.help"));
 
-        JMenuItem documentacaoItem = new JMenuItem("Documentação");
-        JMenuItem suporteItem = new JMenuItem("Suporte");
-        sobreItem = new JMenuItem("Sobre");
+        JMenuItem documentacaoItem = new JMenuItem(bn.getString("main.menu.help.documentacao"));
+        JMenuItem suporteItem = new JMenuItem(bn.getString("main.menu.help.suporte"));
+        sobreItem = new JMenuItem(bn.getString("main.menu.help.sobre"));
 
         helpMenu.add(documentacaoItem);
         helpMenu.add(suporteItem);
         helpMenu.add(sobreItem);
 
         // Menu "Account"
-        JMenu accountMenu = new JMenu("Account");
+        JMenu accountMenu = new JMenu(bn.getString("main.menu.account"));
 
-        alterarSenhaItem = new JMenuItem("Alterar Senha");
-        alterarDadosItem = new JMenuItem("Alterar Dados");
-        logout = new JMenuItem("Logout");
+        alterarSenhaItem = new JMenuItem(bn.getString("main.menu.account.alterarsenha"));
+        alterarDadosItem = new JMenuItem(bn.getString("main.menu.account.alterardados"));
+        logout = new JMenuItem(bn.getString("main.menu.account.logout"));
 
         accountMenu.add(alterarSenhaItem);
         accountMenu.add(alterarDadosItem);

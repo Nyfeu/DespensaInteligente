@@ -7,6 +7,8 @@ import view.utils.Validator;
 import view.utils.ViewUtils;
 
 import javax.swing.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class AuthenticationController {
 
@@ -30,10 +32,10 @@ public class AuthenticationController {
 
     private void login() {
 
-        String email = view.getEmail();
-        String senha = view.getPassword();
+        String email = view.getEmail_login();
+        String senha = view.getPassword_login();
 
-        if (view.getEmail().isEmpty() || view.getPassword().isEmpty()) return;
+        if (view.getEmail_login().isEmpty() || view.getPassword_login().isEmpty()) return;
 
         boolean authenticated = Authenticator.login(email, senha, view);
         verifyAuthentication(authenticated);
@@ -43,18 +45,18 @@ public class AuthenticationController {
     private void register() {
 
         String nome = view.getNome();
-        String email = view.getEmail();
-        String senha = view.getPassword();
+        String email = view.getEmail_login();
+        String senha = view.getPassword_login();
 
-        System.out.println(view.getEmail());
+        System.out.println(view.getEmail_login());
         System.out.println(view.getNome());
-        System.out.println(view.getPassword());
+        System.out.println(view.getPassword_login());
 
-        if (view.getEmail().isEmpty() ||
-            view.getPassword().isEmpty() ||
+        if (view.getEmail_login().isEmpty() ||
+            view.getPassword_login().isEmpty() ||
             view.getNome().isEmpty()) return;
 
-        if (!Validator.isValidEmail(view.getEmail())) {
+        if (!Validator.isValidEmail(view.getEmail_login())) {
             JOptionPane.showMessageDialog(view,"Formato de email inválido!");
             return;
         }
@@ -68,7 +70,7 @@ public class AuthenticationController {
         if (authenticated) {
             System.out.println("Usuário Autenticado!");
             ViewUtils.closeView(view);
-            new MainView().setVisible(true);
+            new MainView(AuthenticationView.getResourceBundle()).setVisible(true);
         } else {
             System.out.println("Falha na autenticação...");
         }

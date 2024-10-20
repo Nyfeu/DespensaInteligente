@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class ReceitaView extends JDialog {
 
@@ -20,15 +21,16 @@ public class ReceitaView extends JDialog {
     private MainView mainView;
     private ReceitaController receitaController;
     private JList<Ingrediente> listaIngredientes;
+    private ResourceBundle bn;
 
-    public ReceitaView(MainView mainView) {
-        super(mainView, "Adicionar Receita", true);
+    public ReceitaView(MainView mainView, ResourceBundle bn) {
+        super(mainView, bn.getString("main.receita.botao.publicar.titulo"), true);
         this.mainView = mainView;
-        initComponents();
+        initComponents(bn);
         setLocationRelativeTo(mainView);
     }
 
-    private void initComponents() {
+    private void initComponents(ResourceBundle bn) {
 
         // Painéis
         JPanel panelPrincipal = new JPanel(new BorderLayout());
@@ -41,10 +43,10 @@ public class ReceitaView extends JDialog {
         // Painel Receita
         GridBagConstraints gbcReceita = new GridBagConstraints();
         gbcReceita.insets = new Insets(5, 5, 5, 5);
-        JLabel lblPublish = ViewUtils.createTitleLabel("Publicar Receita");
-        JLabel lblTitulo = new JLabel("Título:");
-        JLabel lblDescricao = new JLabel("Descrição:");
-        JLabel lblModoPreparo = new JLabel("Modo Preparo:");
+        JLabel lblPublish = ViewUtils.createTitleLabel(bn.getString("main.receita.botao.publicar.label.titulo"));
+        JLabel lblTitulo = new JLabel(bn.getString("main.receita.botao.publicar.tituloreceita"));
+        JLabel lblDescricao = new JLabel(bn.getString("main.receita.botao.publicar.descricaoreceita"));
+        JLabel lblModoPreparo = new JLabel(bn.getString("main.receita.botao.publicar.modopreparoreceita"));
         txtTitulo = new JTextField(50);
         txtDescricao = new JTextField(50);
         txtModoPreparo = new JTextArea(3, 50);
@@ -89,16 +91,16 @@ public class ReceitaView extends JDialog {
         panelReceitaTitle.add(panelReceita, BorderLayout.CENTER);
 
         // Painel Ingredientes
-        txtNome = new JTextField("Nome do ingrediente", 20);
+        txtNome = new JTextField(bn.getString("main.receita.botao.publicar.nomeingrediente"), 20);
         txtNome.setHorizontalAlignment(JTextField.CENTER);
-        txtQuantidade = new JTextField("Quantidade",20);
+        txtQuantidade = new JTextField(bn.getString("main.receita.botao.publicar.quantidadeingrediente"),20);
         txtQuantidade.setHorizontalAlignment(JTextField.CENTER);
-        btnIngrediente = new JButton("Adicionar");
+        btnIngrediente = new JButton(bn.getString("main.receita.botao.publicar.adicionaringrediente"));
         panelIngredientesBtn.add(txtNome);
         panelIngredientesBtn.add(txtQuantidade);
         panelIngredientesBtn.add(btnIngrediente);
         listaIngredientes = new JList<>();
-        listaIngredientes.setCellRenderer(new IngredienteReceitaCellRenderer());
+        listaIngredientes.setCellRenderer(new IngredienteReceitaCellRenderer(AuthenticationView.getResourceBundle()));
         JScrollPane scrollPaneIngredientes = new JScrollPane(listaIngredientes);
         panelIngredientes.add(scrollPaneIngredientes, BorderLayout.CENTER);
         panelIngredientes.add(panelIngredientesBtn, BorderLayout.SOUTH);
@@ -106,8 +108,8 @@ public class ReceitaView extends JDialog {
         panelIngredientes.setBackground(Color.gray);
 
         // Painel Botões
-        btnPublicar = new JButton("Publicar");
-        btnCancelar = new JButton("Cancelar");
+        btnPublicar = new JButton(bn.getString("main.receita.botao.publicar.botao.publicar"));
+        btnCancelar = new JButton(bn.getString("main.receita.botao.publicar.botao.cancelar"));
         btnPanel.setBackground(Color.GRAY);
         btnPanel.setBorder(new EmptyBorder(0, 5, 5, 5));
         btnPanel.add(btnPublicar);

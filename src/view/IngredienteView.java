@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 public class IngredienteView extends JDialog {
 
@@ -17,17 +18,18 @@ public class IngredienteView extends JDialog {
     private MainView mainView;
     private IngredienteController ingredienteController;
     private Ingrediente ingrediente;
+    private ResourceBundle bn;
 
-    public IngredienteView(MainView mainView, Ingrediente ingrediente) {
-        super(mainView, "Adicionar Ingrediente", true);
+    public IngredienteView(MainView mainView, Ingrediente ingrediente, ResourceBundle bn) {
+        super(mainView, bn.getString("main.despensa.botao.adicionar.titulo"), true);
         this.mainView = mainView;
         this.ingrediente = ingrediente;
-        initComponents(!(ingrediente == null));
+        initComponents(!(ingrediente == null), bn);
         setLocationRelativeTo(mainView);
 
     }
 
-    private void initComponents(boolean isUpdate) {
+    private void initComponents(boolean isUpdate, ResourceBundle bn) {
 
         // Strings
         String nome = isUpdate ? ingrediente.getNome() : "";
@@ -39,9 +41,9 @@ public class IngredienteView extends JDialog {
         JPanel btnPanel = new JPanel();
 
         // Labels
-        JLabel lblNome = new JLabel("Nome:");
-        JLabel lblQuantidade = new JLabel("Quantidade:");
-        JLabel lblDataValidade = new JLabel("Data de Validade:");
+        JLabel lblNome = new JLabel(bn.getString("main.despensa.botao.adicionar.nome"));
+        JLabel lblQuantidade = new JLabel(bn.getString("main.despensa.botao.adicionar.quantidade"));
+        JLabel lblDataValidade = new JLabel(bn.getString("main.despensa.botao.adicionar.datavalidade"));
 
         // TextFields
         txtNome = new JTextField(nome,20);
@@ -50,8 +52,8 @@ public class IngredienteView extends JDialog {
         txtDataValidade = new JTextField(validade,10);
 
         // Buttons
-        btnAdicionar = new JButton(isUpdate ? "Atualizar" : "Adicionar");
-        btnCancelar = new JButton("Cancelar");
+        btnAdicionar = new JButton(isUpdate ? "Atualizar" : bn.getString("main.despensa.botao.adicionar.botao.adicionar"));
+        btnCancelar = new JButton(bn.getString("main.despensa.botao.adicionar.botao.cancelar"));
 
         // Adicionando aos paineis
         panel.add(lblNome);

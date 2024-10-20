@@ -9,14 +9,17 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 public class IngredienteCellRenderer extends JPanel implements ListCellRenderer<Ingrediente> {
 
     private JLabel lblNome;
     private JLabel lblQuantidade;
     private JLabel lblValidade;
+    private ResourceBundle bn;
 
-    public IngredienteCellRenderer() {
+    public IngredienteCellRenderer(ResourceBundle bn) {
+        this.bn = bn;
         setLayout(new BorderLayout(5, 5));
         lblNome = new JLabel();
         lblQuantidade = new JLabel();
@@ -31,16 +34,16 @@ public class IngredienteCellRenderer extends JPanel implements ListCellRenderer<
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Ingrediente> list, Ingrediente value, int index, boolean isSelected, boolean cellHasFocus) {
-        lblNome.setText("Nome: " + value.getNome());
-        lblQuantidade.setText("Quantidade: " + value.getQuantidade());
+        lblNome.setText(bn.getString("main.despensa.ingrediente.nome")+" " + value.getNome());
+        lblQuantidade.setText(bn.getString("main.despensa.ingrediente.quantidade")+" " + value.getQuantidade());
 
         Date dataValidade = value.getValidade();
 
         if (!vencido(dataValidade)) {
-            lblValidade.setText("Validade: " + DateParser.parseDate(dataValidade));
+            lblValidade.setText(bn.getString("main.despensa.ingrediente.validade")+" " + DateParser.parseDate(dataValidade));
             lblValidade.setForeground(Color.black);
         } else {
-            lblValidade.setText("Validade: " + DateParser.parseDate(dataValidade) + " (VENCIDO)");
+            lblValidade.setText(bn.getString("main.despensa.ingrediente.validade")+" " + DateParser.parseDate(dataValidade) + " " + bn.getString("main.despensa.ingrediente.vencido"));
             lblValidade.setForeground(Color.red);
         }
 
