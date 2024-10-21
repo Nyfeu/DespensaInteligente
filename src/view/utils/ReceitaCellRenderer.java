@@ -1,15 +1,18 @@
 package view.utils;
 
 import model.entities.Receita;
+import view.AuthenticationView;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ResourceBundle;
 
 public class ReceitaCellRenderer extends JPanel implements ListCellRenderer<Receita> {
 
     private JLabel lblNome;
     private JLabel lblDescription;
+
 
     public ReceitaCellRenderer() {
         setLayout(new BorderLayout(5, 5));
@@ -25,8 +28,10 @@ public class ReceitaCellRenderer extends JPanel implements ListCellRenderer<Rece
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Receita> list, Receita value, int index, boolean isSelected, boolean cellHasFocus) {
-        lblNome.setText("Título: " + value.getTitulo());
-        lblDescription.setText("Descrição: " + truncateString(value.getDescricao(),40));
+
+        ResourceBundle bn = AuthenticationView.getResourceBundle();
+        lblNome.setText(bn.getString("main.receita.renderer.titulo") + " " + value.getTitulo());
+        lblDescription.setText(bn.getString("main.receit.renderer.descricao") + " " + truncateString(value.getDescricao(),40));
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());

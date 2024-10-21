@@ -2,6 +2,7 @@ package view.utils;
 
 import controller.ReceitaController;
 import model.entities.Ingrediente;
+import view.AuthenticationView;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,7 +18,7 @@ public class IngredienteReceitaCellRenderer extends JPanel implements ListCellRe
     private ResourceBundle bn;
 
     public IngredienteReceitaCellRenderer(ResourceBundle bn) {
-        this.bn = bn;
+        this.bn = AuthenticationView.getResourceBundle();
         setLayout(new BorderLayout(5, 5));
         lblNome = new JLabel();
         lblQuantidade = new JLabel();
@@ -31,8 +32,8 @@ public class IngredienteReceitaCellRenderer extends JPanel implements ListCellRe
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Ingrediente> list, Ingrediente value, int index, boolean isSelected, boolean cellHasFocus) {
-        lblNome.setText("Nome: " + value.getNome());
-        lblQuantidade.setText("Quantidade: " + value.getQuantidade());
+        lblNome.setText(bn.getString("main.receita.botao.publicar.ingredientereceitarenderer.nome") + " " + value.getNome());
+        lblQuantidade.setText(bn.getString("main.receita.botao.publicar.ingredientereceitarenderer.quantidade")+ " " + value.getQuantidade());
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());

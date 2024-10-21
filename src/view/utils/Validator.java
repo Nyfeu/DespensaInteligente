@@ -5,25 +5,28 @@ import model.dao.DAOFactory;
 import model.dao.interfaces.IngredienteDao;
 import model.entities.Ingrediente;
 import model.utils.CategoriaIngrediente;
+import view.AuthenticationView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validator {
 
+
     public static boolean verifyIngrediente(String nome, Component component) {
 
         IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
         Ingrediente ingredienteVerify = ingredienteDao.read(nome);
-
+        ResourceBundle bn = AuthenticationView.getResourceBundle();
         System.out.println(ingredienteVerify);
 
         if (ingredienteVerify == null) {
 
-            int option = JOptionPane.showConfirmDialog(component, "Esse ingrediente não está cadastrado. Deseja cadastrá-lo?", "Confirmar Cadastro", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(component, bn.getString("main.despensa.botao.adicionar.validation.texto"), bn.getString("main.despensa.botao.adicionar.validation.titulo"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (option == JOptionPane.YES_OPTION) {
 
                 JPanel panel = new JPanel(new GridLayout(1,2));
@@ -31,11 +34,11 @@ public class Validator {
                 for (String categoria : getCategoriaNomes()) {
                     comboBox.addItem(categoria);
                 }
-                JLabel label = new JLabel("Selecione a categoria: ");
+                JLabel label = new JLabel(bn.getString("main.despensa.botao.adicionar.validation.selecaocategoria"));
                 panel.add(label);
                 panel.add(comboBox);
 
-                int result = JOptionPane.showConfirmDialog(component, panel, "Seleção de categoria", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                int result = JOptionPane.showConfirmDialog(component, panel, bn.getString("main.despensa.botao.adicionar.validation.selecaocategoria.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     int categoria = comboBox.getSelectedIndex();
                     IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();

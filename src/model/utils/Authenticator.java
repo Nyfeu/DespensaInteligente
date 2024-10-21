@@ -3,6 +3,7 @@ package model.utils;
 import model.dao.DAOFactory;
 import model.dao.interfaces.UsuarioDao;
 import model.entities.Usuario;
+import view.AuthenticationView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +48,7 @@ public class Authenticator {
         Usuario usuario = usuarioDao.read(email);
 
         if (usuario == null) {
-            JOptionPane.showMessageDialog(component, "Usuário não encontrado!", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(component, AuthenticationView.getResourceBundle().getString("utils.authenticator.user.desconhecido"), "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -58,7 +59,7 @@ public class Authenticator {
                 authenticatedUser = usuario;
                 return true;
             } else {
-                JOptionPane.showMessageDialog(component, "Senha inválida!", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(component, AuthenticationView.getResourceBundle().getString("utils.authenticator.senha.invalida"), "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
             }
         }
 

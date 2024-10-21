@@ -7,20 +7,24 @@ import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
+import view.AuthenticationView;
 import view.ReceitaView;
 import view.utils.Validator;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class ReceitaController {
 
     private ReceitaView receitaView;
     private ArrayList<Ingrediente> ingredientes;
+    private static ResourceBundle bn;
 
     public ReceitaController(ReceitaView receitaView) {
         this.receitaView = receitaView;
+        bn = AuthenticationView.getResourceBundle();
         this.ingredientes = new ArrayList<>();
         initButtonListeners();
     }
@@ -67,14 +71,14 @@ public class ReceitaController {
 
             receitaView.setListaIngredientesData(ingredientes);
 
-            receitaView.setTxtNome("Nome do ingrediente");
-            receitaView.setTxtQuantidade("Quantidade");
+            receitaView.setTxtNome(bn.getString("main.receita.botao.publicar.nomeingrediente"));
+            receitaView.setTxtQuantidade(bn.getString("main.receita.botao.publicar.quantidadeingrediente"));
 
         });
 
         receitaView.addNomeFocusListener(new FocusListener() {
 
-            private static String hold_string = "Nome do ingrediente";
+            private static String hold_string = bn.getString("main.receita.botao.publicar.nomeingrediente");
 
             @Override
             public void focusGained(FocusEvent e) {
@@ -93,7 +97,7 @@ public class ReceitaController {
 
         receitaView.addQuantidadeFocusListener(new FocusListener() {
 
-            private static String hold_string = "Quantidade";
+            private static String hold_string = bn.getString("main.receita.botao.publicar.quantidadeingrediente");
 
             @Override
             public void focusGained(FocusEvent e) {

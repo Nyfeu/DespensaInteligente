@@ -57,7 +57,7 @@ public class AuthenticationController {
             view.getNome().isEmpty()) return;
 
         if (!Validator.isValidEmail(view.getEmail_login())) {
-            JOptionPane.showMessageDialog(view,"Formato de email inválido!");
+            JOptionPane.showMessageDialog(view,AuthenticationView.getResourceBundle().getString("controller.authentication.email.invalido"));
             return;
         }
 
