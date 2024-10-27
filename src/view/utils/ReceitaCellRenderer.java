@@ -31,7 +31,7 @@ public class ReceitaCellRenderer extends JPanel implements ListCellRenderer<Rece
 
         ResourceBundle bn = AuthenticationView.getResourceBundle();
         lblNome.setText(bn.getString("main.receita.renderer.titulo") + " " + value.getTitulo());
-        lblDescription.setText(bn.getString("main.receit.renderer.descricao") + " " + truncateString(value.getDescricao(),40));
+        lblDescription.setText(bn.getString("main.receita.renderer.descricao") + " " + truncateString(value.getDescricao(),40));
 
         if (isSelected) {
             setBackground(list.getSelectionBackground());

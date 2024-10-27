@@ -230,7 +230,7 @@ public class AuthenticationView extends JFrame {
     }
 
     private void atualizarIdioma(Locale locale) {
-        bn = ResourceBundle.getBundle("DespensaInteligente", locale);
+        bn = ResourceBundle.getBundle("view.DespensaInteligente", locale);
         idiomaSelecionado = locale;
 
         setTitle(bn.getString("autenticacao.titulo"));
