@@ -35,6 +35,24 @@ public class MainView extends JFrame {
         addComponentsToPane();
         fetchInitialReceitas();
 
+        listaReceitas.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) { // Detecta um duplo clique
+                    Receita receitaSelecionada = listaReceitas.getSelectedValue();
+                    if (receitaSelecionada != null) {
+                        // Exibe os detalhes da receita em uma nova janela
+                        mostrarDetalhesReceita(receitaSelecionada);
+                    }
+                }
+            }
+        });
+    }
+
+    // Método para exibir os detalhes da receita em uma nova janela
+    private void mostrarDetalhesReceita(Receita receita) {
+        ReceitaView receitaView = new ReceitaView(this, receita, bn, true); 
+        receitaView.setVisible(true);
     }
 
     private void addComponentsToPane() {
@@ -153,7 +171,7 @@ public class MainView extends JFrame {
         mainViewController = new MainViewController(this);
 
         // Configurando a aparência dos botões
-        configureButtons();
+        configureButtons();   
     }
 
     private JMenuBar createMenuBar() {
