@@ -23,28 +23,13 @@ public class ReceitaView extends JDialog {
     private ReceitaController receitaController;
     private JList<Ingrediente> listaIngredientes;
     private ResourceBundle bn;
-    private boolean isViewMode;
 
-    public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn, boolean isViewMode) {
+    public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn) {
         super(mainView, bn.getString("main.receita.botao.publicar.titulo"), true);
         this.mainView = mainView;
         this.bn = bn;
         initComponents(bn);
         setLocationRelativeTo(mainView);
-
-        txtTitulo.setText(receita.getTitulo());
-        txtDescricao.setText(receita.getDescricao());
-        txtModoPreparo.setText(receita.getModoPreparo());
-        
-        if (isViewMode) {
-            // Desativar edição e ocultar os botões para visualização
-            txtTitulo.setEditable(false);
-            txtDescricao.setEditable(false);
-            txtModoPreparo.setEditable(false);
-            btnPublicar.setVisible(false);
-            btnCancelar.setVisible(false);
-            btnIngrediente.setVisible(false);
-        } 
     }
 
     private void initComponents(ResourceBundle bn) {

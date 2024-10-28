@@ -27,7 +27,6 @@ public class MainViewController {
     private MainView mainView;
     private ReceitaDao receitaDao;
     private Receita receita;
-    private boolean isViewMode;
     private FilterStrategy filterStrategy;
     private int offset = 0;
 
@@ -113,7 +112,7 @@ public class MainViewController {
         });
 
         mainView.addPublishReceitaButtonListener(e -> {
-            ReceitaView dialog = new ReceitaView(mainView, receita, AuthenticationView.getResourceBundle(), isViewMode);
+            ReceitaView dialog = new ReceitaView(mainView, receita, AuthenticationView.getResourceBundle());
             dialog.setVisible(true);
         });
 

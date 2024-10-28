@@ -51,8 +51,8 @@ public class MainView extends JFrame {
 
     // Método para exibir os detalhes da receita em uma nova janela
     private void mostrarDetalhesReceita(Receita receita) {
-        ReceitaView receitaView = new ReceitaView(this, receita, bn, true); 
-        receitaView.setVisible(true);
+        ReceitaDetalhesView detalhesView = new ReceitaDetalhesView(this, receita, bn);
+        detalhesView.setVisible(true);
     }
 
     private void addComponentsToPane() {
