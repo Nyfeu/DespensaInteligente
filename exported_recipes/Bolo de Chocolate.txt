@@ -1,0 +1,3 @@
+Título: Bolo de Chocolate
+Descrição: Um delicioso bolo de chocolate
+Modo de Preparo: Assar por 45 minutos

@@ -1,10 +1,12 @@
 package view;
 
 import model.entities.Receita;
+import view.utils.Handler_IO;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.File;
 import java.util.ResourceBundle;
 
 public class ReceitaDetalhesView extends JDialog {
@@ -78,6 +80,24 @@ public class ReceitaDetalhesView extends JDialog {
     }
 
     private void exportarReceita(Receita receita) {
-        // Lógica para exportar a receita (formato .txt)
+        // Define o diretório onde o arquivo será salvo
+        String directoryPath = "exported_recipes/";
+        
+        // Define o nome completo do arquivo com o diretório
+        String filePath = directoryPath + receita.getTitulo().replaceAll("[\\\\/:*?\"<>|]", "") + ".txt";  
+        Handler_IO<String> handler = new Handler_IO<>(filePath);
+    
+        // Prepara o conteúdo da receita
+        StringBuilder conteudoReceita = new StringBuilder();
+        conteudoReceita.append("Título: ").append(receita.getTitulo()).append("\n");
+        conteudoReceita.append("Descrição: ").append(receita.getDescricao()).append("\n");
+        conteudoReceita.append("Modo de Preparo: ").append(receita.getModoPreparo()).append("\n");
+    
+        // Grava o conteúdo no arquivo
+        handler.writeFile(conteudoReceita.toString(), false);
+    
+        // Confirmação para o usuário
+        JOptionPane.showMessageDialog(this, "Receita exportada para " + filePath, "Exportação Completa", JOptionPane.INFORMATION_MESSAGE);
     }
+    
 }
