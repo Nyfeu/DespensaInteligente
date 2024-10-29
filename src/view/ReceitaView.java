@@ -1,6 +1,8 @@
 package view;
 
 import controller.ReceitaController;
+import model.dao.DAOFactory;
+import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import view.utils.IngredienteReceitaCellRenderer;
@@ -23,13 +25,19 @@ public class ReceitaView extends JDialog {
     private ReceitaController receitaController;
     private JList<Ingrediente> listaIngredientes;
     private ResourceBundle bn;
+    private Receita receita;
 
     public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn) {
         super(mainView, bn.getString("main.receita.botao.publicar.titulo"), true);
         this.mainView = mainView;
+        this.receita = receita;
         this.bn = bn;
         initComponents(bn);
         setLocationRelativeTo(mainView);
+
+        if (receita != null) {
+            carregarDadosReceita();
+        }
     }
 
     private void initComponents(ResourceBundle bn) {
@@ -116,6 +124,15 @@ public class ReceitaView extends JDialog {
         btnPanel.setBorder(new EmptyBorder(0, 5, 5, 5));
         btnPanel.add(btnPublicar);
         btnPanel.add(btnCancelar);
+        btnPublicar.addActionListener(e -> {
+            if (receita != null) {
+                // Salva as alterações da receita
+                atualizarReceita();
+            } else {
+                // Cria uma nova receita
+                salvarReceita();
+            }
+        });
 
         // Adicionando ao painel principal
         panelPrincipal.add(panelReceitaTitle, BorderLayout.NORTH);
@@ -127,6 +144,37 @@ public class ReceitaView extends JDialog {
         configureButtons();
         pack();
         setResizable(false);
+    }
+
+    private void carregarDadosReceita() {
+        // Preenche os campos com os dados da receita para edição
+        txtTitulo.setText(receita.getTitulo());
+        txtDescricao.setText(receita.getDescricao());
+        txtModoPreparo.setText(receita.getModoPreparo());
+        setListaIngredientesData(new ArrayList<>(receita.getIngredientes()));
+    }
+
+    private void atualizarReceita() {
+        receita.setTitulo(txtTitulo.getText());
+        receita.setDescricao(txtDescricao.getText());
+        receita.setModoPreparo(txtModoPreparo.getText());
+        receita.setIngredientes(new ArrayList<>(listaIngredientes.getSelectedValuesList())); // ou conforme necessário
+
+        ReceitaDao receitaDao = DAOFactory.createReceitaDao();
+        receitaDao.update(receita);
+
+        dispose();  // Fecha a janela de edição
+    }
+
+    private void salvarReceita() {
+        receita.setTitulo(txtTitulo.getText());
+        receita.setDescricao(txtDescricao.getText());
+        receita.setModoPreparo(txtModoPreparo.getText());
+
+        ReceitaDao receitaDao = DAOFactory.createReceitaDao();
+        receitaDao.update(receita);
+
+        dispose();  // Fecha a janela de edição
     }
 
     private void configureButtons() {
@@ -152,6 +200,8 @@ public class ReceitaView extends JDialog {
     public void addQuantidadeFocusListener(FocusListener listener) {
         txtQuantidade.addFocusListener(listener);
     }
+    
+    // GETTERS
     public String getTxtTitulo() {
         return txtTitulo.getText();
     }
@@ -167,12 +217,16 @@ public class ReceitaView extends JDialog {
     public String getTxtModoPreparo(){
         return txtModoPreparo.getText();
     }
+    
+    // SETTERS
+    
     public void setTxtNome(String text) {
         txtNome.setText(text);
     }
     public void setTxtQuantidade(String text) {
         txtQuantidade.setText(text);
     }
+    
     public void setListaIngredientesData(ArrayList<Ingrediente> ingredientes) {
         DefaultListModel<Ingrediente> model = new DefaultListModel<>();
         for (Ingrediente ingrediente : ingredientes) {
@@ -180,6 +234,7 @@ public class ReceitaView extends JDialog {
         }
         listaIngredientes.setModel(model);
     }
+    
     public MainView getMainView() {
         return mainView;
     }

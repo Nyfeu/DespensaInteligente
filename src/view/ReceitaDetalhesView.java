@@ -6,7 +6,7 @@ import view.utils.Handler_IO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.File;
+//import java.io.File;
 import java.util.ResourceBundle;
 
 public class ReceitaDetalhesView extends JDialog {
@@ -71,12 +71,22 @@ public class ReceitaDetalhesView extends JDialog {
         getContentPane().add(panelPrincipal);
 
         // Adiciona ação ao botão Editar para abrir ReceitaView
-        btnEditar.addActionListener(e -> abrirReceitaView(receita));
+        btnEditar.addActionListener(e -> editarReceitaView(receita));
         btnExportar.addActionListener(e -> exportarReceita(receita));
     }
 
-    private void abrirReceitaView(Receita receita) {
-        // Lógica para edição da receita
+    private void editarReceitaView(Receita receita) {
+        // Usa o `MainView` como referência, mantendo o construtor de ReceitaView
+        ReceitaView receitaView = new ReceitaView((MainView) getParent(), receita, bn);
+        receitaView.setVisible(true);
+        atualizarDadosReceita(receita);  // Atualiza os dados exibidos após a edição
+    }
+
+    private void atualizarDadosReceita(Receita receita) {
+        // Atualiza os campos com as novas informações da receita
+        lblTitulo.setText("<html><b>" + bn.getString("main.receita.label.titulo") + ":</b> " + receita.getTitulo() + "</html>");
+        lblDescricao.setText("<html><b>" + bn.getString("main.receita.label.descricao") + ":</b> " + receita.getDescricao() + "</html>");
+        lblModoPreparo.setText("<html><b>" + bn.getString("main.receita.label.modopreparo") + ":</b><br/>" + receita.getModoPreparo().replace("\n", "<br/>") + "</html>");
     }
 
     private void exportarReceita(Receita receita) {
