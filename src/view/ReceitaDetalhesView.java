@@ -6,7 +6,6 @@ import view.utils.Handler_IO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-//import java.io.File;
 import java.util.ResourceBundle;
 
 public class ReceitaDetalhesView extends JDialog {

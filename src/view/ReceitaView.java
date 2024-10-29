@@ -217,6 +217,9 @@ public class ReceitaView extends JDialog {
     public String getTxtModoPreparo(){
         return txtModoPreparo.getText();
     }
+    public MainView getMainView() {
+        return mainView;
+    }
     
     // SETTERS
     
@@ -226,16 +229,11 @@ public class ReceitaView extends JDialog {
     public void setTxtQuantidade(String text) {
         txtQuantidade.setText(text);
     }
-    
     public void setListaIngredientesData(ArrayList<Ingrediente> ingredientes) {
         DefaultListModel<Ingrediente> model = new DefaultListModel<>();
         for (Ingrediente ingrediente : ingredientes) {
             model.addElement(ingrediente);
         }
         listaIngredientes.setModel(model);
-    }
-    
-    public MainView getMainView() {
-        return mainView;
     }
 }

@@ -36,7 +36,7 @@ public class AuthenticationView extends JFrame {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        alteralinguagem = new JMenu("Linguagem");
+        alteralinguagem = new JMenu("Idioma");
         JMenuItem port = new JMenuItem("Português");
         JMenuItem eng = new JMenuItem("English");
         JMenuItem ita = new JMenuItem("Italiano");
@@ -128,8 +128,6 @@ public class AuthenticationView extends JFrame {
                 atualizarIdioma(new Locale("es", "ES"));
             }
         });
-
-
     }
 
     private JPanel createRegistrationPanel() {
@@ -230,9 +228,9 @@ public class AuthenticationView extends JFrame {
     }
 
     private void atualizarIdioma(Locale locale) {
-        bn = ResourceBundle.getBundle("view.DespensaInteligente", locale);
+        bn = ResourceBundle.getBundle("resources.DespensaInteligente", locale);
         idiomaSelecionado = locale;
-
+    
         setTitle(bn.getString("autenticacao.titulo"));
         submit.setText(bn.getString("autenticacao.botao.submeter"));
         email_login.setText(bn.getString("autenticacao.login.email"));
@@ -244,8 +242,20 @@ public class AuthenticationView extends JFrame {
         titulo_registro.setText(bn.getString("autenticacao.registro.label.titulo"));
         botao_registro.setText(bn.getString("autenticacao.botao.registro"));
         botao_login.setText(bn.getString("autenticacao.botao.login"));
+    
+        // Atualiza o título do menu de idioma com o idioma selecionado
+        String idiomaDisplay = locale.getDisplayLanguage(locale);
+        alteralinguagem.setText("Idioma: " + idiomaDisplay.substring(0, 1).toUpperCase() + idiomaDisplay.substring(1));
+    
+        // Revalida e repinta a barra de menu para refletir a mudança
+        JMenuBar barra = getJMenuBar();
+        barra.revalidate();
+        barra.repaint();
+    
         revalidate();
         repaint();
+
+        pack();
     }
 
     public static void main(String[] args) {
