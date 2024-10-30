@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -21,9 +22,10 @@ public class AuthenticationView extends JFrame {
     private JLabel email_login, password_login,titulo_login;
     private JLabel email_registro, password_registro,nome_registro, titulo_registro;
     private JButton botao_login, botao_registro;
-    private JMenu alteralinguagem;
+    private JLabel idiomaLabel;
     private static ResourceBundle bn;
     private Locale idiomaSelecionado;
+    private JMenu emojiMenu;
 
     public AuthenticationView() {
         // Configurações da janela
@@ -31,105 +33,74 @@ public class AuthenticationView extends JFrame {
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        // Inicializa o CardLayout e o painel de cartões
+    
         cardLayout = new CardLayout();
-        cardPanel = new JPanel(cardLayout);
+        cardPanel = new JPanel(cardLayout);  
+        
+        // Criação e adição do menu de idiomas
+        idiomaSelecionado = new Locale("pt", "BR");
 
-        alteralinguagem = new JMenu("Idioma");
-        JMenuItem port = new JMenuItem("Português");
-        JMenuItem eng = new JMenuItem("English");
-        JMenuItem ita = new JMenuItem("Italiano");
-        JMenuItem esp = new JMenuItem("Español");
-        JMenuItem fra = new JMenuItem("Français");
-        alteralinguagem.add(port);
-        alteralinguagem.add(eng);
-        alteralinguagem.add(ita);
-        alteralinguagem.add(esp);
-        alteralinguagem.add(fra);
-
+        // Menu com o emoji 🔽
+        emojiMenu = new JMenu("🔽");
+    
+        idiomaLabel = new JLabel(getLanguageDisplayName(idiomaSelecionado));
+        
+        setupLanguageMenu();
+    
+        // Barra de menu
         JMenuBar barra = new JMenuBar();
+        barra.add(Box.createHorizontalGlue());
+        barra.add(idiomaLabel); // Nome do idioma
+        barra.add(emojiMenu);       // Emoji do menu
         setJMenuBar(barra);
-        barra.add(alteralinguagem);
-
-        // Cria textFields e passwordField
+    
         nome = new JTextField(30);
         email1 = new JTextField(30);
         password1 = new JPasswordField(30);
         email2 = new JTextField(30);
         password2 = new JPasswordField(30);
-
-        // Cria os diferentes painéis
+    
         JPanel registerPanel = createRegistrationPanel();
         JPanel loginPanel = createLoginPanel();
-
-        // Adiciona os painéis ao CardLayout
+    
         cardPanel.add(registerPanel, "Registrar-se");
         cardPanel.add(loginPanel, "Login");
-
-        // Adiciona o painel de cartões à janela
+    
         add(cardPanel, BorderLayout.CENTER);
-
-        // Cria e adiciona os botões de navegação
+    
         JPanel buttonPanel = new JPanel();
         botao_registro = new JButton("Registrar-se");
         botao_login = new JButton("Login");
         submit = new JButton("Submeter!");
-
+    
         ViewUtils.configureButton(botao_registro);
         ViewUtils.configureButton(botao_login);
         ViewUtils.configureButton(submit);
-
+    
         buttonPanel.setBackground(Color.GRAY);
         buttonPanel.setBorder(new EmptyBorder(5, 0, 5, 0));
-
+    
         botao_registro.addActionListener(e -> switchPanel("Registrar-se"));
         botao_login.addActionListener(e -> switchPanel("Login"));
-
+    
         buttonPanel.add(botao_registro);
         buttonPanel.add(botao_login);
         buttonPanel.add(submit);
-
+    
         add(buttonPanel, BorderLayout.SOUTH);
-        AuthenticationController controller = new AuthenticationController(this);
+        new AuthenticationController(this);
 
-        atualizarIdioma(new Locale("pt", "BR"));
-        port.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                atualizarIdioma(new Locale("pt", "BR"));
-            }
-        });
-
-        eng.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                atualizarIdioma(Locale.US);
-            }
-        });
-
-        ita.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                atualizarIdioma(new Locale("it", "IT"));
-            }
-        });
-
-        fra.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                atualizarIdioma(new Locale("fr", "FR"));
-            }
-        });
-
-        esp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                atualizarIdioma(new Locale("es", "ES"));
-            }
-        });
+        atualizarIdioma(idiomaSelecionado);
     }
 
+    private void setupLanguageMenu() {
+        emojiMenu.add(createLanguageMenuItem("Português", "/resources/flags/pt_BR.png", new Locale("pt", "BR")));
+        emojiMenu.add(createLanguageMenuItem("English", "/resources/flags/en_US.png", Locale.US));
+        emojiMenu.add(createLanguageMenuItem("Italiano", "/resources/flags/it_IT.png", new Locale("it", "IT")));
+        emojiMenu.add(createLanguageMenuItem("Español", "/resources/flags/es_ES.png", new Locale("es", "ES")));
+        emojiMenu.add(createLanguageMenuItem("Français", "/resources/flags/fr_FR.png", new Locale("fr", "FR")));
+    }
+    
     private JPanel createRegistrationPanel() {
 
         JPanel panel = new JPanel(new BorderLayout());
@@ -227,34 +198,64 @@ public class AuthenticationView extends JFrame {
         return bn;
     }
 
+    private JMenuItem createLanguageMenuItem(String languageName, String iconPath, Locale locale) {
+        JMenuItem menuItem = new JMenuItem(languageName);
+        URL iconUrl = getClass().getClassLoader().getResource(iconPath.substring(1));
+        if (iconUrl != null) {
+            menuItem.setIcon(new ImageIcon(iconUrl));
+        } else {
+            System.out.println("Icon not found for " + languageName);
+        }
+        menuItem.addActionListener(e -> atualizarIdioma(locale));
+        return menuItem;
+    }
+
+    private String getLanguageDisplayName(Locale locale) {
+        if (locale == null) {
+            return "Português";  // Retorno padrão definido como Português
+        }
+        switch (locale.getLanguage()) {
+            case "pt": return "Português";
+            case "en": return "English";
+            case "it": return "Italiano";
+            case "es": return "Español";
+            case "fr": return "Français";
+            default: return "Idioma";
+        }
+    }
+
+    private void atualizarIconeIdioma(Locale locale) {
+        String iconPath = "resources/flags/" + locale.getLanguage() + "_" + locale.getCountry() + ".png";
+        URL iconUrl = getClass().getClassLoader().getResource(iconPath);
+        if (iconUrl != null) {
+            idiomaLabel.setIcon(new ImageIcon(iconUrl)); // Configura o ícone diretamente no JLabel
+        } else {
+            System.out.println("Icon not found for " + getLanguageDisplayName(locale));
+            idiomaLabel.setIcon(null); // Remove o ícone se não for encontrado
+        }
+    }
+    
     private void atualizarIdioma(Locale locale) {
-        bn = ResourceBundle.getBundle("resources.DespensaInteligente", locale);
+        bn = ResourceBundle.getBundle("resources.properties.DespensaInteligente", locale);
         idiomaSelecionado = locale;
     
+        idiomaLabel.setText(getLanguageDisplayName(idiomaSelecionado));
+        atualizarIconeIdioma(idiomaSelecionado);  // Chama para atualizar o ícone no JLabel
+    
         setTitle(bn.getString("autenticacao.titulo"));
-        submit.setText(bn.getString("autenticacao.botao.submeter"));
-        email_login.setText(bn.getString("autenticacao.login.email"));
-        password_login.setText(bn.getString("autenticacao.login.senha"));
-        titulo_login.setText(bn.getString("autenticacao.login.label.titulo"));
-        password_registro.setText(bn.getString("autenticacao.registro.senha"));
-        nome_registro.setText(bn.getString("autenticacao.registro.nome"));
-        email_registro.setText(bn.getString("autenticacao.registro.email"));
-        titulo_registro.setText(bn.getString("autenticacao.registro.label.titulo"));
-        botao_registro.setText(bn.getString("autenticacao.botao.registro"));
-        botao_login.setText(bn.getString("autenticacao.botao.login"));
-    
-        // Atualiza o título do menu de idioma com o idioma selecionado
-        String idiomaDisplay = locale.getDisplayLanguage(locale);
-        alteralinguagem.setText("Idioma: " + idiomaDisplay.substring(0, 1).toUpperCase() + idiomaDisplay.substring(1));
-    
-        // Revalida e repinta a barra de menu para refletir a mudança
-        JMenuBar barra = getJMenuBar();
-        barra.revalidate();
-        barra.repaint();
+        if (submit != null) submit.setText(bn.getString("autenticacao.botao.submeter"));
+        if (email_login != null) email_login.setText(bn.getString("autenticacao.login.email"));
+        if (password_login != null) password_login.setText(bn.getString("autenticacao.login.senha"));
+        if (titulo_login != null) titulo_login.setText(bn.getString("autenticacao.login.label.titulo"));
+        if (password_registro != null) password_registro.setText(bn.getString("autenticacao.registro.senha"));
+        if (nome_registro != null) nome_registro.setText(bn.getString("autenticacao.registro.nome"));
+        if (email_registro != null) email_registro.setText(bn.getString("autenticacao.registro.email"));
+        if (titulo_registro != null) titulo_registro.setText(bn.getString("autenticacao.registro.label.titulo"));
+        if (botao_registro != null) botao_registro.setText(bn.getString("autenticacao.botao.registro"));
+        if (botao_login != null) botao_login.setText(bn.getString("autenticacao.botao.login"));
     
         revalidate();
         repaint();
-
         pack();
     }
 
