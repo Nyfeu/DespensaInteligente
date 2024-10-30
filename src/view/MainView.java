@@ -116,7 +116,7 @@ public class MainView extends JFrame {
     private JPanel createFilterOptionsPanel() {
         JPanel filterOptionsPanel = new JPanel();
         filterOptionsPanel.setBackground(Color.GRAY);
-        String[] options = {bn.getString("main.receita.autor"), bn.getString("main.receita.titulo")};
+        String[] options = {bn.getString("main.receita.autor"), bn.getString("main.receita.nome")};
         dropdown = new JComboBox<>(options);
         dropdown.setBackground(Color.white);
         dropdown.setFocusable(false);
