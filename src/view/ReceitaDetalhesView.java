@@ -5,6 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ResourceBundle;
 import view.utils.ViewUtils;
+import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
 import view.utils.Handler_IO;
@@ -12,7 +13,8 @@ import java.awt.event.ActionListener;
 
 public class ReceitaDetalhesView extends JDialog {
 
-    private JLabel lblTitulo, lblDescricao, lblModoPreparo;
+    private JLabel lblTitulo, lblDescricao, lblModoPreparo, lblIngredientes;
+    private JTextArea ingredientesArea;
     private JButton btnEditar, btnExportar, btnVoltar; 
     private ResourceBundle bn;
 
@@ -21,7 +23,7 @@ public class ReceitaDetalhesView extends JDialog {
         this.bn = bn;
         initComponents(receita);
         setLocationRelativeTo(parent);
-        setSize(400, 300); 
+        setSize(400, 400); 
         setResizable(false);
     }
 
@@ -48,6 +50,27 @@ public class ReceitaDetalhesView extends JDialog {
         lblDescricao.setFont(new Font("Arial", Font.PLAIN, 16));
         lblDescricao.setBorder(new EmptyBorder(5, 0, 5, 0));
         panelConteudo.add(lblDescricao);
+
+        // Painel Ingredientes
+        lblIngredientes = new JLabel("<html><b>" + bn.getString("main.receita.label.ingredientes") + ":</b></html>");
+        lblIngredientes.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblIngredientes.setBorder(new EmptyBorder(5, 0, 5, 0));
+        panelConteudo.add(lblIngredientes);
+
+        ingredientesArea = new JTextArea();
+        ingredientesArea.setEditable(false);
+        ingredientesArea.setLineWrap(true);
+        ingredientesArea.setWrapStyleWord(true);
+
+        for (Ingrediente ingrediente : receita.getIngredientes()) {
+            ingredientesArea.append(ingrediente.getNome() + " - " + ingrediente.getQuantidade() + "\n");
+        }
+
+        JScrollPane ingredientesScrollPane = new JScrollPane(ingredientesArea);
+        ingredientesScrollPane.setPreferredSize(new Dimension(360, 100)); // Tamanho ajustável
+        panelConteudo.add(ingredientesScrollPane);
+
+        panelPrincipal.add(panelConteudo, BorderLayout.CENTER);
 
         // Painel Modo de Preparo
         lblModoPreparo = new JLabel("<html><b>" + bn.getString("main.receita.label.modopreparo") + ":</b><br/>" + receita.getModoPreparo().replace("\n", "<br/>") + "</html>");
@@ -133,6 +156,15 @@ public class ReceitaDetalhesView extends JDialog {
         StringBuilder conteudoReceita = new StringBuilder();
         conteudoReceita.append("Título: ").append(receita.getTitulo()).append("\n");
         conteudoReceita.append("Descrição: ").append(receita.getDescricao()).append("\n");
+
+        conteudoReceita.append("Ingredientes:\n");
+        for (Ingrediente ingrediente : receita.getIngredientes()) {
+            conteudoReceita.append("- ").append(ingrediente.getNome())
+                           .append(" : ")
+                           .append(ingrediente.getQuantidade())
+                           .append("\n");
+        }
+        
         conteudoReceita.append("Modo de Preparo: ").append(receita.getModoPreparo()).append("\n");
     
         handler.writeFile(conteudoReceita.toString(), false);

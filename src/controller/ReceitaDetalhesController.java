@@ -1,7 +1,6 @@
 package controller;
 
 import model.entities.Receita;
-import model.utils.Authenticator;
 import view.ReceitaDetalhesView;
 import view.ReceitaView;
 import view.MainView;
