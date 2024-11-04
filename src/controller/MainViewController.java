@@ -18,6 +18,7 @@ import view.utils.ViewUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -94,7 +95,15 @@ public class MainViewController {
             JComboBox<String> cb = new JComboBox<>(model);
             cb.setRenderer(new FilterListCellRenderer());
 
-            int result = JOptionPane.showConfirmDialog(mainView, cb, AuthenticationView.getResourceBundle().getString("main.receita.botao.filtrarreceitas.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            URL iconUrl = getClass().getResource("/resources/images/filtro.png");
+            ImageIcon customIcon = null;
+            if (iconUrl != null) {
+                customIcon = new ImageIcon(iconUrl);
+            } else {
+                System.out.println("Icon not found at specified path.");
+            }
+
+            int result = JOptionPane.showConfirmDialog(mainView, cb, AuthenticationView.getResourceBundle().getString("main.receita.botao.filtrarreceitas.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, customIcon);
             if (result == JOptionPane.OK_OPTION) {
 
                 if (Objects.equals(cb.getSelectedItem(), AuthenticationView.getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"))) filterStrategy = new FilterReceitasByIngredientes();

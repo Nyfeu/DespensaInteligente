@@ -94,11 +94,11 @@ public class AuthenticationView extends JFrame {
     }
 
     private void setupLanguageMenu() {
-        emojiMenu.add(createLanguageMenuItem("Português", "/resources/flags/pt_BR.png", new Locale("pt", "BR")));
-        emojiMenu.add(createLanguageMenuItem("English", "/resources/flags/en_US.png", Locale.US));
-        emojiMenu.add(createLanguageMenuItem("Italiano", "/resources/flags/it_IT.png", new Locale("it", "IT")));
-        emojiMenu.add(createLanguageMenuItem("Español", "/resources/flags/es_ES.png", new Locale("es", "ES")));
-        emojiMenu.add(createLanguageMenuItem("Français", "/resources/flags/fr_FR.png", new Locale("fr", "FR")));
+        emojiMenu.add(createLanguageMenuItem("Português", "/resources/images/pt_BR.png", new Locale("pt", "BR")));
+        emojiMenu.add(createLanguageMenuItem("English", "/resources/images/en_US.png", Locale.US));
+        emojiMenu.add(createLanguageMenuItem("Italiano", "/resources/images/it_IT.png", new Locale("it", "IT")));
+        emojiMenu.add(createLanguageMenuItem("Español", "/resources/images/es_ES.png", new Locale("es", "ES")));
+        emojiMenu.add(createLanguageMenuItem("Français", "/resources/images/fr_FR.png", new Locale("fr", "FR")));
     }
     
     private JPanel createRegistrationPanel() {
@@ -225,7 +225,7 @@ public class AuthenticationView extends JFrame {
     }
 
     private void atualizarIconeIdioma(Locale locale) {
-        String iconPath = "resources/flags/" + locale.getLanguage() + "_" + locale.getCountry() + ".png";
+        String iconPath = "resources/images/" + locale.getLanguage() + "_" + locale.getCountry() + ".png";
         URL iconUrl = getClass().getClassLoader().getResource(iconPath);
         if (iconUrl != null) {
             idiomaLabel.setIcon(new ImageIcon(iconUrl)); // Configura o ícone diretamente no JLabel

@@ -126,10 +126,8 @@ public class ReceitaView extends JDialog {
         btnPanel.add(btnCancelar);
         btnPublicar.addActionListener(e -> {
             if (receita != null) {
-                // Salva as alterações da receita
                 atualizarReceita();
             } else {
-                // Cria uma nova receita
                 salvarReceita();
             }
         });
@@ -179,7 +177,7 @@ public class ReceitaView extends JDialog {
 
     private void configureButtons() {
         ViewUtils.configureButton(btnCancelar);
-        ViewUtils.configureButton(btnPublicar);
+        ViewUtils.customButton(btnPublicar);
         ViewUtils.configureButton(btnIngrediente);
         btnIngrediente.setBackground(Color.darkGray);
         btnIngrediente.setForeground(Color.white);
@@ -222,7 +220,6 @@ public class ReceitaView extends JDialog {
     }
     
     // SETTERS
-    
     public void setTxtNome(String text) {
         txtNome.setText(text);
     }

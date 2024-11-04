@@ -34,7 +34,10 @@ public class MainView extends JFrame {
         configureMainView();
         addComponentsToPane();
         fetchInitialReceitas();
+        acaoDuploClique();
+    }
 
+    private void acaoDuploClique() {
         listaReceitas.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -46,10 +49,9 @@ public class MainView extends JFrame {
                     }
                 }
             }
-        });
+        });    
     }
-
-    // Método para exibir os detalhes da receita em uma nova janela
+    
     private void mostrarDetalhesReceita(Receita receita) {
     ReceitaDetalhesView detalhesView = new ReceitaDetalhesView(this, receita, bn);
     detalhesView.setVisible(true);

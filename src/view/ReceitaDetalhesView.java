@@ -1,17 +1,19 @@
 package view;
 
-import model.entities.Receita;
-import view.utils.Handler_IO;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ResourceBundle;
+import view.utils.ViewUtils;
+import model.entities.Receita;
+import model.utils.Authenticator;
+import view.utils.Handler_IO;
+import java.awt.event.ActionListener;
 
 public class ReceitaDetalhesView extends JDialog {
 
     private JLabel lblTitulo, lblDescricao, lblModoPreparo;
-    private JButton btnEditar, btnExportar; // Declaração dos botões
+    private JButton btnEditar, btnExportar, btnVoltar; 
     private ResourceBundle bn;
 
     public ReceitaDetalhesView(JFrame parent, Receita receita, ResourceBundle bn) {
@@ -19,18 +21,18 @@ public class ReceitaDetalhesView extends JDialog {
         this.bn = bn;
         initComponents(receita);
         setLocationRelativeTo(parent);
-        setSize(400, 300); // Define o tamanho da janela
+        setSize(400, 300); 
         setResizable(false);
     }
 
     private void initComponents(Receita receita) {
-        // Painel principal com BorderLayout
+        // Painel principal 
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
         panelPrincipal.setBorder(new EmptyBorder(15, 15, 15, 15));
-        panelPrincipal.setBackground(new Color(245, 245, 245)); // Cor de fundo suave
-        panelPrincipal.setBorder(BorderFactory.createLineBorder(Color.GRAY, 5)); // Borda cinza ao redor
+        panelPrincipal.setBackground(new Color(245, 245, 245)); 
+        panelPrincipal.setBorder(BorderFactory.createLineBorder(Color.GRAY, 5)); 
 
-        // Painel de conteúdo (para os textos) com BoxLayout
+        // Painel de conteúdo 
         JPanel panelConteudo = new JPanel();
         panelConteudo.setLayout(new BoxLayout(panelConteudo, BoxLayout.Y_AXIS));
         panelConteudo.setBackground(new Color(245, 245, 245));
@@ -53,59 +55,88 @@ public class ReceitaDetalhesView extends JDialog {
         lblModoPreparo.setBorder(new EmptyBorder(5, 0, 5, 0));
         panelConteudo.add(lblModoPreparo);
 
-        // Adiciona o painel de conteúdo ao centro do painel principal
         panelPrincipal.add(panelConteudo, BorderLayout.CENTER);
 
         // Painel de botões
         JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnEditar = new JButton(bn.getString("main.receita.botao.editar"));
         btnExportar = new JButton(bn.getString("main.receita.botao.exportar"));
+        btnVoltar = new JButton(bn.getString("main.receita.botao.voltar"));
+        panelBotoes.setBackground(Color.GRAY);
         panelBotoes.add(btnEditar);
         panelBotoes.add(btnExportar);
+        panelBotoes.add(btnVoltar);
 
-        // Adiciona o painel de botões ao sul do painel principal
         panelPrincipal.add(panelBotoes, BorderLayout.SOUTH);
 
-        // Adiciona o painel principal ao conteúdo do dialog
         getContentPane().add(panelPrincipal);
 
-        // Adiciona ação ao botão Editar para abrir ReceitaView
-        btnEditar.addActionListener(e -> editarReceitaView(receita));
+        btnEditar.addActionListener(e -> {
+            String emailAutor = receita.getEmailAutor();
+            String emailUsuario = Authenticator.getAuthenticatedUser().getEmail();
+
+            if (emailAutor.equalsIgnoreCase(emailUsuario)) {
+                editarReceitaView(receita);
+            } else {
+                showNotAuthorMessage();
+            }
+        });
+
         btnExportar.addActionListener(e -> exportarReceita(receita));
+
+        configureButtons();
     }
 
-    private void editarReceitaView(Receita receita) {
-        // Usa o `MainView` como referência, mantendo o construtor de ReceitaView
+    private void configureButtons() {
+        ViewUtils.configureButton(btnEditar);
+        ViewUtils.configureButton(btnExportar);
+        ViewUtils.configureButton(btnVoltar);
+    }
+
+    public void addEditarButtonActionListener(ActionListener listener) {
+        btnEditar.addActionListener(listener);
+    }
+    
+    public void addExportarButtonActionListener(ActionListener listener) {
+        btnExportar.addActionListener(listener);
+    }
+
+    public void addVoltarButtonActionListener(ActionListener listener) {
+        btnVoltar.addActionListener(listener);
+    }
+
+    public void showNotAuthorMessage() {
+        JOptionPane.showMessageDialog(this, 
+            "Você não é o autor dessa receita.", 
+            "Acesso Negado", 
+            JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void editarReceitaView(Receita receita) {
         ReceitaView receitaView = new ReceitaView((MainView) getParent(), receita, bn);
         receitaView.setVisible(true);
-        atualizarDadosReceita(receita);  // Atualiza os dados exibidos após a edição
+        atualizarDadosReceita(receita);  
     }
 
-    private void atualizarDadosReceita(Receita receita) {
-        // Atualiza os campos com as novas informações da receita
+    public void atualizarDadosReceita(Receita receita) {
         lblTitulo.setText("<html><b>" + bn.getString("main.receita.label.titulo") + ":</b> " + receita.getTitulo() + "</html>");
         lblDescricao.setText("<html><b>" + bn.getString("main.receita.label.descricao") + ":</b> " + receita.getDescricao() + "</html>");
         lblModoPreparo.setText("<html><b>" + bn.getString("main.receita.label.modopreparo") + ":</b><br/>" + receita.getModoPreparo().replace("\n", "<br/>") + "</html>");
     }
 
-    private void exportarReceita(Receita receita) {
-        // Define o diretório onde o arquivo será salvo
+    public void exportarReceita(Receita receita) {
         String directoryPath = "exported_recipes/";
         
-        // Define o nome completo do arquivo com o diretório
         String filePath = directoryPath + receita.getTitulo().replaceAll("[\\\\/:*?\"<>|]", "") + ".txt";  
         Handler_IO<String> handler = new Handler_IO<>(filePath);
     
-        // Prepara o conteúdo da receita
         StringBuilder conteudoReceita = new StringBuilder();
         conteudoReceita.append("Título: ").append(receita.getTitulo()).append("\n");
         conteudoReceita.append("Descrição: ").append(receita.getDescricao()).append("\n");
         conteudoReceita.append("Modo de Preparo: ").append(receita.getModoPreparo()).append("\n");
     
-        // Grava o conteúdo no arquivo
         handler.writeFile(conteudoReceita.toString(), false);
     
-        // Confirmação para o usuário
         JOptionPane.showMessageDialog(this, "Receita exportada para " + filePath, "Exportação Completa", JOptionPane.INFORMATION_MESSAGE);
     }
     
