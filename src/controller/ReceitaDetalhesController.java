@@ -6,7 +6,6 @@ import view.ReceitaDetalhesView;
 import view.ReceitaView;
 import view.MainView;
 
-import javax.swing.JOptionPane;
 import java.util.ResourceBundle;
 
 public class ReceitaDetalhesController {

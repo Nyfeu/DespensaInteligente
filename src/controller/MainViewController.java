@@ -29,7 +29,7 @@ public class MainViewController {
     private ReceitaDao receitaDao;
     private Receita receita;
     private FilterStrategy filterStrategy;
-    private int offset = 0;
+    private int offset = 0, receitasPorPagina = 12;
 
     public MainViewController(MainView mainView) {
         this.mainView = mainView;
@@ -48,20 +48,33 @@ public class MainViewController {
         if (filterStrategy == null) {
             filterStrategy = new FilterReceitasByPage();
         }
+
+        int totalReceitas = receitaDao.countAll();
+        int totalPages = (int) Math.ceil((double) totalReceitas / receitasPorPagina);
+        int currentPage = offset / receitasPorPagina + 1;
+
         List<Filterable> filterableList = receitaDao.filter(filterStrategy, 12, offset);
         ArrayList<Receita> receitaList = new ArrayList<>();
+
         for (Filterable filterable : filterableList) {
             Receita receita = receitaDao.read(filterable.getId());
             receitaList.add(receita);
         }
         mainView.setListaReceitasData(receitaList);
+
+        mainView.setTotalPages(totalPages);
+        mainView.setCurrentPage(currentPage);
+
+        boolean isLastPage = filterableList.size() < receitasPorPagina;
+        mainView.setRightButtonEnabled(!isLastPage);
+        mainView.setLeftButtonEnabled(offset > 0);
     }
 
     private void initButtonListeners() {
 
         mainView.addLeftButtonListener(e -> {
-            if (offset >= 12) {
-                updateReceitasList(offset - 12);
+            if (offset >= receitasPorPagina) {
+                updateReceitasList(offset - receitasPorPagina);
             }
         });
 

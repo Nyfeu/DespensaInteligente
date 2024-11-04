@@ -205,6 +205,21 @@ public class ReceitaDaoJDBC implements ReceitaDao {
 
     }
 
+    @Override
+    public int countAll() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM RECEITA"; 
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getInt(1); 
+            }
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage()); 
+        }
+        return count;
+    }
+
     public List<Filterable> filter(FilterStrategy filterStrategy, Integer LIMIT, Integer OFFSET) {
         return filterStrategy.filter(conn, LIMIT, OFFSET);
     }

@@ -20,6 +20,8 @@ public class MainView extends JFrame {
     private JList<Ingrediente> listaDespensa;
     private JList<Receita> listaReceitas;
     private JTextField txtFiltro;
+    private JLabel pageLabel;
+    private int totalPages = 1, currentPage = 1;
     private JButton addIngrediente, removeIngrediente, updateIngrediente, filterByIngrediente, publishReceita, filterReceita, leftBtn, rightBtn, clearBtn;
     private MainViewController mainViewController;
     private JComboBox<String> dropdown;
@@ -97,11 +99,12 @@ public class MainView extends JFrame {
         JPanel painelReceitas = new JPanel(new BorderLayout());
         JScrollPane scrollPaneReceitas = new JScrollPane(listaReceitas);
         JPanel painelReceitasButtons = new JPanel(new FlowLayout());
+        
         painelReceitasButtons.setBackground(Color.GRAY);
-
         painelReceitasButtons.add(filterByIngrediente);
         painelReceitasButtons.add(clearBtn);
         painelReceitasButtons.add(leftBtn);
+        painelReceitasButtons.add(pageLabel);
         painelReceitasButtons.add(rightBtn);
         painelReceitasButtons.add(publishReceita);
 
@@ -113,6 +116,28 @@ public class MainView extends JFrame {
         painelReceitas.add(painelReceitasButtons, BorderLayout.SOUTH);
 
         return painelReceitas;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+        updatePageLabel();
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+        updatePageLabel();
+    }
+
+    private void updatePageLabel() {
+        pageLabel.setText(currentPage + "/" + totalPages);
+    }
+
+    public void setLeftButtonEnabled(boolean enabled) {
+        leftBtn.setEnabled(enabled);
+    }
+
+    public void setRightButtonEnabled(boolean enabled) {
+        rightBtn.setEnabled(enabled);
     }
 
     private JPanel createFilterOptionsPanel() {
@@ -147,7 +172,9 @@ public class MainView extends JFrame {
     }
 
     private void initComponents() {
-
+        
+        pageLabel = new JLabel(currentPage + "/" + totalPages, SwingConstants.CENTER);
+        
         // Configuração dos componentes da interface gráfica
         listaDespensa = new JList<>();
         listaReceitas = new JList<>();
