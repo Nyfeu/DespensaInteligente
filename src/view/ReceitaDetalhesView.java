@@ -5,6 +5,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ResourceBundle;
 import view.utils.ViewUtils;
+import model.dao.DAOFactory;
+import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
@@ -15,7 +17,8 @@ public class ReceitaDetalhesView extends JDialog {
 
     private JLabel lblTitulo, lblDescricao, lblModoPreparo, lblIngredientes;
     private JTextArea ingredientesArea;
-    private JButton btnEditar, btnExportar, btnVoltar; 
+    private JButton btnEditar, btnExportar, btnVoltar, btnExcluir;
+    private Receita receita; 
     private ResourceBundle bn;
 
     public ReceitaDetalhesView(JFrame parent, Receita receita, ResourceBundle bn) {
@@ -34,16 +37,16 @@ public class ReceitaDetalhesView extends JDialog {
         panelPrincipal.setBackground(new Color(245, 245, 245)); 
         panelPrincipal.setBorder(BorderFactory.createLineBorder(Color.GRAY, 5)); 
 
+        // Painel Título
+        lblTitulo = new JLabel("<html><b>" + bn.getString("main.receita.label.titulo") + ":</b> " + receita.getTitulo() + "</html>");
+        lblTitulo.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblTitulo.setBorder(new EmptyBorder(5, 0, 5, 0));
+        panelPrincipal.add(lblTitulo, BorderLayout.NORTH);
+
         // Painel de conteúdo 
         JPanel panelConteudo = new JPanel();
         panelConteudo.setLayout(new BoxLayout(panelConteudo, BoxLayout.Y_AXIS));
         panelConteudo.setBackground(new Color(245, 245, 245));
-
-        // Painel Título
-        lblTitulo = new JLabel("<html><b>" + bn.getString("main.receita.label.titulo") + ":</b> " + receita.getTitulo() + "</html>");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-        lblTitulo.setBorder(new EmptyBorder(5, 0, 5, 0));
-        panelConteudo.add(lblTitulo);
 
         // Painel Descrição
         lblDescricao = new JLabel("<html><b>" + bn.getString("main.receita.label.descricao") + ":</b> " + receita.getDescricao() + "</html>");
@@ -54,23 +57,17 @@ public class ReceitaDetalhesView extends JDialog {
         // Painel Ingredientes
         lblIngredientes = new JLabel("<html><b>" + bn.getString("main.receita.label.ingredientes") + ":</b></html>");
         lblIngredientes.setFont(new Font("Arial", Font.PLAIN, 16));
-        lblIngredientes.setBorder(new EmptyBorder(5, 0, 5, 0));
+        lblIngredientes.setBorder(new EmptyBorder(10, 0, 5, 0));
         panelConteudo.add(lblIngredientes);
 
-        ingredientesArea = new JTextArea();
-        ingredientesArea.setEditable(false);
-        ingredientesArea.setLineWrap(true);
-        ingredientesArea.setWrapStyleWord(true);
-
-        for (Ingrediente ingrediente : receita.getIngredientes()) {
-            ingredientesArea.append(ingrediente.getNome() + " - " + ingrediente.getQuantidade() + "\n");
-        }
-
-        JScrollPane ingredientesScrollPane = new JScrollPane(ingredientesArea);
-        ingredientesScrollPane.setPreferredSize(new Dimension(360, 100)); // Tamanho ajustável
-        panelConteudo.add(ingredientesScrollPane);
-
-        panelPrincipal.add(panelConteudo, BorderLayout.CENTER);
+        JList<String> ingredientList = new JList<>(receita.getIngredientes().stream()
+            .map(ing -> ing.getNome() + " - " + ing.getQuantidade())
+            .toArray(String[]::new));
+        ingredientList.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        ingredientList.setFont(new Font("Arial", Font.PLAIN, 14));
+        ingredientList.setVisibleRowCount(4);
+        ingredientList.setFixedCellHeight(16);
+        panelConteudo.add(new JScrollPane(ingredientList));
 
         // Painel Modo de Preparo
         lblModoPreparo = new JLabel("<html><b>" + bn.getString("main.receita.label.modopreparo") + ":</b><br/>" + receita.getModoPreparo().replace("\n", "<br/>") + "</html>");
@@ -84,10 +81,12 @@ public class ReceitaDetalhesView extends JDialog {
         JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnEditar = new JButton(bn.getString("main.receita.botao.editar"));
         btnExportar = new JButton(bn.getString("main.receita.botao.exportar"));
+        btnExcluir = new JButton(bn.getString("main.receita.botao.excluir"));
         btnVoltar = new JButton(bn.getString("main.receita.botao.voltar"));
         panelBotoes.setBackground(Color.GRAY);
         panelBotoes.add(btnEditar);
         panelBotoes.add(btnExportar);
+        panelBotoes.add(btnExcluir);
         panelBotoes.add(btnVoltar);
 
         panelPrincipal.add(panelBotoes, BorderLayout.SOUTH);
@@ -107,6 +106,17 @@ public class ReceitaDetalhesView extends JDialog {
 
         btnExportar.addActionListener(e -> exportarReceita(receita));
 
+        btnExcluir.addActionListener(e -> {
+            String emailAutor = receita.getEmailAutor();
+            String emailUsuario = Authenticator.getAuthenticatedUser().getEmail();
+
+            if (emailAutor.equalsIgnoreCase(emailUsuario)) {
+                excluirReceita(receita);
+            } else {
+                showNotAuthorMessage();
+            }
+        });
+
         configureButtons();
     }
 
@@ -114,6 +124,7 @@ public class ReceitaDetalhesView extends JDialog {
         ViewUtils.configureButton(btnEditar);
         ViewUtils.configureButton(btnExportar);
         ViewUtils.configureButton(btnVoltar);
+        ViewUtils.configureButton(btnExcluir);
     }
 
     public void addEditarButtonActionListener(ActionListener listener) {
@@ -122,6 +133,10 @@ public class ReceitaDetalhesView extends JDialog {
     
     public void addExportarButtonActionListener(ActionListener listener) {
         btnExportar.addActionListener(listener);
+    }
+
+    public void addExcluirButtonActionListener(ActionListener listener) {
+        btnExcluir.addActionListener(listener);
     }
 
     public void addVoltarButtonActionListener(ActionListener listener) {
@@ -135,10 +150,12 @@ public class ReceitaDetalhesView extends JDialog {
             JOptionPane.WARNING_MESSAGE);
     }
 
+    // PRECISA ARRUMAR ESSE MÉTODO
     public void editarReceitaView(Receita receita) {
         ReceitaView receitaView = new ReceitaView((MainView) getParent(), receita, bn);
         receitaView.setVisible(true);
-        atualizarDadosReceita(receita);  
+        atualizarDadosReceita(receita);
+        pack();  
     }
 
     public void atualizarDadosReceita(Receita receita) {
@@ -164,12 +181,21 @@ public class ReceitaDetalhesView extends JDialog {
                            .append(ingrediente.getQuantidade())
                            .append("\n");
         }
-        
+
         conteudoReceita.append("Modo de Preparo: ").append(receita.getModoPreparo()).append("\n");
     
         handler.writeFile(conteudoReceita.toString(), false);
     
         JOptionPane.showMessageDialog(this, "Receita exportada para " + filePath, "Exportação Completa", JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
+    private void excluirReceita(Receita receita) {
+        int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza de que deseja excluir esta receita?", "Confirmação de Exclusão", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            ReceitaDao receitaDao = DAOFactory.createReceitaDao();
+            receitaDao.delete(receita.getId()); // Remove a receita do banco de dados
+            JOptionPane.showMessageDialog(this, "Receita excluída com sucesso.", "Exclusão Completa", JOptionPane.INFORMATION_MESSAGE);
+            dispose(); // Fecha a tela de detalhes após a exclusão
+        }
+    }
 }

@@ -177,10 +177,8 @@ public class ReceitaView extends JDialog {
 
     private void configureButtons() {
         ViewUtils.configureButton(btnCancelar);
-        ViewUtils.customButton(btnPublicar);
-        ViewUtils.configureButton(btnIngrediente);
-        btnIngrediente.setBackground(Color.darkGray);
-        btnIngrediente.setForeground(Color.white);
+        ViewUtils.customButton1(btnIngrediente);
+        ViewUtils.customButton2(btnPublicar);
     }
 
     public void addPublicarButtonActionListener(ActionListener listener) {

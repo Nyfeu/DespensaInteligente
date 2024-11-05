@@ -46,7 +46,29 @@ public class ViewUtils {
     }
 
     // testando uns efeitos
-    public static void customButton(JButton button) {
+    public static void customButton1(JButton button) {
+        button.setBackground(Color.darkGray);
+        button.setForeground(Color.white);
+        button.setFocusable(false);
+        button.setBorderPainted(false);
+
+        button.addMouseListener(new MouseAdapter() {
+            private final Color originalBackground = button.getBackground();
+            private final Color hoverBackground = originalBackground.darker();
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(hoverBackground);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(originalBackground);
+            }
+        });        
+    }
+
+    public static void customButton2(JButton button) {
         button.setContentAreaFilled(false); 
         button.setOpaque(true); 
         button.setBackground(new Color(100, 149, 237)); 
