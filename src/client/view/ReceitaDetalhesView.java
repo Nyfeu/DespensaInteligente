@@ -117,6 +117,8 @@ public class ReceitaDetalhesView extends JDialog {
             }
         });
 
+        btnVoltar.addActionListener(e -> SwingUtilities.getWindowAncestor(btnVoltar).dispose());
+
         configureButtons();
     }
 
