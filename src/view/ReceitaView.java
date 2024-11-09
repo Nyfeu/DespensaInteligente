@@ -6,6 +6,7 @@ import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import view.utils.IngredienteReceitaCellRenderer;
+import view.utils.LanguageManager;
 import view.utils.ViewUtils;
 
 import javax.swing.*;
@@ -110,7 +111,7 @@ public class ReceitaView extends JDialog {
         panelIngredientesBtn.add(txtQuantidade);
         panelIngredientesBtn.add(btnIngrediente);
         listaIngredientes = new JList<>();
-        listaIngredientes.setCellRenderer(new IngredienteReceitaCellRenderer(AuthenticationView.getResourceBundle()));
+        listaIngredientes.setCellRenderer(new IngredienteReceitaCellRenderer(LanguageManager.getInstance().getResourceBundle()));
         JScrollPane scrollPaneIngredientes = new JScrollPane(listaIngredientes);
         panelIngredientes.add(scrollPaneIngredientes, BorderLayout.CENTER);
         panelIngredientes.add(panelIngredientesBtn, BorderLayout.SOUTH);

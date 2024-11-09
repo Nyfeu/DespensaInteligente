@@ -1,7 +1,6 @@
 package view.utils;
 
 import model.entities.Receita;
-import view.AuthenticationView;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,7 +28,7 @@ public class ReceitaCellRenderer extends JPanel implements ListCellRenderer<Rece
     @Override
     public Component getListCellRendererComponent(JList<? extends Receita> list, Receita value, int index, boolean isSelected, boolean cellHasFocus) {
 
-        ResourceBundle bn = AuthenticationView.getResourceBundle();
+        ResourceBundle bn = LanguageManager.getInstance().getResourceBundle();
         lblNome.setText(bn.getString("main.receita.renderer.titulo") + " " + value.getTitulo());
         lblDescription.setText(bn.getString("main.receita.renderer.descricao") + " " + truncateString(value.getDescricao(),40));
 

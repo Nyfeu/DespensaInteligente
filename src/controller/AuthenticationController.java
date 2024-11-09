@@ -3,12 +3,11 @@ package controller;
 import model.utils.Authenticator;
 import view.AuthenticationView;
 import view.MainView;
+import view.utils.LanguageManager;
 import view.utils.Validator;
 import view.utils.ViewUtils;
 
 import javax.swing.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class AuthenticationController {
 
@@ -57,7 +56,7 @@ public class AuthenticationController {
             view.getNome().isEmpty()) return;
 
         if (!Validator.isValidEmail(view.getEmail_login())) {
-            JOptionPane.showMessageDialog(view,AuthenticationView.getResourceBundle().getString("controller.authentication.email.invalido"));
+            JOptionPane.showMessageDialog(view,LanguageManager.getInstance().getResourceBundle().getString("controller.authentication.email.invalido"));
             return;
         }
 
@@ -70,7 +69,7 @@ public class AuthenticationController {
         if (authenticated) {
             System.out.println("Usuário Autenticado!");
             ViewUtils.closeView(view);
-            new MainView(AuthenticationView.getResourceBundle()).setVisible(true);
+            new MainView().setVisible(true);
         } else {
             System.out.println("Falha na autenticação...");
         }

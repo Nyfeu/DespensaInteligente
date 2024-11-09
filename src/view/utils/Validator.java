@@ -5,7 +5,6 @@ import model.dao.DAOFactory;
 import model.dao.interfaces.IngredienteDao;
 import model.entities.Ingrediente;
 import model.utils.CategoriaIngrediente;
-import view.AuthenticationView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,7 @@ public class Validator {
 
         IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
         Ingrediente ingredienteVerify = ingredienteDao.read(nome);
-        ResourceBundle bn = AuthenticationView.getResourceBundle();
+        ResourceBundle bn = LanguageManager.getInstance().getResourceBundle();
         System.out.println(ingredienteVerify);
 
         if (ingredienteVerify == null) {

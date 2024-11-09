@@ -1,17 +1,17 @@
 package model.utils;
 
-import view.AuthenticationView;
+import view.utils.LanguageManager;
 
 public enum CategoriaIngrediente {
-    FRUTAS(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.frutas")),
-    VEGETAIS(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.vegetais")),
-    CARNES(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.carnes")),
-    PEIXES(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.peixes")),
-    GRAOS(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.graos")),
-    LATICINIOS(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.laticinios")),
-    TEMPEROS(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.temperos")),
-    BEBIDAS(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.bebidas")),
-    OUTROS(AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.outros"));
+    FRUTAS(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.frutas")),
+    VEGETAIS(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.vegetais")),
+    CARNES(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.carnes")),
+    PEIXES(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.peixes")),
+    GRAOS(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.graos")),
+    LATICINIOS(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.laticinios")),
+    TEMPEROS(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.temperos")),
+    BEBIDAS(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.bebidas")),
+    OUTROS(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.validation.selecaocategoria.outros"));
 
     private final String nome;
 

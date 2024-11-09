@@ -13,7 +13,7 @@ public class DB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new DBException("Não foi possível conectar-se ao banco MySQL!");
         }
     }
 

@@ -7,8 +7,8 @@ import model.dao.interfaces.ReceitaDao;
 import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
-import view.AuthenticationView;
 import view.ReceitaView;
+import view.utils.LanguageManager;
 import view.utils.Validator;
 
 import java.awt.event.FocusEvent;
@@ -24,7 +24,7 @@ public class ReceitaController {
 
     public ReceitaController(ReceitaView receitaView) {
         this.receitaView = receitaView;
-        bn = AuthenticationView.getResourceBundle();
+        bn = LanguageManager.getInstance().getResourceBundle();
         this.ingredientes = new ArrayList<>();
         initButtonListeners();
     }

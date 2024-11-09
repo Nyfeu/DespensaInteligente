@@ -3,7 +3,7 @@ package model.utils;
 import model.dao.DAOFactory;
 import model.dao.interfaces.UsuarioDao;
 import model.entities.Usuario;
-import view.AuthenticationView;
+import view.utils.LanguageManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +48,8 @@ public class Authenticator {
         Usuario usuario = usuarioDao.read(email);
 
         if (usuario == null) {
-            JOptionPane.showMessageDialog(component, AuthenticationView.getResourceBundle().getString("utils.authenticator.user.desconhecido"), "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+            String error_string = LanguageManager.getInstance().getResourceBundle().getString("utils.authenticator.user.desconhecido");
+            JOptionPane.showMessageDialog(component, error_string, "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -59,7 +60,8 @@ public class Authenticator {
                 authenticatedUser = usuario;
                 return true;
             } else {
-                JOptionPane.showMessageDialog(component, AuthenticationView.getResourceBundle().getString("utils.authenticator.senha.invalida"), "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                String error_string = LanguageManager.getInstance().getResourceBundle().getString("utils.authenticator.senha.invalida");
+                JOptionPane.showMessageDialog(component, error_string, "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
             }
         }
 

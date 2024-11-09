@@ -13,6 +13,7 @@ import view.MainView;
 import model.utils.Authenticator;
 import view.ReceitaView;
 import view.utils.FilterListCellRenderer;
+import view.utils.LanguageManager;
 import view.utils.Validator;
 import view.utils.ViewUtils;
 
@@ -102,8 +103,8 @@ public class MainViewController {
         mainView.addFilterByIngredienteButtonListener(e -> {
 
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            model.addElement(AuthenticationView.getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"));
-            model.addElement(AuthenticationView.getResourceBundle().getString("main.receita.botao.filtrarreceitas.pordatadevalidade"));
+            model.addElement(LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"));
+            model.addElement(LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.pordatadevalidade"));
 
             JComboBox<String> cb = new JComboBox<>(model);
             cb.setRenderer(new FilterListCellRenderer());
@@ -116,10 +117,10 @@ public class MainViewController {
                 System.out.println("Icon not found at specified path.");
             }
 
-            int result = JOptionPane.showConfirmDialog(mainView, cb, AuthenticationView.getResourceBundle().getString("main.receita.botao.filtrarreceitas.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, customIcon);
+            int result = JOptionPane.showConfirmDialog(mainView, cb, LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, customIcon);
             if (result == JOptionPane.OK_OPTION) {
 
-                if (Objects.equals(cb.getSelectedItem(), AuthenticationView.getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"))) filterStrategy = new FilterReceitasByIngredientes();
+                if (Objects.equals(cb.getSelectedItem(), LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"))) filterStrategy = new FilterReceitasByIngredientes();
                 else filterStrategy = new FilterReceitasByDataValidadeAndIngredientes();
 
                 updateReceitasList(0);
@@ -129,12 +130,12 @@ public class MainViewController {
         });
 
         mainView.addAddIngredienteButtonListener(e -> {
-            IngredienteView dialog = new IngredienteView(mainView, null,AuthenticationView.getResourceBundle());
+            IngredienteView dialog = new IngredienteView(mainView, null,LanguageManager.getInstance().getResourceBundle());
             dialog.setVisible(true);
         });
 
         mainView.addPublishReceitaButtonListener(e -> {
-            ReceitaView dialog = new ReceitaView(mainView, receita, AuthenticationView.getResourceBundle());
+            ReceitaView dialog = new ReceitaView(mainView, receita, LanguageManager.getInstance().getResourceBundle());
             dialog.setVisible(true);
         });
 
@@ -142,9 +143,9 @@ public class MainViewController {
         mainView.addUpdateIngredienteListener(e -> {
             Ingrediente ingrediente = mainView.getIngredienteSelected();
             if (ingrediente == null) {
-                JOptionPane.showMessageDialog(mainView, AuthenticationView.getResourceBundle().getString("controller.mainview.nenhum.ingrediente"), "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(mainView, LanguageManager.getInstance().getResourceBundle().getString("controller.mainview.nenhum.ingrediente"), "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
             } else {
-                IngredienteView dialog = new IngredienteView(mainView, ingrediente,AuthenticationView.getResourceBundle());
+                IngredienteView dialog = new IngredienteView(mainView, ingrediente,LanguageManager.getInstance().getResourceBundle());
                 dialog.setVisible(true);
             }
         });
@@ -153,7 +154,7 @@ public class MainViewController {
 
             Ingrediente ingrediente = mainView.getIngredienteSelected();
             if (ingrediente == null) {
-                JOptionPane.showMessageDialog(mainView, AuthenticationView.getResourceBundle().getString("controller.mainview.nenhum.ingrediente"), "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(mainView, LanguageManager.getInstance().getResourceBundle().getString("controller.mainview.nenhum.ingrediente"), "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
             } else {
                 UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
                 Usuario usuario = Authenticator.getAuthenticatedUser();
@@ -168,9 +169,9 @@ public class MainViewController {
         mainView.addAlterarSenhaListener(e -> {
             JPasswordField jPasswordField = new JPasswordField(10);
             JPanel jPanel = new JPanel();
-            jPanel.add(new JLabel(AuthenticationView.getResourceBundle().getString("controller.mainview.alterar.senha")+ " "));
+            jPanel.add(new JLabel(LanguageManager.getInstance().getResourceBundle().getString("controller.mainview.alterar.senha")+ " "));
             jPanel.add(jPasswordField);
-            int option = JOptionPane.showConfirmDialog(mainView, jPanel, AuthenticationView.getResourceBundle().getString("controller.mainview.alterar.senha.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(mainView, jPanel, LanguageManager.getInstance().getResourceBundle().getString("controller.mainview.alterar.senha.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (option == JOptionPane.OK_OPTION) {
                 String password = new String(jPasswordField.getPassword()).trim();
                 Authenticator.changePassword(password);
@@ -199,7 +200,7 @@ public class MainViewController {
 
             try {
 
-                String novoNome = JOptionPane.showInputDialog(mainView, AuthenticationView.getResourceBundle().getString("controller.mainview.altera.nome") + " ", "");
+                String novoNome = JOptionPane.showInputDialog(mainView, LanguageManager.getInstance().getResourceBundle().getString("controller.mainview.altera.nome") + " ", "");
                 if (!novoNome.isEmpty()) Authenticator.changeNome(novoNome.trim());
 
             } catch (RuntimeException exception) {
@@ -218,7 +219,7 @@ public class MainViewController {
             gbc.weightx = 0.3;
             gbc.gridx = 0;
             gbc.gridy = 0;
-            jPanel.add(new JLabel(AuthenticationView.getResourceBundle().getString("main.despensa.ingrediente.nome") + " "), gbc);
+            jPanel.add(new JLabel(LanguageManager.getInstance().getResourceBundle().getString("main.despensa.ingrediente.nome") + " "), gbc);
 
             JTextField nomeTxt = new JTextField(30);
             gbc.weightx = 0.7;
@@ -226,9 +227,9 @@ public class MainViewController {
             gbc.gridy = 0;
             jPanel.add(nomeTxt, gbc);
 
-            int option = JOptionPane.showConfirmDialog(mainView, jPanel, AuthenticationView.getResourceBundle().getString("main.despensa.botao.adicionar.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(mainView, jPanel, LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (option == JOptionPane.OK_OPTION) {
-                if (Validator.verifyIngrediente(nomeTxt.getText(), mainView)) JOptionPane.showMessageDialog(mainView,AuthenticationView.getResourceBundle().getString("controller.mainview.ingrediente.existente"));
+                if (Validator.verifyIngrediente(nomeTxt.getText(), mainView)) JOptionPane.showMessageDialog(mainView,LanguageManager.getInstance().getResourceBundle().getString("controller.mainview.ingrediente.existente"));
             }
 
         });

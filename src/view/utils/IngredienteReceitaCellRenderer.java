@@ -1,8 +1,6 @@
 package view.utils;
 
-import controller.ReceitaController;
 import model.entities.Ingrediente;
-import view.AuthenticationView;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,7 +16,7 @@ public class IngredienteReceitaCellRenderer extends JPanel implements ListCellRe
     private ResourceBundle bn;
 
     public IngredienteReceitaCellRenderer(ResourceBundle bn) {
-        this.bn = AuthenticationView.getResourceBundle();
+        this.bn = LanguageManager.getInstance().getResourceBundle();
         setLayout(new BorderLayout(5, 5));
         lblNome = new JLabel();
         lblQuantidade = new JLabel();

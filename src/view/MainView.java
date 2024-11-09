@@ -5,6 +5,7 @@ import model.entities.Ingrediente;
 import model.entities.Receita;
 import model.utils.Authenticator;
 import view.utils.IngredienteCellRenderer;
+import view.utils.LanguageManager;
 import view.utils.ReceitaCellRenderer;
 import view.utils.ViewUtils;
 
@@ -30,8 +31,8 @@ public class MainView extends JFrame {
 
     private JLabel titulo_mainView, sua_despensa;
 
-    public MainView(ResourceBundle bn) {
-        this.bn = bn;
+    public MainView() {
+        this.bn = LanguageManager.getInstance().getResourceBundle();
         initComponents();
         configureMainView();
         addComponentsToPane();
@@ -190,7 +191,7 @@ public class MainView extends JFrame {
         updateIngrediente = new JButton(bn.getString("main.despensa.botao.atualizar"));
 
         // Configurar componentes
-        listaDespensa.setCellRenderer(new IngredienteCellRenderer(AuthenticationView.getResourceBundle()));
+        listaDespensa.setCellRenderer(new IngredienteCellRenderer(bn));
         listaReceitas.setCellRenderer(new ReceitaCellRenderer());
 
         // Adicionando JMenuBar
