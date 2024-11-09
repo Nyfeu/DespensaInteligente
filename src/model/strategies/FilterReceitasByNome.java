@@ -20,7 +20,9 @@ public class FilterReceitasByNome implements FilterStrategy {
     public FilterReceitasByNome(String nome_receita) { this.nome_receita = nome_receita; }
 
     @Override
-    public List<Filterable> filter(Connection conn, Integer LIMIT, Integer OFFSET) {
+    public List<Filterable> filter(Integer LIMIT, Integer OFFSET) {
+
+        Connection conn = DB.getConnection();
 
         String filterSQL = """
                 SELECT r.id
@@ -57,6 +59,7 @@ public class FilterReceitasByNome implements FilterStrategy {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 

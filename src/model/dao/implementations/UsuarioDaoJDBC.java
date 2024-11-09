@@ -19,16 +19,10 @@ import java.util.List;
 
 public class UsuarioDaoJDBC implements UsuarioDao {
 
-    private Connection conn;
-
-    public UsuarioDaoJDBC(Connection conn) {
-        this.conn = conn;
-    }
-
-
     @Override
     public void create(Usuario usuario) {
 
+        Connection conn = DB.getConnection();
         String sqlInsert = "INSERT INTO usuario(nome, email, senha_hash) VALUES(?,?,?)";
         PreparedStatement stm = null;
 
@@ -48,6 +42,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -56,6 +51,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public Usuario read(String email) {
 
+        Connection conn = DB.getConnection();
         String sqlSelect = "SELECT nome, email, senha_hash FROM usuario WHERE email = ?";
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -84,6 +80,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 
@@ -91,6 +88,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private ArrayList<Receita> readReceitasPublicadas(String email) {
 
+        Connection conn = DB.getConnection();
         String sqlSelect = "SELECT id, titulo, descricao, modo_preparo, email_usuario FROM receita WHERE email_usuario = ?";
 
         PreparedStatement stm = null;
@@ -127,6 +125,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 
@@ -134,6 +133,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private ArrayList<Ingrediente> readDespensa(String email) {
 
+        Connection conn = DB.getConnection();
         String sqlSelect = "SELECT email, nome_ingrediente, validade, quantidade FROM despensa WHERE email = ?";
 
         PreparedStatement stm = null;
@@ -169,6 +169,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 
@@ -187,6 +188,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void update(Usuario usuario) {
 
+        Connection conn = DB.getConnection();
         String sqlUpdate = "UPDATE usuario SET nome = ?, senha_hash = ? WHERE email = ?";
         PreparedStatement stm = null;
         String email = usuario.getEmail();
@@ -211,6 +213,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -218,6 +221,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private void createReceitasPublicadas(Usuario usuario) {
 
+        Connection conn = DB.getConnection();
         String sqlInsert = "INSERT INTO receita(id, titulo, descricao, modo_preparo, email_usuario) VALUES(?,?,?,?,?)";
         PreparedStatement stm = null;
         String email = usuario.getEmail();
@@ -243,6 +247,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -250,6 +255,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private void createDespensa(Usuario usuario) {
 
+        Connection conn = DB.getConnection();
         String sqlInsert = "INSERT INTO despensa(email, nome_ingrediente, validade, quantidade) VALUES(?,?,?,?)";
         PreparedStatement stm = null;
         String email = usuario.getEmail();
@@ -275,6 +281,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -284,6 +291,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public void delete(String email) {
 
+        Connection conn = DB.getConnection();
         String sqlExcluir = "DELETE FROM usuario WHERE email = ?";
         PreparedStatement stm = null;
 
@@ -303,6 +311,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -310,6 +319,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private void deleteReceitasPublicadas(String email) {
 
+        Connection conn = DB.getConnection();
         String sqlExcluir = "DELETE FROM receita WHERE email_usuario = ?";
         PreparedStatement stm = null;
 
@@ -326,6 +336,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -333,6 +344,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
     private void deleteDespensa(String email) {
 
+        Connection conn = DB.getConnection();
         String sqlExcluir = "DELETE FROM despensa WHERE email = ?";
         PreparedStatement stm = null;
 
@@ -349,6 +361,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -357,6 +370,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
     @Override
     public List<Usuario> readAll() {
 
+        Connection conn = DB.getConnection();
         PreparedStatement st = null;
         ResultSet rs = null;
 
@@ -381,6 +395,7 @@ public class UsuarioDaoJDBC implements UsuarioDao {
 
             DB.closeStatement(st);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 

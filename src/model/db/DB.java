@@ -3,18 +3,48 @@ package model.db;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.LinkedList;
 import java.util.Properties;
 
 public class DB {
 
-    private static Connection conn = null;
+    private static LinkedList<Connection> connectionPool;
+    private static final int MAX_POOL_SIZE = 10;
 
     static {
+
         try {
+
             Class.forName("com.mysql.cj.jdbc.Driver");
+
         } catch (ClassNotFoundException e) {
+
             throw new DBException("Não foi possível conectar-se ao banco MySQL!");
+
         }
+
+        connectionPool = new LinkedList<>();
+
+        Properties props = loadProperties();
+        String url = props.getProperty("dburl");
+
+        try {
+
+            for (int i = 0; i < MAX_POOL_SIZE; i++) {
+
+                Connection conn = DriverManager.getConnection(url, props);
+                connectionPool.add(conn);
+
+            }
+
+        } catch (SQLException e) {
+
+            throw new DBException("Falha ao inicializar pool de conexões com o DB...");
+
+        }
+
+        System.out.println("CONNECTION::POOL::SUCCESSFULLY::CREATED");
+
     }
 
     private DB() {}
@@ -35,40 +65,32 @@ public class DB {
 
     }
 
-    public static Connection getConnection() {
+    public static synchronized Connection getConnection() {
 
-        try {
-
-            if (conn == null) {
-
-                Properties props = loadProperties();
-                String url = props.getProperty("dburl");
-                conn = DriverManager.getConnection(url, props);
-
-            }
-
-            return conn;
-
-        } catch (DBException | SQLException e) {
-
-            throw new DBException(e.getMessage());
-
-        }
+        if (connectionPool.isEmpty()) throw new DBException("Não há conexões disponíveis na pool.");
+        else return connectionPool.removeFirst();
 
     }
 
-    public static void closeConnection() {
+    public static synchronized void releaseConnection(Connection conn) {
+
+        if (conn != null) connectionPool.addLast(conn);
+
+    }
+
+    public static void closeConnectionPool() {
 
         try {
 
-            if (conn != null) conn.close();
-            System.out.println("Conexão com banco de dados fechada.");
+            for (Connection conn : connectionPool) conn.close();
 
         } catch (SQLException e) {
 
-            throw new DBException(e.getMessage());
+            throw new DBException("ERROR::CLOSING::CONNECTION::POOL");
 
         }
+
+        System.out.println("CONNECTION::POOL::CLOSED");
 
     }
 
@@ -107,6 +129,5 @@ public class DB {
         }
 
     }
-
 
 }

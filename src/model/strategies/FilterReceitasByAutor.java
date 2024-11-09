@@ -20,7 +20,9 @@ public class FilterReceitasByAutor implements FilterStrategy {
     public FilterReceitasByAutor(String emailAutor) { this.emailAutor = emailAutor; }
 
     @Override
-    public List<Filterable> filter(Connection conn, Integer LIMIT, Integer OFFSET) {
+    public List<Filterable> filter(Integer LIMIT, Integer OFFSET) {
+
+        Connection conn = DB.getConnection();
 
         String filterSQL = """
                 SELECT r.id
@@ -57,6 +59,7 @@ public class FilterReceitasByAutor implements FilterStrategy {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 

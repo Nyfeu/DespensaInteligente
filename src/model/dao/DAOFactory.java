@@ -1,6 +1,5 @@
 package model.dao;
 
-import model.db.DB;
 import model.dao.implementations.IngredienteDaoJDBC;
 import model.dao.implementations.ReceitaDaoJDBC;
 import model.dao.implementations.UsuarioDaoJDBC;
@@ -11,15 +10,15 @@ import model.dao.interfaces.UsuarioDao;
 public class DAOFactory {
 
     public static IngredienteDao createIngredienteDao() {
-        return new IngredienteDaoJDBC(DB.getConnection());
+        return new IngredienteDaoJDBC();
     }
 
     public static UsuarioDao createUsuarioDao() {
-        return new UsuarioDaoJDBC(DB.getConnection());
+        return new UsuarioDaoJDBC();
     }
 
     public static ReceitaDao createReceitaDao() {
-        return new ReceitaDaoJDBC(DB.getConnection());
+        return new ReceitaDaoJDBC();
     }
 
 }

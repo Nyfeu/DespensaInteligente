@@ -15,20 +15,16 @@ import java.util.List;
 
 public class IngredienteDaoJDBC implements IngredienteDao {
 
-    private Connection conn;
-
-    public IngredienteDaoJDBC(Connection conn) {
-        this.conn = conn;
-    }
-
     @Override
     public void create(Ingrediente ingrediente) {
 
+        Connection conn = null;
         String sqlInsert = "INSERT INTO ingrediente(nome, categoria) VALUES(?,?)";
         PreparedStatement stm = null;
 
         try {
 
+            conn = DB.getConnection();
             stm = conn.prepareStatement(sqlInsert);
             stm.setString(1, ingrediente.getNome());
             stm.setInt(2, ingrediente.getCategoria());
@@ -41,6 +37,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
     }
@@ -48,12 +45,14 @@ public class IngredienteDaoJDBC implements IngredienteDao {
     @Override
     public Ingrediente read(String name) {
 
+        Connection conn = null;
         String sqlCarregar = "SELECT Nome, Categoria FROM Ingrediente WHERE Nome = ?";
         ResultSet rs = null;
         PreparedStatement stm = null;
 
         try {
 
+            conn = DB.getConnection();
             stm = conn.prepareStatement(sqlCarregar);
             stm.setString(1, name);
             rs = stm.executeQuery();
@@ -69,6 +68,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 
@@ -77,10 +77,13 @@ public class IngredienteDaoJDBC implements IngredienteDao {
     @Override
     public void update(Ingrediente ingrediente) {
 
+        Connection conn = null;
         String sqlUpdate = "UPDATE INGREDIENTE SET Categoria = ? WHERE Nome = ?";
         PreparedStatement stm = null;
 
         try {
+
+            conn = DB.getConnection();
 
             stm = conn.prepareStatement(sqlUpdate);
             stm.setInt(1, ingrediente.getCategoria());
@@ -94,6 +97,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -102,11 +106,13 @@ public class IngredienteDaoJDBC implements IngredienteDao {
     @Override
     public void delete(String name) {
 
+        Connection conn = null;
         String sqlExcluir = "DELETE FROM INGREDIENTE WHERE Nome = ?";
         PreparedStatement stm = null;
 
         try{
 
+            conn = DB.getConnection();
             stm = conn.prepareStatement(sqlExcluir);
             stm.setString(1, name);
             stm.execute();
@@ -118,6 +124,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -126,10 +133,13 @@ public class IngredienteDaoJDBC implements IngredienteDao {
     @Override
     public List<Ingrediente> readAll() {
 
+        Connection conn = null;
         PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
+
+            conn = DB.getConnection();
 
             st = conn.prepareStatement("SELECT * FROM INGREDIENTE ORDER BY Nome");
 
@@ -150,6 +160,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
 
             DB.closeStatement(st);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
     }

@@ -17,20 +17,17 @@ import java.util.List;
 
 public class ReceitaDaoJDBC implements ReceitaDao {
 
-    private Connection conn;
-
-    public ReceitaDaoJDBC(Connection conn) {
-        this.conn = conn;
-    }
-
     @Override
     public void create(Receita receita) {
 
+        Connection conn = null;
         String sqlInsert = "INSERT INTO RECEITA(titulo, descricao, modo_preparo, email_usuario) VALUES(?,?,?,?)";
 
         PreparedStatement stm = null;
         ResultSet rs = null;
         try{
+
+            conn = DB.getConnection();
 
             stm = conn.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, receita.getTitulo());
@@ -61,6 +58,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
         }
 
     }
@@ -68,11 +66,14 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public Receita read(Integer recipe_id) {
 
+        Connection conn = null;
         String sqlCarregar = "SELECT id, titulo, descricao, modo_preparo, email_usuario FROM RECEITA WHERE id = ?";
         ResultSet rs1 = null, rs2 = null;
         PreparedStatement stm = null;
 
         try{
+
+            conn = DB.getConnection();
 
             stm = conn.prepareStatement(sqlCarregar);
             stm.setInt(1, recipe_id);
@@ -94,6 +95,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             DB.closeStatement(stm);
             DB.closeResultSet(rs1);
             DB.closeResultSet(rs2);
+            DB.releaseConnection(conn);
 
         }
     }
@@ -101,10 +103,13 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public void update(Receita receita) {
 
+        Connection conn = null;
         String sqlUpdate = "UPDATE RECEITA SET Titulo = ?, Descricao = ?, modo_preparo = ?, email_usuario = ? WHERE id = ?";
         PreparedStatement stm = null;
 
         try{
+
+            conn = DB.getConnection();
 
             stm = conn.prepareStatement(sqlUpdate);
             stm.setString(1, receita.getTitulo());
@@ -134,6 +139,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -142,10 +148,13 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public void delete(Integer recipe_id) {
 
+        Connection conn = null;
         String sqlExcluir = "DELETE FROM RECEITA WHERE id = ?";
         PreparedStatement stm = null;
 
         try{
+
+            conn = DB.getConnection();
 
             stm = conn.prepareStatement(sqlExcluir);
             stm.setInt(1, recipe_id);
@@ -162,6 +171,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         } finally {
 
             DB.closeStatement(stm);
+            DB.releaseConnection(conn);
 
         }
 
@@ -170,10 +180,13 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     @Override
     public List<Receita> readAll() {
 
+        Connection conn = null;
         PreparedStatement st = null;
         ResultSet rs1 = null, rs2 = null;
 
         try {
+
+            conn = DB.getConnection();
 
             st = conn.prepareStatement("SELECT * FROM RECEITA ORDER BY id");
 
@@ -200,6 +213,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             DB.closeStatement(st);
             DB.closeResultSet(rs1);
             DB.closeResultSet(rs2);
+            DB.releaseConnection(conn);
 
         }
 
@@ -207,21 +221,32 @@ public class ReceitaDaoJDBC implements ReceitaDao {
 
     @Override
     public int countAll() {
+
+        Connection conn = DB.getConnection();
+
         int count = 0;
-        String sql = "SELECT COUNT(*) FROM RECEITA"; 
+        String sql = "SELECT COUNT(*) FROM RECEITA";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql);
+
             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                count = rs.getInt(1); 
-            }
+            if (rs.next()) count = rs.getInt(1);
+
         } catch (SQLException e) {
-            throw new DBException(e.getMessage()); 
+
+            throw new DBException(e.getMessage());
+
+        } finally {
+
+            DB.releaseConnection(conn);
+
         }
+
         return count;
     }
 
     public List<Filterable> filter(FilterStrategy filterStrategy, Integer LIMIT, Integer OFFSET) {
-        return filterStrategy.filter(conn, LIMIT, OFFSET);
+        return filterStrategy.filter(LIMIT, OFFSET);
     }
 
     private Receita instantiateReceita(ResultSet rs1, ResultSet rs2) throws SQLException {

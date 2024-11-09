@@ -17,7 +17,9 @@ import java.util.List;
 public class FilterReceitasByIngredientes implements FilterStrategy {
 
     @Override
-    public List<Filterable> filter(Connection conn, Integer LIMIT, Integer OFFSET) {
+    public List<Filterable> filter(Integer LIMIT, Integer OFFSET) {
+
+        Connection conn = DB.getConnection();
 
         String filterSQL = """
                 SELECT r.id
@@ -57,6 +59,7 @@ public class FilterReceitasByIngredientes implements FilterStrategy {
 
             DB.closeStatement(stm);
             DB.closeResultSet(rs);
+            DB.releaseConnection(conn);
 
         }
 
