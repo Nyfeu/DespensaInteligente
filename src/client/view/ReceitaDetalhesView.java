@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.ResourceBundle;
 import client.view.utils.ViewUtils;
 import com.itextpdf.text.Document;
@@ -248,8 +249,19 @@ public class ReceitaDetalhesView extends JDialog {
         }
     }
 
+    
+
     private void excluirReceita(Receita receita) {
-        int confirm = JOptionPane.showConfirmDialog(this, bn.getString("main.receita.exibe.msg.excluir"), bn.getString("main.receita.exibe.msg.excluir.titulo"), JOptionPane.YES_NO_OPTION);
+
+        URL iconUrl = getClass().getResource("/client/resources/images/trash.png");
+        ImageIcon customIcon = null;
+        if (iconUrl != null) {
+            customIcon = new ImageIcon(iconUrl);
+        } else {
+            System.out.println("Icon not found at specified path.");
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this, bn.getString("main.receita.exibe.msg.excluir"), bn.getString("main.receita.exibe.msg.excluir.titulo"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, customIcon);
         if (confirm == JOptionPane.YES_OPTION) {
             ReceitaDao receitaDao = DAOFactory.createReceitaDao();
             receitaDao.delete(receita.getId()); // Remove a receita do banco de dados
