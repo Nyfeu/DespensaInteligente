@@ -1,8 +1,0 @@
-Título: Biscoito de Manteiga
-Descrição: Biscoitos crocantes e deliciosos
-Ingredientes:
-- Farinha de Trigo : 2
-- Manteiga : 1
-- Açúcar : 1
-- Fermento : 1
-Modo de Preparo: Assar por 20 minutos
