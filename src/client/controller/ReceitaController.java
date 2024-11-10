@@ -14,6 +14,7 @@ import client.view.utils.Validator;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class ReceitaController {
@@ -50,7 +51,7 @@ public class ReceitaController {
             ReceitaDao receitaDao = DAOFactory.createReceitaDao();
             receitaDao.create(receita);
 
-            receitaView.getMainView().getMainViewController().updateReceitasList(0);
+            receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
             receitaView.dispose();
         });
 

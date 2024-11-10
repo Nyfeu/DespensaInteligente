@@ -1,9 +1,9 @@
-package shared.util;
+package shared.enums;
 
 public enum Attributes {
 
     RESULT("RESULT"),
-    STRATAGY("STRATEGY"),
+    STRATEGY("STRATEGY"),
     LIMIT("LIMIT"),
     OFFSET("OFFSET"),
     EMAIL("EMAIL"),
@@ -11,7 +11,8 @@ public enum Attributes {
     RECIPE_ID("RECIPE_ID"),
     USER("USER"),
     RECEITA("RECEITA"),
-    INGREDIENTE("INGREDIENTE");
+    INGREDIENTE("INGREDIENTE"),
+    AUTOR("AUTOR");
 
     private final String description;
 

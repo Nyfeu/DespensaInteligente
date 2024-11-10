@@ -1,8 +1,12 @@
 package client.controller;
 
+import client.facade.ClientFacade;
 import server.dao.DAOFactory;
 import server.dao.interfaces.ReceitaDao;
 import server.dao.interfaces.UsuarioDao;
+import server.strategies.Filterable;
+import shared.enums.Command;
+import shared.enums.Entity;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import shared.entities.Usuario;
@@ -19,17 +23,18 @@ import client.view.utils.ViewUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import server.strategies.*;
+
+import shared.enums.Attributes;
+import shared.enums.Strategy;
 
 public class MainViewController {
 
     private MainView mainView;
     private ReceitaDao receitaDao;
     private Receita receita;
-    private FilterStrategy filterStrategy;
+    private Strategy filterStrategy;
     private int offset = 0, receitasPorPagina = 12;
 
     public MainViewController(MainView mainView) {
@@ -41,57 +46,98 @@ public class MainViewController {
 
         // Carregar dados iniciais
         mainView.setListaDespensaData(Authenticator.getAuthenticatedUser().getDespensa());
-        updateReceitasList(0);
+        updateReceitasList(0, new HashMap<>());
     }
 
-    public void updateReceitasList(int newOffset) {
+    public void updateReceitasList(int newOffset, Map<String, Object> args) {
+
         offset = newOffset;
-        if (filterStrategy == null) {
-            filterStrategy = new FilterReceitasByPage();
-        }
+        if (filterStrategy == null) filterStrategy = Strategy.PAGE;
 
-        int totalReceitas = receitaDao.countAll();
-        int totalPages = (int) Math.ceil((double) totalReceitas / receitasPorPagina);
-        int currentPage = offset / receitasPorPagina + 1;
+        ClientFacade.sendRequest(Entity.RECEITA, Command.COUNT_ALL, null, responsePacket -> {
 
-        List<Filterable> filterableList = receitaDao.filter(filterStrategy, 12, offset);
-        ArrayList<Receita> receitaList = new ArrayList<>();
+            int totalReceitas = (int) responsePacket.getData().get(Attributes.RESULT.getDescription());
+            int totalPages = (int) Math.ceil((double) totalReceitas / receitasPorPagina);
+            int currentPage = offset / receitasPorPagina + 1;
 
-        for (Filterable filterable : filterableList) {
-            Receita receita = receitaDao.read(filterable.getId());
-            receitaList.add(receita);
-        }
-        mainView.setListaReceitasData(receitaList);
+            // Atualizar a interface com o número de páginas
 
-        mainView.setTotalPages(totalPages);
-        mainView.setCurrentPage(currentPage);
+            SwingUtilities.invokeLater(() -> {
 
-        boolean isLastPage = filterableList.size() < receitasPorPagina;
-        mainView.setRightButtonEnabled(!isLastPage);
-        mainView.setLeftButtonEnabled(offset > 0);
+                mainView.setTotalPages(totalPages);
+                mainView.setCurrentPage(currentPage);
+
+            });
+
+            // Enviar requisição assíncrona para buscar a lista de receitas
+
+            args.put(Attributes.LIMIT.getDescription(), receitasPorPagina);
+            args.put(Attributes.OFFSET.getDescription(), offset);
+            args.put(Attributes.STRATEGY.getDescription(), filterStrategy);
+
+            ClientFacade.sendRequest(Entity.RECEITA, Command.FILTER, args, filterResponsePacket -> {
+
+                List<Filterable> filterableList = (List<Filterable>) filterResponsePacket.getData()
+                        .get(Attributes.RESULT.getDescription());
+
+                ArrayList<Receita> receitaList   = new ArrayList<>();
+
+                for (Filterable filterable : filterableList) {
+                    Receita receita = receitaDao.read(filterable.getId());
+                    receitaList.add(receita);
+                }
+
+                SwingUtilities.invokeLater(() -> {
+
+                    mainView.setListaReceitasData(receitaList);
+                    mainView.setTotalPages(totalPages);
+                    mainView.setCurrentPage(currentPage);
+
+                    boolean isLastPage = filterableList.size() < receitasPorPagina;
+                    mainView.setRightButtonEnabled(!isLastPage);
+                    mainView.setLeftButtonEnabled(offset > 0);
+
+                });
+
+            });
+
+        });
+
     }
 
     private void initButtonListeners() {
 
         mainView.addLeftButtonListener(e -> {
             if (offset >= receitasPorPagina) {
-                updateReceitasList(offset - receitasPorPagina);
+                updateReceitasList(offset - receitasPorPagina, new HashMap<>());
             }
         });
 
-        mainView.addRightButtonListener(e -> updateReceitasList(offset + 12));
+        mainView.addRightButtonListener(e -> updateReceitasList(offset + 12, new HashMap<>()));
 
         mainView.addFilterReceitaButtonListener(e -> {
 
-            if (mainView.getDropdown() == 0) filterStrategy = new FilterReceitasByAutor(mainView.getTxtFiltro());
-            else filterStrategy = new FilterReceitasByNome(mainView.getTxtFiltro());
-            updateReceitasList(0);
+            Map<String, Object> args = new HashMap<>();
+
+            if (mainView.getDropdown() == 0) {
+
+                filterStrategy = Strategy.AUTOR;
+                args.put(Attributes.AUTOR.getDescription(), mainView.getTxtFiltro());
+
+            } else {
+
+                filterStrategy = Strategy.NOME;
+                args.put(Attributes.NAME.getDescription(), mainView.getTxtFiltro());
+
+            }
+
+            updateReceitasList(0, args);
 
         });
 
         mainView.addClearButtonListener(e -> {
-            filterStrategy = new FilterReceitasByPage();
-            updateReceitasList(0);
+            filterStrategy = Strategy.PAGE;
+            updateReceitasList(0, new HashMap<>());
         });
 
         mainView.addLogoutListener(e -> {
@@ -120,10 +166,10 @@ public class MainViewController {
             int result = JOptionPane.showConfirmDialog(mainView, cb, LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, customIcon);
             if (result == JOptionPane.OK_OPTION) {
 
-                if (Objects.equals(cb.getSelectedItem(), LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"))) filterStrategy = new FilterReceitasByIngredientes();
-                else filterStrategy = new FilterReceitasByDataValidadeAndIngredientes();
+                if (Objects.equals(cb.getSelectedItem(), LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"))) filterStrategy = Strategy.INGREDIENTES;
+                else filterStrategy = Strategy.DATA_VALIDADE_AND_INGREDIENTES;
 
-                updateReceitasList(0);
+                updateReceitasList(0, new HashMap<>());
 
             }
 

@@ -5,7 +5,7 @@ import server.db.DBException;
 import server.dao.DAOFactory;
 import server.dao.interfaces.ReceitaDao;
 import shared.entities.Receita;
-import client.model.utils.Authenticator;
+import shared.entities.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterReceitasByIngredientes implements FilterStrategy {
+
+    private Usuario usuario;
+
+    public FilterReceitasByIngredientes(Usuario usuario) { this.usuario = usuario; }
 
     @Override
     public List<Filterable> filter(Integer LIMIT, Integer OFFSET) {
@@ -36,7 +40,7 @@ public class FilterReceitasByIngredientes implements FilterStrategy {
         try {
 
             stm = conn.prepareStatement(filterSQL);
-            stm.setString(1, Authenticator.getAuthenticatedUser().getEmail());
+            stm.setString(1, usuario.getEmail());
             stm.setInt(2, LIMIT);
             stm.setInt(3, OFFSET);
             rs = stm.executeQuery();

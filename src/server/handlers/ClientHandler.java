@@ -2,17 +2,13 @@ package server.handlers;
 
 import server.ServerApp;
 import server.dao.DAOFactory;
-import server.strategies.FilterStrategy;
-import server.strategies.Filterable;
-import shared.Command;
-import shared.Entity;
-import shared.Status;
+import server.strategies.*;
+import shared.enums.*;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import shared.entities.Usuario;
 import shared.serializable.RequestPacket;
 import shared.serializable.ResponsePacket;
-import shared.util.Attributes;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -490,7 +486,7 @@ public class ClientHandler extends Thread {
 
                 } else {
 
-                    FilterStrategy filterStrategy = (FilterStrategy) requestPacket.getArgs().get(Attributes.STRATAGY.getDescription());
+                    FilterStrategy filterStrategy = getStrategyFromRequestPacket(requestPacket);
 
                     Integer limit = (Integer) requestPacket.getArgs().get(Attributes.LIMIT.getDescription());
                     Integer offset = (Integer) requestPacket.getArgs().get(Attributes.OFFSET.getDescription());
@@ -568,6 +564,50 @@ public class ClientHandler extends Thread {
             }
 
         }
+
+    }
+
+    private FilterStrategy getStrategyFromRequestPacket(RequestPacket requestPacket) {
+
+        Strategy strategy_type = (Strategy) requestPacket.getArgs().get(Attributes.STRATEGY.getDescription());
+
+        FilterStrategy filterStrategy = null;
+
+        switch (strategy_type) {
+
+            case NOME -> {
+
+                String nome_receita = (String) requestPacket.getArgs().get(Attributes.NAME.getDescription());
+                filterStrategy = new FilterReceitasByNome(nome_receita);
+
+            }
+
+            case PAGE -> filterStrategy = new FilterReceitasByPage();
+
+            case AUTOR -> {
+
+                String autor = (String) requestPacket.getArgs().get(Attributes.AUTOR.getDescription());
+                filterStrategy = new FilterReceitasByAutor(autor);
+
+            }
+
+            case INGREDIENTES -> {
+
+                Usuario usuario = (Usuario) requestPacket.getArgs().get(Attributes.USER.getDescription());
+                filterStrategy = new FilterReceitasByIngredientes(usuario);
+
+            }
+
+            case DATA_VALIDADE_AND_INGREDIENTES -> {
+
+                Usuario usuario = (Usuario) requestPacket.getArgs().get(Attributes.USER.getDescription());
+                filterStrategy = new FilterReceitasByDataValidadeAndIngredientes(usuario);
+
+            }
+
+        }
+
+        return filterStrategy;
 
     }
 

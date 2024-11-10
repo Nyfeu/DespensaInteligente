@@ -1,6 +1,6 @@
 package client.facade;
 
-import shared.Status;
+import shared.enums.Status;
 import shared.serializable.RequestPacket;
 import shared.serializable.ResponsePacket;
 

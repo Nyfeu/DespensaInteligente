@@ -3,11 +3,11 @@ package client.model.utils;
 import client.facade.ClientFacade;
 import server.dao.DAOFactory;
 import server.dao.interfaces.UsuarioDao;
-import shared.Command;
-import shared.Entity;
+import shared.enums.Command;
+import shared.enums.Entity;
 import shared.entities.Usuario;
 import client.view.utils.LanguageManager;
-import shared.util.Attributes;
+import shared.enums.Attributes;
 
 import javax.swing.*;
 import java.awt.*;

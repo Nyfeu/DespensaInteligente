@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class MainView extends JFrame {
@@ -157,7 +158,7 @@ public class MainView extends JFrame {
     }
 
     private void fetchInitialReceitas() {
-        mainViewController.updateReceitasList(0);
+        mainViewController.updateReceitasList(0, new HashMap<>());
     }
 
     private void configureMainView() {

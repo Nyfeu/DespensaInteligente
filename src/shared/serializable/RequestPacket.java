@@ -1,7 +1,7 @@
 package shared.serializable;
 
-import shared.Command;
-import shared.Entity;
+import shared.enums.Command;
+import shared.enums.Entity;
 
 import java.io.Serializable;
 import java.util.Map;

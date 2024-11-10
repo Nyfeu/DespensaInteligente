@@ -1,6 +1,6 @@
 package shared.serializable;
 
-import shared.Status;
+import shared.enums.Status;
 
 import java.io.Serializable;
 import java.util.Map;

@@ -1,8 +1,8 @@
 package client.facade;
 
 import client.exceptions.ClientException;
-import shared.Command;
-import shared.Entity;
+import shared.enums.Command;
+import shared.enums.Entity;
 import shared.serializable.RequestPacket;
 import shared.serializable.ResponsePacket;
 
