@@ -95,11 +95,12 @@ public class CommunicationHandler {
             }
 
             // Envia a requisição ao servidor
-            outStream.writeObject(request);
+            outStream.writeUnshared(request);
+            outStream.reset();
             outStream.flush();
 
             // Aguarda a resposta do servidor
-            ResponsePacket response = (ResponsePacket) inStream.readObject();
+            ResponsePacket response = (ResponsePacket) inStream.readUnshared();
 
             // Chama o callback associado à requisição usando o requestId
             Consumer<ResponsePacket> callback = callbackMap.remove(response.getRequestId());

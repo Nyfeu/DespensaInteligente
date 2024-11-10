@@ -76,7 +76,7 @@ public class ClientHandler extends Thread {
 
         try {
 
-            RequestPacket requestPacket = (RequestPacket) input.readObject();
+            RequestPacket requestPacket = (RequestPacket) input.readUnshared();
             System.out.println("NEW::REQUEST::RECEIVED::" + acceptedClient.getInetAddress().getHostAddress());
             processCommand(requestPacket);
 
@@ -112,8 +112,7 @@ public class ClientHandler extends Thread {
                         null
                 );
 
-                output.writeObject(responsePacket);
-                output.flush();
+                output.writeUnshared(responsePacket);
 
             }
 
@@ -178,7 +177,7 @@ public class ClientHandler extends Thread {
 
                 }
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
@@ -256,7 +255,7 @@ public class ClientHandler extends Thread {
 
                 }
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
@@ -326,7 +325,7 @@ public class ClientHandler extends Thread {
 
                 }
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
@@ -392,7 +391,7 @@ public class ClientHandler extends Thread {
 
                 }
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
@@ -470,7 +469,7 @@ public class ClientHandler extends Thread {
 
                 }
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
@@ -511,7 +510,7 @@ public class ClientHandler extends Thread {
 
                 }
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
@@ -547,7 +546,7 @@ public class ClientHandler extends Thread {
 
                 }
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
@@ -563,7 +562,7 @@ public class ClientHandler extends Thread {
                         "Unkown Command!"
                 );
 
-                output.writeObject(responsePacket);
+                output.writeUnshared(responsePacket);
                 output.flush();
 
             }
