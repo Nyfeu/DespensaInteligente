@@ -22,7 +22,9 @@ public class ReceitaDetalhesController {
     private void initButtonListeners() {
         detalhesView.addEditarButtonActionListener(e -> abrirEdicaoReceita());
             
-        detalhesView.addExportarButtonActionListener(e -> exportarReceita());
+        detalhesView.addExportarMenuItemActionListener(e -> exportarReceita());
+
+        detalhesView.addExportarPDFMenuItemButtonActionListener(e -> exportarReceitaPDF());
 
         detalhesView.addVoltarButtonActionListener(e -> detalhesView.dispose());
     }
@@ -37,4 +39,6 @@ public class ReceitaDetalhesController {
     private void exportarReceita() {
         detalhesView.exportarReceita(receita);
     }
+
+    private void exportarReceitaPDF() { detalhesView.exportarReceitaParaPDF(receita); }
 }
