@@ -3,10 +3,11 @@ package shared.serializable;
 import shared.Command;
 import shared.Entity;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class RequestPacket {
+public class RequestPacket implements Serializable {
 
     private Entity entity;
     private Command command;        // Enum para indicar o comando (CREATE, READ, UPDATE, DELETE, etc.)

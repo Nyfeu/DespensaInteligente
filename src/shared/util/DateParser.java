@@ -1,4 +1,4 @@
-package client.model.utils;
+package shared.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

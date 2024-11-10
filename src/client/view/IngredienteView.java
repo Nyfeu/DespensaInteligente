@@ -2,7 +2,7 @@ package client.view;
 
 import client.controller.IngredienteController;
 import shared.entities.Ingrediente;
-import client.model.utils.DateParser;
+import shared.util.DateParser;
 
 import javax.swing.*;
 import java.awt.*;
