@@ -77,6 +77,7 @@ public class ClientHandler extends Thread {
         try {
 
             RequestPacket requestPacket = (RequestPacket) input.readObject();
+            System.out.println("NEW::REQUEST::RECEIVED::" + acceptedClient.getInetAddress().getHostAddress());
             processCommand(requestPacket);
 
         } catch (ClassNotFoundException e) {
@@ -280,7 +281,11 @@ public class ClientHandler extends Thread {
 
                         case USUARIO -> {
 
-                            DAOFactory.createUsuarioDao().update((Usuario) requestPacket.getArgs().get(Attributes.USER.getDescription()));
+                            Usuario usuario_up = (Usuario) requestPacket.getArgs().get(Attributes.USER.getDescription());
+
+                            System.out.println(usuario_up.getDespensa().toString());
+
+                            DAOFactory.createUsuarioDao().update(usuario_up);
 
                             responsePacket = new ResponsePacket(
                                     requestPacket.getRequestId(),

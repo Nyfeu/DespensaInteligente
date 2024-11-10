@@ -1,7 +1,6 @@
 package client;
 
 import client.facade.ClientFacade;
-import server.db.DB;
 import client.view.AuthenticationView;
 
 import javax.swing.*;
@@ -21,7 +20,6 @@ public class ClientApp {
 
         System.out.println("CLOSING::CLIENT::FACADE");
         ClientFacade.closeConnection();
-        DB.closeConnectionPool();
 
     }
 

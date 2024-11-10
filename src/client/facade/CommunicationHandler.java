@@ -1,5 +1,9 @@
 package client.facade;
 
+import shared.entities.Usuario;
+import shared.enums.Attributes;
+import shared.enums.Command;
+import shared.enums.Entity;
 import shared.enums.Status;
 import shared.serializable.RequestPacket;
 import shared.serializable.ResponsePacket;
@@ -78,6 +82,17 @@ public class CommunicationHandler {
     public void sendRequest(RequestPacket request) {
 
         try {
+
+            Command command = request.getCommand();
+            Entity entity = request.getEntity();
+
+            if (command == Command.UPDATE && entity == Entity.USUARIO) {
+
+                System.out.println("Enviando USER:");
+                Usuario user = (Usuario) request.getArgs().get(Attributes.USER.getDescription());
+                System.out.println(user.getDespensa().toString());
+
+            }
 
             // Envia a requisição ao servidor
             outStream.writeObject(request);

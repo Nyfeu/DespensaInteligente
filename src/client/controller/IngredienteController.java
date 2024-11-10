@@ -1,17 +1,23 @@
 package client.controller;
 
+import client.facade.ClientFacade;
 import client.model.builder.IngredienteBuilder;
-import server.dao.DAOFactory;
-import server.dao.interfaces.UsuarioDao;
 import shared.entities.Ingrediente;
 import shared.entities.Usuario;
 import client.model.utils.Authenticator;
 import client.view.IngredienteView;
 import client.view.utils.Validator;
+import shared.enums.Attributes;
+import shared.enums.Command;
+import shared.enums.Entity;
+import shared.enums.Status;
 
+import javax.swing.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IngredienteController {
 
@@ -34,57 +40,69 @@ public class IngredienteController {
 
                 String nome = ingredienteView.getTxtNome();
 
-                boolean continuar = Validator.verifyIngrediente(nome, ingredienteView);
+                Validator.verifyIngrediente(nome, ingredienteView).thenAccept(continuar -> {
 
-                if (!continuar) return;
+                    if (continuar) {
 
-                int quantidade = ingredienteView.getQuantidade();
-                Date dataValidade;
-                try {
-                    dataValidade = ingredienteView.getData();
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
+                        int quantidade = ingredienteView.getQuantidade();
+                        Date dataValidade;
+                        try {
+                            dataValidade = ingredienteView.getData();
+                        } catch (ParseException ex) {
+                            throw new RuntimeException(ex);
+                        }
 
-                UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-                Usuario usuario = Authenticator.getAuthenticatedUser();
-                ArrayList<Ingrediente> novaDespensa = usuario.getDespensa();
+                        Usuario usuario = Authenticator.getAuthenticatedUser();
+                        ArrayList<Ingrediente> novaDespensa = usuario.getDespensa();
 
-                IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
+                        IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
 
-                ingredienteBuilder.nome(nome)
-                        .validade(dataValidade)
-                        .quantidade(quantidade);
+                        ingredienteBuilder.nome(nome)
+                                .validade(dataValidade)
+                                .quantidade(quantidade);
 
-                Ingrediente ingrediente = ingredienteBuilder.build();
+                        Ingrediente ingrediente = ingredienteBuilder.build();
 
-                ArrayList<String> ingredientesNome = new ArrayList<>();
-                for (Ingrediente ingred : novaDespensa) ingredientesNome.add(ingred.getNome());
+                        ArrayList<String> ingredientesNome = new ArrayList<>();
+                        for (Ingrediente ingred : novaDespensa) ingredientesNome.add(ingred.getNome());
 
-                int index = ingredientesNome.indexOf(nome);
+                        int index = ingredientesNome.indexOf(nome);
 
-                if (index == -1) {
+                        if (index == -1) usuario.addIngredienteDespensa(ingrediente);
+                        else {
 
-                        Authenticator.getAuthenticatedUser().addIngredienteDespensa(ingrediente);
-                        usuarioDao.update(usuario);
+                            Ingrediente ingredienteEncontrado = novaDespensa.get(index);
 
-                } else {
+                            int novaQuantidade = ingredienteEncontrado.getQuantidade() + ingrediente.getQuantidade();
+                            ingredienteEncontrado.setQuantidade(novaQuantidade);
 
-                        Ingrediente ingredienteEncontrado = novaDespensa.get(index);
+                            Date validade = dataValidade.before(ingredienteEncontrado.getValidade()) ? dataValidade : ingredienteEncontrado.getValidade();
+                            ingredienteEncontrado.setValidade(validade);
 
-                        int novaQuantidade = ingredienteEncontrado.getQuantidade() + ingrediente.getQuantidade();
-                        ingredienteEncontrado.setQuantidade(novaQuantidade);
+                            usuario.setDespensa(novaDespensa);
 
-                        Date validade = dataValidade.before(ingredienteEncontrado.getValidade()) ? dataValidade : ingredienteEncontrado.getValidade();
-                        ingredienteEncontrado.setValidade(validade);
+                        }
 
-                        usuario.setDespensa(novaDespensa);
-                        usuarioDao.update(usuario);
+                        // Envia a solicitação de atualização da despensa via ClientFacade
+                        Map<String, Object> args = new HashMap<>();
+                        args.put(Attributes.USER.getDescription(), usuario);
 
-                }
+                        ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, responsePacket -> {
 
-                ingredienteView.getMainView().setListaDespensaData(novaDespensa);
-                ingredienteView.dispose();
+                            if (responsePacket.getStatus().equals(Status.SUCCESS)) {
+
+                                ingredienteView.getMainView().setListaDespensaData(novaDespensa);
+                                JOptionPane.showMessageDialog(ingredienteView, "Ingrediente adicionado com sucesso!", "INFO_MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+
+                            } else JOptionPane.showMessageDialog(ingredienteView, "Erro ao atualizar a despensa no servidor. Tente novamente.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+
+                            ingredienteView.dispose();
+
+                        });
+
+                    }
+
+                });
 
             });
 
@@ -93,10 +111,9 @@ public class IngredienteController {
             ingredienteView.addAdicionarButtonActionListener(e -> {
 
                 Ingrediente ingrediente = ingredienteView.getIngrediente();
-
-                UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
                 Usuario usuario = Authenticator.getAuthenticatedUser();
                 ArrayList<Ingrediente> novaDespensa = usuario.getDespensa();
+
                 int index = novaDespensa.indexOf(ingrediente);
                 novaDespensa.remove(ingrediente);
 
@@ -107,9 +124,20 @@ public class IngredienteController {
                     ingrediente.setQuantidade(ingredienteView.getQuantidade());
                     novaDespensa.add(index, ingrediente);
                     usuario.setDespensa(novaDespensa);
-                    usuarioDao.update(usuario);
-                    ingredienteView.getMainView().setListaDespensaData(novaDespensa);
-                    ingredienteView.dispose();
+
+                    // Envia a solicitação de atualização via ClientFacade
+                    Map<String, Object> args = new HashMap<>();
+                    args.put(Attributes.USER.getDescription(), usuario);
+
+                    ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, responsePacket -> {
+                        if (responsePacket.getStatus().equals(Status.SUCCESS)) {
+                            ingredienteView.getMainView().setListaDespensaData(novaDespensa);
+                            JOptionPane.showMessageDialog(ingredienteView, "Ingrediente atualizado com sucesso!", "INFO_MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(ingredienteView, "Erro ao atualizar a despensa no servidor. Tente novamente.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                        }
+                        ingredienteView.dispose();
+                    });
 
                 } catch (ParseException ex) {
                     throw new RuntimeException(ex);

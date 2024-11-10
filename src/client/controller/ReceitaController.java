@@ -61,19 +61,21 @@ public class ReceitaController {
 
             String nome = receitaView.getTxtNome();
 
-            boolean continuar = Validator.verifyIngrediente(nome, receitaView);
+            Validator.verifyIngrediente(nome, receitaView).thenAccept(continuar -> {
 
-            if (!continuar) return;
+                if (!continuar) return;
 
-            ingredienteBuilder.nome(nome);
-            ingredienteBuilder.quantidade(Integer.parseInt(receitaView.getTxtQuantidade()));
+                ingredienteBuilder.nome(nome);
+                ingredienteBuilder.quantidade(Integer.parseInt(receitaView.getTxtQuantidade()));
 
-            ingredientes.add(ingredienteBuilder.build());
+                ingredientes.add(ingredienteBuilder.build());
 
-            receitaView.setListaIngredientesData(ingredientes);
+                receitaView.setListaIngredientesData(ingredientes);
 
-            receitaView.setTxtNome(bn.getString("main.receita.botao.publicar.nomeingrediente"));
-            receitaView.setTxtQuantidade(bn.getString("main.receita.botao.publicar.quantidadeingrediente"));
+                receitaView.setTxtNome(bn.getString("main.receita.botao.publicar.nomeingrediente"));
+                receitaView.setTxtQuantidade(bn.getString("main.receita.botao.publicar.quantidadeingrediente"));
+
+            });
 
         });
 

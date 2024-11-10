@@ -197,6 +197,7 @@ public class MainViewController {
 
                 Map<String, Object> args = new HashMap<>();
                 args.put(Attributes.USER.getDescription(), usuario);
+                System.out.println(usuario);
 
                 ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, responsePacket -> {
 
@@ -276,7 +277,13 @@ public class MainViewController {
 
             int option = JOptionPane.showConfirmDialog(mainView, jPanel, LanguageManager.getInstance().getResourceBundle().getString("main.despensa.botao.adicionar.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (option == JOptionPane.OK_OPTION) {
-                if (Validator.verifyIngrediente(nomeTxt.getText(), mainView)) JOptionPane.showMessageDialog(mainView,LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.ingrediente.existente"));
+
+                Validator.verifyIngrediente(nomeTxt.getText(), mainView).thenAccept(continuar -> {
+
+                    if (continuar) JOptionPane.showMessageDialog(mainView,LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.ingrediente.existente"));
+
+                });
+
             }
 
         });

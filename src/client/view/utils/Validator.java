@@ -1,57 +1,83 @@
 package client.view.utils;
 
+import client.facade.ClientFacade;
 import client.model.builder.IngredienteBuilder;
-import server.dao.DAOFactory;
-import server.dao.interfaces.IngredienteDao;
 import shared.entities.Ingrediente;
 import client.model.utils.CategoriaIngrediente;
+import shared.enums.Attributes;
+import shared.enums.Command;
+import shared.enums.Entity;
+import shared.enums.Status;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validator {
 
 
-    public static boolean verifyIngrediente(String nome, Component component) {
+    public static CompletableFuture<Boolean> verifyIngrediente(String nome, Component component) {
 
-        IngredienteDao ingredienteDao = DAOFactory.createIngredienteDao();
-        Ingrediente ingredienteVerify = ingredienteDao.read(nome);
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
         ResourceBundle bn = LanguageManager.getInstance().getResourceBundle();
-        System.out.println(ingredienteVerify);
 
-        if (ingredienteVerify == null) {
+        // Envia uma requisição para verificar se o ingrediente existe
+        Map<String, Object> args = new HashMap<>();
+        args.put(Attributes.NAME.getDescription(), nome);
 
-            int option = JOptionPane.showConfirmDialog(component, bn.getString("main.despensa.botao.adicionar.validation.texto"), bn.getString("main.despensa.botao.adicionar.validation.titulo"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (option == JOptionPane.YES_OPTION) {
+        ClientFacade.sendRequest(Entity.INGREDIENTE, Command.READ, args, responsePacket -> {
 
-                JPanel panel = new JPanel(new GridLayout(1,2));
-                JComboBox<String> comboBox = new JComboBox<>();
-                for (String categoria : getCategoriaNomes()) {
-                    comboBox.addItem(categoria);
-                }
-                JLabel label = new JLabel(bn.getString("main.despensa.botao.adicionar.validation.selecaocategoria"));
-                panel.add(label);
-                panel.add(comboBox);
+            Ingrediente ingredienteVerify = (Ingrediente) responsePacket.getData().get(Attributes.RESULT.getDescription());
 
-                int result = JOptionPane.showConfirmDialog(component, panel, bn.getString("main.despensa.botao.adicionar.validation.selecaocategoria.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (result == JOptionPane.OK_OPTION) {
-                    int categoria = comboBox.getSelectedIndex();
-                    IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
-                    ingredienteBuilder.nome(nome).categoria(categoria);
-                    ingredienteDao.create(ingredienteBuilder.build());
-                }
+            if (ingredienteVerify == null) {
 
-                return true;
+                int option = JOptionPane.showConfirmDialog(component, bn.getString("main.despensa.botao.adicionar.validation.texto"), bn.getString("main.despensa.botao.adicionar.validation.titulo"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (option == JOptionPane.YES_OPTION) {
 
-            } else return false;
+                    JPanel panel = new JPanel(new GridLayout(1,2));
+                    JComboBox<String> comboBox = new JComboBox<>();
 
-        }
+                    for (String categoria : getCategoriaNomes()) comboBox.addItem(categoria);
 
-        return true;
+                    JLabel label = new JLabel(bn.getString("main.despensa.botao.adicionar.validation.selecaocategoria"));
+                    panel.add(label);
+                    panel.add(comboBox);
+
+                    int result = JOptionPane.showConfirmDialog(component, panel, bn.getString("main.despensa.botao.adicionar.validation.selecaocategoria.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                    if (result == JOptionPane.OK_OPTION) {
+
+                        int categoria = comboBox.getSelectedIndex();
+                        IngredienteBuilder ingredienteBuilder = new IngredienteBuilder();
+                        ingredienteBuilder.nome(nome).categoria(categoria);
+
+                        // Envia uma requisição para criar o novo ingrediente no servidor
+                        Map<String, Object> createArgs = new HashMap<>();
+                        createArgs.put(Attributes.INGREDIENTE.getDescription(), ingredienteBuilder.build());
+
+                        ClientFacade.sendRequest(Entity.INGREDIENTE, Command.CREATE, createArgs, createResponse -> {
+
+                            if (createResponse.getStatus().equals(Status.SUCCESS)) future.complete(true);
+                            else future.complete(false);
+
+                        });
+
+                    } else future.complete(false);
+
+                } else future.complete(false);
+
+            } else future.complete(true);
+
+        });
+
+        return future;
 
     }
 
