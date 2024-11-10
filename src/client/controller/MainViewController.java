@@ -1,12 +1,8 @@
 package client.controller;
 
 import client.facade.ClientFacade;
-import server.dao.DAOFactory;
-import server.dao.interfaces.ReceitaDao;
-import server.dao.interfaces.UsuarioDao;
 import server.strategies.Filterable;
-import shared.enums.Command;
-import shared.enums.Entity;
+import shared.enums.*;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import shared.entities.Usuario;
@@ -26,20 +22,15 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
-import shared.enums.Attributes;
-import shared.enums.Strategy;
-
 public class MainViewController {
 
     private MainView mainView;
-    private ReceitaDao receitaDao;
     private Receita receita;
     private Strategy filterStrategy;
     private int offset = 0, receitasPorPagina = 12;
 
     public MainViewController(MainView mainView) {
         this.mainView = mainView;
-        this.receitaDao = DAOFactory.createReceitaDao();
 
         // Inicializar listeners dos botões
         initButtonListeners();
@@ -82,10 +73,7 @@ public class MainViewController {
 
                 ArrayList<Receita> receitaList   = new ArrayList<>();
 
-                for (Filterable filterable : filterableList) {
-                    Receita receita = receitaDao.read(filterable.getId());
-                    receitaList.add(receita);
-                }
+                for (Filterable filterable : filterableList) receitaList.add((Receita) filterable);
 
                 SwingUtilities.invokeLater(() -> {
 
@@ -198,16 +186,29 @@ public class MainViewController {
 
         mainView.addRemoveIngredienteButtonListener(e -> {
 
+            Usuario usuario = Authenticator.getAuthenticatedUser();
+
             Ingrediente ingrediente = mainView.getIngredienteSelected();
-            if (ingrediente == null) {
-                JOptionPane.showMessageDialog(mainView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.nenhum.ingrediente"), "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
-            } else {
-                UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-                Usuario usuario = Authenticator.getAuthenticatedUser();
+            if (ingrediente == null) JOptionPane.showMessageDialog(mainView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.nenhum.ingrediente"), "ERROR_MESSAGE", JOptionPane.WARNING_MESSAGE);
+            else {
+
                 ArrayList<Ingrediente> novaDespensa = usuario.getDespensa();
                 novaDespensa.remove(ingrediente);
-                usuarioDao.update(usuario);
-                mainView.setListaDespensaData(novaDespensa);
+
+                Map<String, Object> args = new HashMap<>();
+                args.put(Attributes.USER.getDescription(), usuario);
+
+                ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, responsePacket -> {
+
+                    if (responsePacket.getStatus().equals(Status.SUCCESS)) {
+
+                        mainView.setListaDespensaData(novaDespensa);
+                        JOptionPane.showMessageDialog(mainView, "Ingrediente removido com sucesso!", "INFO_MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+
+                    } else JOptionPane.showMessageDialog(mainView, "Erro ao atualizar a despensa no servidor. Tente novamente.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+
+                });
+
             }
 
         });
