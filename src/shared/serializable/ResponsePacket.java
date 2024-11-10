@@ -2,9 +2,10 @@ package shared.serializable;
 
 import shared.Status;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class ResponsePacket {
+public class ResponsePacket implements Serializable {
 
     private String requestId;               // Identificador da requisição original
     private Status status;                  // Enum com o status da operação (SUCCESS, ERROR, etc.)

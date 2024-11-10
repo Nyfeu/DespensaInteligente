@@ -1,7 +1,7 @@
 package client.view.utils;
 
 import shared.entities.Ingrediente;
-import client.model.utils.DateParser;
+import shared.util.DateParser;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

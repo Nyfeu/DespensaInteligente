@@ -9,7 +9,7 @@ import server.db.DBException;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import shared.entities.Usuario;
-import client.model.utils.DateParser;
+import shared.util.DateParser;
 
 
 import java.sql.*;
