@@ -198,7 +198,7 @@ public class ReceitaDetalhesView extends JDialog {
         conteudoReceita.append(bn.getString("main.receita.renderer.titulo")).append(receita.getTitulo()).append("\n");
         conteudoReceita.append(bn.getString("main.receita.renderer.descricao")).append(receita.getDescricao()).append("\n");
 
-        conteudoReceita.append(bn.getString("main.receita.exibe.ingredientes")+ "\n");
+        conteudoReceita.append(bn.getString("main.receita.exibe.ingredientes")).append("\n");
         for (Ingrediente ingrediente : receita.getIngredientes()) {
             conteudoReceita.append("- ").append(ingrediente.getNome())
                            .append(" : ")
@@ -206,7 +206,7 @@ public class ReceitaDetalhesView extends JDialog {
                            .append("\n");
         }
 
-        conteudoReceita.append(bn.getString("main.receita.exibe.modopreparo")+ " ").append(receita.getModoPreparo()).append("\n");
+        conteudoReceita.append(bn.getString("main.receita.exibe.modopreparo")).append(" ").append(receita.getModoPreparo()).append("\n");
     
         handler.writeFile(conteudoReceita.toString(), false);
     

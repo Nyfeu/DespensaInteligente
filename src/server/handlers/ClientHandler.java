@@ -1,14 +1,26 @@
 package server.handlers;
 
 import server.ServerApp;
+import server.dao.DAOFactory;
+import server.strategies.FilterStrategy;
+import server.strategies.Filterable;
+import shared.Command;
+import shared.Entity;
 import shared.Status;
+import shared.entities.Ingrediente;
+import shared.entities.Receita;
+import shared.entities.Usuario;
 import shared.serializable.RequestPacket;
 import shared.serializable.ResponsePacket;
+import shared.util.Attributes;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ClientHandler extends Thread {
 
@@ -81,6 +93,15 @@ public class ClientHandler extends Thread {
 
     private void processCommand(RequestPacket requestPacket) throws IOException {
 
+        if (requestPacket.getCommand() != Command.EXIT)
+            System.out.println("CLIENT::"
+                    + acceptedClient.getInetAddress().getHostAddress()
+                    + "::"
+                    + requestPacket.getCommand()
+                    + "::"
+                    + requestPacket.getEntity()
+            );
+
         switch (requestPacket.getCommand()) {
 
             case EXIT -> {
@@ -99,7 +120,452 @@ public class ClientHandler extends Thread {
 
             }
 
-            default -> System.out.println("CLIENT::UNKNOWN::COMMAND");
+            case CREATE -> {
+
+                ResponsePacket responsePacket = null;
+
+                if (requestPacket.getEntity() == null) {
+                    System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.ERROR,
+                            null,
+                            "Unkown Command!"
+                    );
+
+                } else {
+
+                    switch (requestPacket.getEntity()) {
+
+                        case USUARIO -> {
+
+                            DAOFactory.createUsuarioDao().create((Usuario) requestPacket.getArgs().get(Attributes.USER.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                        case RECEITA -> {
+
+                            DAOFactory.createReceitaDao().create((Receita) requestPacket.getArgs().get(Attributes.RECEITA.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                        case INGREDIENTE -> {
+
+                            DAOFactory.createIngredienteDao().create((Ingrediente) requestPacket.getArgs().get(Attributes.INGREDIENTE.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                    }
+
+                }
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
+
+            case READ -> {
+
+                ResponsePacket responsePacket = null;
+
+                if (requestPacket.getEntity() == null) {
+                    System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.ERROR,
+                            null,
+                            "Unkown Command!"
+                    );
+
+                } else {
+
+                    switch (requestPacket.getEntity()) {
+
+                        case USUARIO -> {
+
+                            Usuario result = DAOFactory.createUsuarioDao().read((String) requestPacket.getArgs().get(Attributes.EMAIL.getDescription()));
+
+                            Map<String, Object> data = new HashMap<>();
+
+                            data.put(Attributes.RESULT.getDescription(), result);
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    data,
+                                    null
+                            );
+
+                        }
+
+                        case RECEITA -> {
+
+                            Receita result = DAOFactory.createReceitaDao().read((Integer) requestPacket.getArgs().get(Attributes.RECIPE_ID.getDescription()));
+
+                            Map<String, Object> data = new HashMap<>();
+
+                            data.put(Attributes.RESULT.getDescription(), result);
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    data,
+                                    null
+                            );
+
+                        }
+
+                        case INGREDIENTE -> {
+
+                            Ingrediente result = DAOFactory.createIngredienteDao().read((String) requestPacket.getArgs().get(Attributes.NAME.getDescription()));
+
+                            Map<String, Object> data = new HashMap<>();
+
+                            data.put(Attributes.RESULT.getDescription(), result);
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    data,
+                                    null
+                            );
+
+                        }
+
+                    }
+
+                }
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
+
+            case UPDATE -> {
+
+                ResponsePacket responsePacket = null;
+
+                if (requestPacket.getEntity() == null) {
+                    System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.ERROR,
+                            null,
+                            "Unkown Command!"
+                    );
+
+                } else {
+
+                    switch (requestPacket.getEntity()) {
+
+                        case USUARIO -> {
+
+                            DAOFactory.createUsuarioDao().update((Usuario) requestPacket.getArgs().get(Attributes.USER.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                        case RECEITA -> {
+
+                            DAOFactory.createReceitaDao().update((Receita) requestPacket.getArgs().get(Attributes.RECEITA.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                        case INGREDIENTE -> {
+
+                            DAOFactory.createIngredienteDao().update((Ingrediente) requestPacket.getArgs().get(Attributes.INGREDIENTE.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                    }
+
+                }
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
+
+            case DELETE -> {
+
+                ResponsePacket responsePacket = null;
+
+                if (requestPacket.getEntity() == null) {
+                    System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.ERROR,
+                            null,
+                            "Unkown Command!"
+                    );
+
+                } else {
+
+                    switch (requestPacket.getEntity()) {
+
+                        case USUARIO -> {
+
+                            DAOFactory.createUsuarioDao().delete((String) requestPacket.getArgs().get(Attributes.EMAIL.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                        case RECEITA -> {
+
+                            DAOFactory.createReceitaDao().delete((Integer) requestPacket.getArgs().get(Attributes.RECIPE_ID.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                        case INGREDIENTE -> {
+
+                            DAOFactory.createIngredienteDao().delete((String) requestPacket.getArgs().get(Attributes.NAME.getDescription()));
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    null,
+                                    null
+                            );
+
+                        }
+
+                    }
+
+                }
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
+
+            case READ_ALL -> {
+
+                ResponsePacket responsePacket = null;
+
+                if (requestPacket.getEntity() == null) {
+                    System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.ERROR,
+                            null,
+                            "Unkown Command!"
+                    );
+
+                } else {
+
+                    switch (requestPacket.getEntity()) {
+
+                        case USUARIO -> {
+
+                            List<Usuario>  result = DAOFactory.createUsuarioDao().readAll();
+
+                            Map<String, Object> data = new HashMap<>();
+
+                            data.put(Attributes.RESULT.getDescription(), result);
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    data,
+                                    null
+                            );
+
+                        }
+
+                        case RECEITA -> {
+
+                            List<Receita>  result = DAOFactory.createReceitaDao().readAll();
+
+                            Map<String, Object> data = new HashMap<>();
+
+                            data.put(Attributes.RESULT.getDescription(), result);
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    data,
+                                    null
+                            );
+
+                        }
+
+                        case INGREDIENTE -> {
+
+                            List<Ingrediente>  result = DAOFactory.createIngredienteDao().readAll();
+
+                            Map<String, Object> data = new HashMap<>();
+
+                            data.put(Attributes.RESULT.getDescription(), result);
+
+                            responsePacket = new ResponsePacket(
+                                    requestPacket.getRequestId(),
+                                    Status.SUCCESS,
+                                    data,
+                                    null
+                            );
+
+                        }
+
+                    }
+
+                }
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
+
+            case FILTER -> {
+
+                ResponsePacket responsePacket;
+
+                if (requestPacket.getEntity() != Entity.RECEITA) {
+                    System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.ERROR,
+                            null,
+                            "Unkown Command!"
+                    );
+
+                } else {
+
+                    FilterStrategy filterStrategy = (FilterStrategy) requestPacket.getArgs().get(Attributes.STRATAGY.getDescription());
+
+                    Integer limit = (Integer) requestPacket.getArgs().get(Attributes.LIMIT.getDescription());
+                    Integer offset = (Integer) requestPacket.getArgs().get(Attributes.OFFSET.getDescription());
+
+                    List<Filterable> result = DAOFactory.createReceitaDao().filter(filterStrategy, limit, offset);
+
+                    Map<String, Object> data = new HashMap<>();
+
+                    data.put(Attributes.RESULT.getDescription(), result);
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.SUCCESS,
+                            data,
+                            null
+                    );
+
+                }
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
+
+            case COUNT_ALL -> {
+
+                ResponsePacket responsePacket;
+
+                if (requestPacket.getEntity() != Entity.RECEITA) {
+                    System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.ERROR,
+                            null,
+                            "Unkown Command!"
+                    );
+
+                } else {
+
+                    Integer result = DAOFactory.createReceitaDao().countAll();
+
+                    Map<String, Object> data = new HashMap<>();
+
+                    data.put(Attributes.RESULT.getDescription(), result);
+
+                    responsePacket = new ResponsePacket(
+                            requestPacket.getRequestId(),
+                            Status.SUCCESS,
+                            data,
+                            null
+                    );
+
+                }
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
+
+            default -> {
+
+                System.out.println("CLIENT::UNKNOWN::COMMAND");
+
+                ResponsePacket responsePacket = new ResponsePacket(
+                        requestPacket.getRequestId(),
+                        Status.ERROR,
+                        null,
+                        "Unkown Command!"
+                );
+
+                output.writeObject(responsePacket);
+                output.flush();
+
+            }
 
         }
 

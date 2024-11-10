@@ -35,4 +35,7 @@ public class RequestPacket implements Serializable {
         return args;
     }
 
+    public Entity getEntity() {
+        return entity;
+    }
 }

@@ -2,9 +2,10 @@ package shared.entities;
 
 import client.model.builder.IngredienteBuilder;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Ingrediente {
+public class Ingrediente implements Serializable {
 
     private String nome;
     private Integer categoria;

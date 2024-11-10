@@ -24,9 +24,9 @@ public class ClientFacade {
     private static Socket serverSocket;
 
     // Gerenciador de comunicações:
-    private CommunicationHandler communicationHandler;
+    private static CommunicationHandler communicationHandler;
 
-    public ClientFacade() {
+    static  {
 
         // Carrega a PORTA e ENDEREÇO do servidor:
         loadProperties();
@@ -35,12 +35,12 @@ public class ClientFacade {
         connectToServer();
 
         // Inicializando CommunicationHandler:
-        this.communicationHandler = new CommunicationHandler(serverSocket);
+        ClientFacade.communicationHandler = new CommunicationHandler(serverSocket);
 
     }
 
     // Metodo para enviar uma solicitacao ao servidor:
-    public void sendRequest(Entity entity, Command command, Map<String, Object> args, Consumer<ResponsePacket> callback) {
+    public static void sendRequest(Entity entity, Command command, Map<String, Object> args, Consumer<ResponsePacket> callback) {
         RequestPacket requestPacket = new RequestPacket(entity, command, args);
         communicationHandler.enqueueRequest(requestPacket, callback);
     }
@@ -92,13 +92,13 @@ public class ClientFacade {
 
     }
 
-    public void closeConnection() {
+    public static void closeConnection() {
 
         sendRequest(null, Command.EXIT, null, e -> close());
 
     }
 
-    public void close() {
+    public static void close() {
 
         try {
 

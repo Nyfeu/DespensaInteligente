@@ -8,6 +8,7 @@ import client.view.utils.Validator;
 import client.view.utils.ViewUtils;
 
 import javax.swing.*;
+import java.util.concurrent.CompletableFuture;
 
 public class AuthenticationController {
 
@@ -36,8 +37,7 @@ public class AuthenticationController {
 
         if (view.getEmail_login().isEmpty() || view.getPassword_login().isEmpty()) return;
 
-        boolean authenticated = Authenticator.login(email, senha, view);
-        verifyAuthentication(authenticated);
+        CompletableFuture<Void> authenticated = Authenticator.login(email, senha, view).thenAccept(this::verifyAuthentication);
 
     }
 

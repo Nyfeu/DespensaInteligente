@@ -12,8 +12,6 @@ public class ClientApp {
 
     public static void main(String[] args) {
 
-        clientFacade = new ClientFacade();
-
         Runtime.getRuntime().addShutdownHook(new Thread(ClientApp::closeResources));
         SwingUtilities.invokeLater(() -> new AuthenticationView().setVisible(true));
 
@@ -22,7 +20,7 @@ public class ClientApp {
     public static void closeResources() {
 
         System.out.println("CLOSING::CLIENT::FACADE");
-        clientFacade.closeConnection();
+        ClientFacade.closeConnection();
         DB.closeConnectionPool();
 
     }

@@ -3,10 +3,11 @@ package shared.entities;
 import client.model.builder.ReceitaBuilder;
 import server.strategies.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Receita implements Filterable {
+public class Receita implements Filterable, Serializable {
     private String titulo;
     private String descricao;
     private List<Ingrediente> ingredientes;

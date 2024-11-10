@@ -1,15 +1,22 @@
 package client.model.utils;
 
+import client.facade.ClientFacade;
 import server.dao.DAOFactory;
 import server.dao.interfaces.UsuarioDao;
+import shared.Command;
+import shared.Entity;
 import shared.entities.Usuario;
 import client.view.utils.LanguageManager;
+import shared.util.Attributes;
 
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class Authenticator {
 
@@ -42,30 +49,42 @@ public class Authenticator {
 
     }
 
-    public static boolean login(String email, String password, Component component) {
+    public static CompletableFuture<Boolean> login(String email, String password, Component component) {
 
-        UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-        Usuario usuario = usuarioDao.read(email);
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        if (usuario == null) {
-            String error_string = LanguageManager.getInstance().getResourceBundle().getString("utils.authenticator.user.desconhecido");
-            JOptionPane.showMessageDialog(component, error_string, "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+        Map<String, Object> args = new HashMap<>();
+        args.put(Attributes.EMAIL.getDescription(), email);
 
-        String encodedPassword = encodePassword(password);
+        ClientFacade.sendRequest(Entity.USUARIO, Command.READ, args, responsePacket -> {
 
-        if (encodedPassword != null) {
-            if (encodedPassword.equals(usuario.getSenha())) {
-                authenticatedUser = usuario;
-                return true;
-            } else {
-                String error_string = LanguageManager.getInstance().getResourceBundle().getString("utils.authenticator.senha.invalida");
+            Usuario usuario = (Usuario) responsePacket.getData().get(Attributes.RESULT.getDescription());
+
+            if (usuario == null) {
+                String error_string = LanguageManager.getInstance().getResourceBundle().getString("utils.authenticator.user.desconhecido");
                 JOptionPane.showMessageDialog(component, error_string, "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                future.complete(false);
+                return;
             }
-        }
 
-        return false;
+            String encodedPassword = encodePassword(password);
+
+            if (encodedPassword != null) {
+                if (encodedPassword.equals(usuario.getSenha())) {
+                    authenticatedUser = usuario;
+                    future.complete(true);
+                    return;
+                } else {
+                    String error_string = LanguageManager.getInstance().getResourceBundle().getString("utils.authenticator.senha.invalida");
+                    JOptionPane.showMessageDialog(component, error_string, "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            future.complete(false);
+
+        });
+
+        return future;
 
     }
 
