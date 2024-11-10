@@ -1,13 +1,12 @@
 package client.model.utils;
 
 import client.facade.ClientFacade;
-import server.dao.DAOFactory;
-import server.dao.interfaces.UsuarioDao;
 import shared.enums.Command;
 import shared.enums.Entity;
 import shared.entities.Usuario;
 import client.view.utils.LanguageManager;
 import shared.enums.Attributes;
+import shared.enums.Status;
 
 import javax.swing.*;
 import java.awt.*;
@@ -92,28 +91,29 @@ public class Authenticator {
         authenticatedUser = null;
     }
 
-    public static boolean registrar(String nome, String email, String password) {
+    public static CompletableFuture<Boolean> registrar(String nome, String email, String password) {
 
-        try {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-            String encodedPassword = encodePassword(password);
+        String encodedPassword = encodePassword(password);
 
-            Usuario usuario = new Usuario(nome, email, encodedPassword);
+        Usuario usuario = new Usuario(nome, email, encodedPassword);
 
-            UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
+        Map<String, Object> args = new HashMap<>();
+        args.put(Attributes.USER.getDescription(), usuario);
 
-            usuarioDao.create(usuario);
+        ClientFacade.sendRequest(Entity.USUARIO, Command.CREATE, args, responsePacket -> {
 
-            authenticatedUser = usuario;
+            if (responsePacket.getStatus().equals(Status.SUCCESS)) {
 
-            return true;
+                authenticatedUser = usuario;
+                future.complete(true);
 
-        } catch (RuntimeException e) {
+            } else future.complete(false);
 
-            System.out.println(e.getMessage());
-            return false;
+        });
 
-        }
+        return future;
 
     }
 
@@ -123,18 +123,13 @@ public class Authenticator {
 
     public static void changePassword(String newPassword) {
 
-        try {
+        String encodedPassword = encodePassword(newPassword);
+        authenticatedUser.setSenha(encodedPassword);
 
-            String encodedPassword = encodePassword(newPassword);
-            authenticatedUser.setSenha(encodedPassword);
-            UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-            usuarioDao.update(authenticatedUser);
+        Map<String, Object> args = new HashMap<>();
+        args.put(Attributes.USER.getDescription(), authenticatedUser);
 
-        } catch (RuntimeException e) {
-
-            System.out.println(e.getMessage());
-
-        }
+        ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, null);
 
     }
 
@@ -143,8 +138,11 @@ public class Authenticator {
         try {
 
             authenticatedUser.setNome(newNome);
-            UsuarioDao usuarioDao = DAOFactory.createUsuarioDao();
-            usuarioDao.update(authenticatedUser);
+
+            Map<String, Object> args = new HashMap<>();
+            args.put(Attributes.USER.getDescription(), authenticatedUser);
+
+            ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, null);
 
         } catch (RuntimeException e) {
 

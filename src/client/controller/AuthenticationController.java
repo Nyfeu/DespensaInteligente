@@ -47,10 +47,6 @@ public class AuthenticationController {
         String email = view.getEmail_login();
         String senha = view.getPassword_login();
 
-        System.out.println(view.getEmail_login());
-        System.out.println(view.getNome());
-        System.out.println(view.getPassword_login());
-
         if (view.getEmail_login().isEmpty() ||
             view.getPassword_login().isEmpty() ||
             view.getNome().isEmpty()) return;
@@ -60,18 +56,17 @@ public class AuthenticationController {
             return;
         }
 
-        boolean authenticated = Authenticator.registrar(nome, email, senha);
-        verifyAuthentication(authenticated);
+        Authenticator.registrar(nome, email, senha).thenAccept(this::verifyAuthentication);
 
     }
 
     private void verifyAuthentication(boolean authenticated) {
         if (authenticated) {
-            System.out.println("Usuário Autenticado!");
+            System.out.println("USER::SUCCESSFULLY::AUTHENTICATED");
             ViewUtils.closeView(view);
             new MainView().setVisible(true);
         } else {
-            System.out.println("Falha na autenticação...");
+            System.out.println("USER::ERROR::AUTHENTICATION");
         }
     }
 
