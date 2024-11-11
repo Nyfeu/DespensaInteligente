@@ -163,15 +163,16 @@ public class MainView extends JFrame {
     }
 
     private void configureMainView() {
-
         // Configurações gerais
         setTitle(bn.getString("main.titulo"));
-        JLabel titleLabel = ViewUtils.createTitleLabel(bn.getString("main.label.titulo"));
-        setSize(1000, 710);
+        setSize(1000,710);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        
+        JLabel titleLabel = ViewUtils.createTitleLabel(bn.getString("main.label.titulo"));
         add(titleLabel, BorderLayout.NORTH);
 
+        setVisible(true);
     }
 
     private void initComponents() {

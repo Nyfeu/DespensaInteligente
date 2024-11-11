@@ -101,7 +101,7 @@ public class MainViewController {
             }
         });
 
-        mainView.addRightButtonListener(e -> updateReceitasList(offset + 12, new HashMap<>()));
+        mainView.addRightButtonListener(e -> updateReceitasList(offset + receitasPorPagina, new HashMap<>()));
 
         mainView.addFilterReceitaButtonListener(e -> {
 
