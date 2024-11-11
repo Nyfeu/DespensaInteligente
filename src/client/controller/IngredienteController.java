@@ -2,6 +2,7 @@ package client.controller;
 
 import client.facade.ClientFacade;
 import client.model.builder.IngredienteBuilder;
+import client.view.utils.LanguageManager;
 import shared.entities.Ingrediente;
 import shared.entities.Usuario;
 import client.model.utils.Authenticator;
@@ -92,9 +93,9 @@ public class IngredienteController {
                             if (responsePacket.getStatus().equals(Status.SUCCESS)) {
 
                                 ingredienteView.getMainView().setListaDespensaData(novaDespensa);
-                                JOptionPane.showMessageDialog(ingredienteView, "Ingrediente adicionado com sucesso!", "INFO_MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(ingredienteView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.ingrediente.sucesso"), LanguageManager.getInstance().getResourceBundle().getString("client.controller.ingrediente.sucesso.titulo"), JOptionPane.INFORMATION_MESSAGE);
 
-                            } else JOptionPane.showMessageDialog(ingredienteView, "Erro ao atualizar a despensa no servidor. Tente novamente.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                            } else JOptionPane.showMessageDialog(ingredienteView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.removeingrediente.erro"), "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 
                             ingredienteView.dispose();
 
@@ -132,9 +133,9 @@ public class IngredienteController {
                     ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, responsePacket -> {
                         if (responsePacket.getStatus().equals(Status.SUCCESS)) {
                             ingredienteView.getMainView().setListaDespensaData(novaDespensa);
-                            JOptionPane.showMessageDialog(ingredienteView, "Ingrediente atualizado com sucesso!", "INFO_MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(ingredienteView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.ingrediente.sucesso2"), LanguageManager.getInstance().getResourceBundle().getString("client.controller.ingrediente.sucesso.titulo2"), JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(ingredienteView, "Erro ao atualizar a despensa no servidor. Tente novamente.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(ingredienteView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.removeingrediente.erro"), "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
                         }
                         ingredienteView.dispose();
                     });

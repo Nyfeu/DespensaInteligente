@@ -204,9 +204,9 @@ public class MainViewController {
                     if (responsePacket.getStatus().equals(Status.SUCCESS)) {
 
                         mainView.setListaDespensaData(novaDespensa);
-                        JOptionPane.showMessageDialog(mainView, "Ingrediente removido com sucesso!", "INFO_MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(mainView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.removeingrediente.sucesso"), LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.removeingrediente.sucesso.titulo"), JOptionPane.INFORMATION_MESSAGE);
 
-                    } else JOptionPane.showMessageDialog(mainView, "Erro ao atualizar a despensa no servidor. Tente novamente.", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+                    } else JOptionPane.showMessageDialog(mainView, LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.removeingrediente.erro"), "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
 
                 });
 
