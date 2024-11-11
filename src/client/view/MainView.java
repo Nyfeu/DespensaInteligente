@@ -132,6 +132,7 @@ public class MainView extends JFrame {
 
     private void updatePageLabel() {
         pageLabel.setText(currentPage + "/" + totalPages);
+        pageLabel.setForeground(Color.WHITE);
     }
 
     public void setLeftButtonEnabled(boolean enabled) {

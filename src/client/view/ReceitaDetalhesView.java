@@ -3,55 +3,35 @@ package client.view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
-import client.facade.ClientFacade;
+import client.controller.ReceitaDetalhesController;
 import client.view.utils.ViewUtils;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
-import shared.entities.Ingrediente;
 import shared.entities.Receita;
-import client.model.utils.Authenticator;
-import client.view.utils.Handler_IO;
-import shared.enums.Attributes;
-import shared.enums.Command;
-import shared.enums.Entity;
-import shared.enums.Strategy;
-
 import java.awt.event.ActionListener;
 
 public class ReceitaDetalhesView extends JDialog {
 
     private JLabel lblTitulo, lblDescricao, lblModoPreparo, lblIngredientes;
-    private JTextArea ingredientesArea;
     private JButton btnEditar, btnVoltar, btnExcluir;
     private JMenu menuExportar;
     private JMenuItem exporta_txt, exporta_pdf;
-    private Receita receita; 
+    private ReceitaDetalhesController receitaDetalhesController;
     private ResourceBundle bn;
-    private MainView mainView;
 
     public ReceitaDetalhesView(JFrame parent, Receita receita, ResourceBundle bn) {
         super(parent, bn.getString("main.receita.detalhes.titulo"), true);
-        this.mainView = (MainView) parent;
         this.bn = bn;
         initComponents(receita);
         setLocationRelativeTo(parent);
-        setSize(400, 400); 
+        setSize(400, 400);
         setResizable(false);
     }
 
     private void initComponents(Receita receita) {
-        // Painel principal 
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
         panelPrincipal.setBorder(new EmptyBorder(15, 15, 15, 15));
-        panelPrincipal.setBackground(new Color(245, 245, 245)); 
+        panelPrincipal.setBackground(new Color(245, 245, 245));
         panelPrincipal.setBorder(BorderFactory.createLineBorder(Color.GRAY, 5));
 
         JMenuBar menuBar = new JMenuBar();
@@ -63,26 +43,20 @@ public class ReceitaDetalhesView extends JDialog {
         menuExportar.add(exporta_pdf);
         menuExportar.add(exporta_txt);
 
-
-
-        // Painel Título
         lblTitulo = new JLabel("<html><b>" + bn.getString("main.receita.label.titulo") + ":</b> " + receita.getTitulo() + "</html>");
         lblTitulo.setFont(new Font("Arial", Font.PLAIN, 16));
         lblTitulo.setBorder(new EmptyBorder(5, 0, 5, 0));
         panelPrincipal.add(lblTitulo, BorderLayout.NORTH);
 
-        // Painel de conteúdo 
         JPanel panelConteudo = new JPanel();
         panelConteudo.setLayout(new BoxLayout(panelConteudo, BoxLayout.Y_AXIS));
         panelConteudo.setBackground(new Color(245, 245, 245));
 
-        // Painel Descrição
         lblDescricao = new JLabel("<html><b>" + bn.getString("main.receita.label.descricao") + ":</b> " + receita.getDescricao() + "</html>");
         lblDescricao.setFont(new Font("Arial", Font.PLAIN, 16));
         lblDescricao.setBorder(new EmptyBorder(5, 0, 5, 0));
         panelConteudo.add(lblDescricao);
 
-        // Painel Ingredientes
         lblIngredientes = new JLabel("<html><b>" + bn.getString("main.receita.label.ingredientes") + ":</b></html>");
         lblIngredientes.setFont(new Font("Arial", Font.PLAIN, 16));
         lblIngredientes.setBorder(new EmptyBorder(10, 0, 5, 0));
@@ -97,7 +71,6 @@ public class ReceitaDetalhesView extends JDialog {
         ingredientList.setFixedCellHeight(16);
         panelConteudo.add(new JScrollPane(ingredientList));
 
-        // Painel Modo de Preparo
         lblModoPreparo = new JLabel("<html><b>" + bn.getString("main.receita.label.modopreparo") + ":</b><br/>" + receita.getModoPreparo().replace("\n", "<br/>") + "</html>");
         lblModoPreparo.setFont(new Font("Arial", Font.PLAIN, 16));
         lblModoPreparo.setBorder(new EmptyBorder(5, 0, 5, 0));
@@ -105,7 +78,6 @@ public class ReceitaDetalhesView extends JDialog {
 
         panelPrincipal.add(panelConteudo, BorderLayout.CENTER);
 
-        // Painel de botões
         JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnEditar = new JButton(bn.getString("main.receita.botao.editar"));
         btnExcluir = new JButton(bn.getString("main.receita.botao.excluir"));
@@ -116,37 +88,8 @@ public class ReceitaDetalhesView extends JDialog {
         panelBotoes.add(btnVoltar);
 
         panelPrincipal.add(panelBotoes, BorderLayout.SOUTH);
-
         getContentPane().add(panelPrincipal);
-
-        btnEditar.addActionListener(e -> {
-            String emailAutor = receita.getEmailAutor();
-            String emailUsuario = Authenticator.getAuthenticatedUser().getEmail();
-
-            if (emailAutor.equalsIgnoreCase(emailUsuario)) {
-                editarReceitaView(receita);
-            } else {
-                showNotAuthorMessage();
-            }
-        });
-
-        exporta_txt.addActionListener(e -> exportarReceita(receita));
-
-        exporta_pdf.addActionListener(e -> exportarReceitaParaPDF(receita));
-
-        btnExcluir.addActionListener(e -> {
-            String emailAutor = receita.getEmailAutor();
-            String emailUsuario = Authenticator.getAuthenticatedUser().getEmail();
-
-            if (emailAutor.equalsIgnoreCase(emailUsuario)) {
-                excluirReceita(receita);
-            } else {
-                showNotAuthorMessage();
-            }
-        });
-
-        btnVoltar.addActionListener(e -> SwingUtilities.getWindowAncestor(btnVoltar).dispose());
-
+        receitaDetalhesController = new ReceitaDetalhesController(this, receita, bn);
         configureButtons();
     }
 
@@ -159,8 +102,8 @@ public class ReceitaDetalhesView extends JDialog {
     public void addEditarButtonActionListener(ActionListener listener) {
         btnEditar.addActionListener(listener);
     }
-    
-    public void addExportarMenuItemActionListener(ActionListener listener) {
+
+    public void addExportarTXTMenuItemActionListener(ActionListener listener) {
         exporta_txt.addActionListener(listener);
     }
 
@@ -176,118 +119,15 @@ public class ReceitaDetalhesView extends JDialog {
         btnVoltar.addActionListener(listener);
     }
 
-    public void showNotAuthorMessage() {
-        JOptionPane.showMessageDialog(this, 
-            bn.getString("main.receita.exibe.msg.autor"),
-            bn.getString("main.receita.exibe.msg.autor.titulo"),
-            JOptionPane.WARNING_MESSAGE);
+    public void setTitulo(String titulo) {
+        lblTitulo.setText(titulo);
     }
 
-    // PRECISA ARRUMAR ESSE MÉTODO
-    public void editarReceitaView(Receita receita) {
-        ReceitaView receitaView = new ReceitaView((MainView) getParent(), receita, bn, false);
-        receitaView.setVisible(true);
-        atualizarDadosReceita(receita);
-        pack();  
+    public void setDescricao(String descricao) {
+        lblDescricao.setText(descricao);
     }
 
-    public void atualizarDadosReceita(Receita receita) {
-        lblTitulo.setText("<html><b>" + bn.getString("main.receita.label.titulo") + ":</b> " + receita.getTitulo() + "</html>");
-        lblDescricao.setText("<html><b>" + bn.getString("main.receita.label.descricao") + ":</b> " + receita.getDescricao() + "</html>");
-        lblModoPreparo.setText("<html><b>" + bn.getString("main.receita.label.modopreparo") + ":</b><br/>" + receita.getModoPreparo().replace("\n", "<br/>") + "</html>");
+    public void setModoPreparo(String modoPreparo) {
+        lblModoPreparo.setText(modoPreparo);
     }
-
-    public void exportarReceita(Receita receita) {
-        String directoryPath = "exported_recipes/";
-        
-        String filePath = directoryPath + receita.getTitulo().replaceAll("[\\\\/:*?\"<>|]", "") + ".txt";  
-        Handler_IO<String> handler = new Handler_IO<>(filePath);
-    
-        StringBuilder conteudoReceita = new StringBuilder();
-        conteudoReceita.append(bn.getString("main.receita.renderer.titulo")).append(receita.getTitulo()).append("\n");
-        conteudoReceita.append(bn.getString("main.receita.renderer.descricao")).append(receita.getDescricao()).append("\n");
-
-        conteudoReceita.append(bn.getString("main.receita.exibe.ingredientes")).append("\n");
-        for (Ingrediente ingrediente : receita.getIngredientes()) {
-            conteudoReceita.append("- ").append(ingrediente.getNome())
-                           .append(" : ")
-                           .append(ingrediente.getQuantidade())
-                           .append("\n");
-        }
-
-        conteudoReceita.append(bn.getString("main.receita.exibe.modopreparo")).append(" ").append(receita.getModoPreparo()).append("\n");
-    
-        handler.writeFile(conteudoReceita.toString(), false);
-    
-        JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg")+ " " + filePath, bn.getString("main.receita.exibe.msg.titulo"), JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public void exportarReceitaParaPDF(Receita receita) {
-        String directoryPath = "exported_recipes/";
-        String filePath = directoryPath + receita.getTitulo().replaceAll("[\\\\/:*?\"<>|]", "") + ".pdf";
-
-        try {
-            // Criação do documento PDF
-            Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream(filePath));
-            document.open();
-
-            // Título da Receita
-            document.add(new Paragraph(bn.getString("main.receita.renderer.titulo")+ " " + receita.getTitulo(), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16)));
-
-            // Descrição
-            document.add(new Paragraph(bn.getString("main.receita.renderer.descricao") + " " + receita.getDescricao()));
-
-            // Ingredientes
-            document.add(new Paragraph(bn.getString("main.receita.exibe.ingredientes")));
-            for (Ingrediente ingrediente : receita.getIngredientes()) {
-                document.add(new Paragraph("- " + ingrediente.getNome() + " : " + ingrediente.getQuantidade()));
-            }
-
-            // Modo de Preparo
-            document.add(new Paragraph(bn.getString("main.receita.exibe.modopreparo")+ " " + receita.getModoPreparo()));
-
-            // Fechar o documento
-            document.close();
-
-            // Exibir mensagem de sucesso
-            JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg")+ " " + filePath, bn.getString("main.receita.exibe.msg.titulo"), JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg.erro"), bn.getString("main.receita.exibe.msg.erro.titulo"), JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    
-
-    private void excluirReceita(Receita receita) {
-
-        URL iconUrl = getClass().getResource("/client/resources/images/trash.png");
-        ImageIcon customIcon = null;
-
-        if (iconUrl != null) customIcon = new ImageIcon(iconUrl);
-        else System.out.println("Icon not found at specified path.");
-
-        int confirm = JOptionPane.showConfirmDialog(this, bn.getString("main.receita.exibe.msg.excluir"), bn.getString("main.receita.exibe.msg.excluir.titulo"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, customIcon);
-        if (confirm == JOptionPane.YES_OPTION) {
-
-            Map<String, Object> args = new HashMap<>();
-            args.put(Attributes.RECIPE_ID.getDescription(), receita.getId());
-
-            ClientFacade.sendRequest(Entity.RECEITA, Command.DELETE, args, e -> {
-
-                JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg.excluir.ok"), bn.getString("main.receita.exibe.msg.excluir.ok.titulo"), JOptionPane.INFORMATION_MESSAGE);
-                this.mainView.getMainViewController().setFilterStrategy(Strategy.PAGE);
-                this.mainView.getMainViewController().updateReceitasList(0, new HashMap<>());
-
-            });
-
-        }
-
-        dispose();
-
-    }
-
 }
-
-
