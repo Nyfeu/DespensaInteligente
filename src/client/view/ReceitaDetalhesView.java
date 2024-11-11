@@ -22,6 +22,7 @@ import client.view.utils.Handler_IO;
 import shared.enums.Attributes;
 import shared.enums.Command;
 import shared.enums.Entity;
+import shared.enums.Strategy;
 
 import java.awt.event.ActionListener;
 
@@ -34,9 +35,11 @@ public class ReceitaDetalhesView extends JDialog {
     private JMenuItem exporta_txt, exporta_pdf;
     private Receita receita; 
     private ResourceBundle bn;
+    private MainView mainView;
 
     public ReceitaDetalhesView(JFrame parent, Receita receita, ResourceBundle bn) {
         super(parent, bn.getString("main.receita.detalhes.titulo"), true);
+        this.mainView = (MainView) parent;
         this.bn = bn;
         initComponents(receita);
         setLocationRelativeTo(parent);
@@ -271,8 +274,13 @@ public class ReceitaDetalhesView extends JDialog {
             Map<String, Object> args = new HashMap<>();
             args.put(Attributes.RECIPE_ID.getDescription(), receita.getId());
 
-            ClientFacade.sendRequest(Entity.RECEITA, Command.DELETE, args,
-                    e -> JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg.excluir.ok"), bn.getString("main.receita.exibe.msg.excluir.ok.titulo"), JOptionPane.INFORMATION_MESSAGE));
+            ClientFacade.sendRequest(Entity.RECEITA, Command.DELETE, args, e -> {
+
+                JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg.excluir.ok"), bn.getString("main.receita.exibe.msg.excluir.ok.titulo"), JOptionPane.INFORMATION_MESSAGE);
+                this.mainView.getMainViewController().setFilterStrategy(Strategy.PAGE);
+                this.mainView.getMainViewController().updateReceitasList(0, new HashMap<>());
+
+            });
 
         }
 

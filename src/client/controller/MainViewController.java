@@ -291,4 +291,9 @@ public class MainViewController {
         });
 
     }
+
+    public void setFilterStrategy(Strategy filterStrategy) {
+        this.filterStrategy = filterStrategy;
+    }
+
 }

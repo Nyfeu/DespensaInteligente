@@ -12,6 +12,7 @@ import client.view.utils.Validator;
 import shared.enums.Attributes;
 import shared.enums.Command;
 import shared.enums.Entity;
+import shared.enums.Strategy;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -55,6 +56,7 @@ public class ReceitaController {
 
             ClientFacade.sendRequest(Entity.RECEITA, Command.CREATE, args, responsePacket -> {
 
+                receitaView.getMainView().getMainViewController().setFilterStrategy(Strategy.PAGE);
                 receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
                 receitaView.dispose();
 
