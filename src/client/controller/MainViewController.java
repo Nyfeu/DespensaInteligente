@@ -157,7 +157,10 @@ public class MainViewController {
                 if (Objects.equals(cb.getSelectedItem(), LanguageManager.getInstance().getResourceBundle().getString("main.receita.botao.filtrarreceitas.poringrediente"))) filterStrategy = Strategy.INGREDIENTES;
                 else filterStrategy = Strategy.DATA_VALIDADE_AND_INGREDIENTES;
 
-                updateReceitasList(0, new HashMap<>());
+                Map<String, Object> args = new HashMap<>();
+                args.put(Attributes.USER.getDescription(), Authenticator.getAuthenticatedUser());
+
+                updateReceitasList(0, args);
 
             }
 
