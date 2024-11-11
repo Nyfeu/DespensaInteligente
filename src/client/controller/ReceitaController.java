@@ -58,7 +58,6 @@ public class ReceitaController {
 
                 receitaView.getMainView().getMainViewController().setFilterStrategy(Strategy.PAGE);
                 receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
-                receitaView.dispose();
 
             });
 
