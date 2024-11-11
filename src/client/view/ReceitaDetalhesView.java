@@ -5,18 +5,24 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.FileOutputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import client.facade.ClientFacade;
 import client.view.utils.ViewUtils;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import server.dao.DAOFactory;
-import server.dao.interfaces.ReceitaDao;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import client.model.utils.Authenticator;
 import client.view.utils.Handler_IO;
+import shared.enums.Attributes;
+import shared.enums.Command;
+import shared.enums.Entity;
+
 import java.awt.event.ActionListener;
 
 public class ReceitaDetalhesView extends JDialog {
@@ -255,19 +261,23 @@ public class ReceitaDetalhesView extends JDialog {
 
         URL iconUrl = getClass().getResource("/client/resources/images/trash.png");
         ImageIcon customIcon = null;
-        if (iconUrl != null) {
-            customIcon = new ImageIcon(iconUrl);
-        } else {
-            System.out.println("Icon not found at specified path.");
-        }
+
+        if (iconUrl != null) customIcon = new ImageIcon(iconUrl);
+        else System.out.println("Icon not found at specified path.");
 
         int confirm = JOptionPane.showConfirmDialog(this, bn.getString("main.receita.exibe.msg.excluir"), bn.getString("main.receita.exibe.msg.excluir.titulo"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, customIcon);
         if (confirm == JOptionPane.YES_OPTION) {
-            ReceitaDao receitaDao = DAOFactory.createReceitaDao();
-            receitaDao.delete(receita.getId()); // Remove a receita do banco de dados
-            JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg.excluir.ok"), bn.getString("main.receita.exibe.msg.excluir.ok.titulo"), JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Fecha a tela de detalhes após a exclusão
+
+            Map<String, Object> args = new HashMap<>();
+            args.put(Attributes.RECIPE_ID.getDescription(), receita.getId());
+
+            ClientFacade.sendRequest(Entity.RECEITA, Command.DELETE, args,
+                    e -> JOptionPane.showMessageDialog(this, bn.getString("main.receita.exibe.msg.excluir.ok"), bn.getString("main.receita.exibe.msg.excluir.ok.titulo"), JOptionPane.INFORMATION_MESSAGE));
+
         }
+
+        dispose();
+
     }
 
 }

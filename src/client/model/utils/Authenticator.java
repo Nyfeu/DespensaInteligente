@@ -129,7 +129,7 @@ public class Authenticator {
         Map<String, Object> args = new HashMap<>();
         args.put(Attributes.USER.getDescription(), authenticatedUser);
 
-        ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, null);
+        ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, e -> {});
 
     }
 
@@ -142,7 +142,7 @@ public class Authenticator {
             Map<String, Object> args = new HashMap<>();
             args.put(Attributes.USER.getDescription(), authenticatedUser);
 
-            ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, null);
+            ClientFacade.sendRequest(Entity.USUARIO, Command.UPDATE, args, e -> {});
 
         } catch (RuntimeException e) {
 

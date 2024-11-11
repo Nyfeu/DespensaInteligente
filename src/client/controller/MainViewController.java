@@ -215,10 +215,12 @@ public class MainViewController {
         });
 
         mainView.addAlterarSenhaListener(e -> {
+
             JPasswordField jPasswordField = new JPasswordField(10);
             JPanel jPanel = new JPanel();
             jPanel.add(new JLabel(LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.alterar.senha")+ " "));
             jPanel.add(jPasswordField);
+
             int option = JOptionPane.showConfirmDialog(mainView, jPanel, LanguageManager.getInstance().getResourceBundle().getString("client.controller.mainview.alterar.senha.titulo"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (option == JOptionPane.OK_OPTION) {
                 String password = new String(jPasswordField.getPassword()).trim();

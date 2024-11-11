@@ -1,20 +1,23 @@
 package client.controller;
 
+import client.facade.ClientFacade;
 import client.model.builder.IngredienteBuilder;
 import client.model.builder.ReceitaBuilder;
-import server.dao.DAOFactory;
-import server.dao.interfaces.ReceitaDao;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import client.model.utils.Authenticator;
 import client.view.ReceitaView;
 import client.view.utils.LanguageManager;
 import client.view.utils.Validator;
+import shared.enums.Attributes;
+import shared.enums.Command;
+import shared.enums.Entity;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ReceitaController {
@@ -47,12 +50,16 @@ public class ReceitaController {
 
             Receita receita = receitaBuilder.build();
 
+            Map<String, Object> args = new HashMap<>();
+            args.put(Attributes.RECEITA.getDescription(), receita);
 
-            ReceitaDao receitaDao = DAOFactory.createReceitaDao();
-            receitaDao.create(receita);
+            ClientFacade.sendRequest(Entity.RECEITA, Command.CREATE, args, responsePacket -> {
 
-            receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
-            receitaView.dispose();
+                receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
+                receitaView.dispose();
+
+            });
+
         });
 
         receitaView.addAdicionarButtonActionListener(e -> {

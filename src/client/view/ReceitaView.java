@@ -1,13 +1,15 @@
 package client.view;
 
 import client.controller.ReceitaController;
-import server.dao.DAOFactory;
-import server.dao.interfaces.ReceitaDao;
+import client.facade.ClientFacade;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import client.view.utils.IngredienteReceitaCellRenderer;
 import client.view.utils.LanguageManager;
 import client.view.utils.ViewUtils;
+import shared.enums.Attributes;
+import shared.enums.Command;
+import shared.enums.Entity;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +17,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ReceitaView extends JDialog {
@@ -154,26 +158,38 @@ public class ReceitaView extends JDialog {
     }
 
     private void atualizarReceita() {
-        receita.setTitulo(txtTitulo.getText());
-        receita.setDescricao(txtDescricao.getText());
-        receita.setModoPreparo(txtModoPreparo.getText());
-        receita.setIngredientes(new ArrayList<>(listaIngredientes.getSelectedValuesList())); // ou conforme necessário
 
-        ReceitaDao receitaDao = DAOFactory.createReceitaDao();
-        receitaDao.update(receita);
+        if (receita != null) {
 
-        dispose();  // Fecha a janela de edição
+            receita.setTitulo(txtTitulo.getText());
+            receita.setDescricao(txtDescricao.getText());
+            receita.setModoPreparo(txtModoPreparo.getText());
+            receita.setIngredientes(new ArrayList<>(listaIngredientes.getSelectedValuesList())); // ou conforme necessário
+
+            Map<String, Object> args = new HashMap<>();
+            args.put(Attributes.RECEITA.getDescription(), receita);
+
+            ClientFacade.sendRequest(Entity.RECEITA, Command.UPDATE, args, e -> dispose());
+
+        } else dispose();
+
     }
 
     private void salvarReceita() {
-        receita.setTitulo(txtTitulo.getText());
-        receita.setDescricao(txtDescricao.getText());
-        receita.setModoPreparo(txtModoPreparo.getText());
 
-        ReceitaDao receitaDao = DAOFactory.createReceitaDao();
-        receitaDao.update(receita);
+        if (receita != null) {
 
-        dispose();  // Fecha a janela de edição
+            receita.setTitulo(txtTitulo.getText());
+            receita.setDescricao(txtDescricao.getText());
+            receita.setModoPreparo(txtModoPreparo.getText());
+
+            Map<String, Object> args = new HashMap<>();
+            args.put(Attributes.RECEITA.getDescription(), receita);
+
+            ClientFacade.sendRequest(Entity.RECEITA, Command.UPDATE, args, e -> dispose());
+
+        } else dispose();
+
     }
 
     private void configureButtons() {
