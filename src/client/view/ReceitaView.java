@@ -31,12 +31,28 @@ public class ReceitaView extends JDialog {
     private JList<Ingrediente> listaIngredientes;
     private ResourceBundle bn;
     private Receita receita;
+    private boolean isNewRecipe;
 
     public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn) {
         super(mainView, bn.getString("main.receita.botao.publicar.titulo"), true);
         this.mainView = mainView;
         this.receita = receita;
         this.bn = bn;
+        isNewRecipe = true;
+        initComponents(bn);
+        setLocationRelativeTo(mainView);
+
+        if (receita != null) {
+            carregarDadosReceita();
+        }
+    }
+
+    public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn, boolean isNewRecipe) {
+        super(mainView, bn.getString("main.receita.botao.publicar.titulo"), true);
+        this.mainView = mainView;
+        this.receita = receita;
+        this.bn = bn;
+        this.isNewRecipe = isNewRecipe;
         initComponents(bn);
         setLocationRelativeTo(mainView);
 
@@ -247,5 +263,9 @@ public class ReceitaView extends JDialog {
             model.addElement(ingrediente);
         }
         listaIngredientes.setModel(model);
+    }
+
+    public boolean isNewRecipe() {
+        return isNewRecipe;
     }
 }

@@ -51,15 +51,31 @@ public class ReceitaController {
 
             Receita receita = receitaBuilder.build();
 
-            Map<String, Object> args = new HashMap<>();
-            args.put(Attributes.RECEITA.getDescription(), receita);
+            if (!receitaView.isNewRecipe()) {
 
-            ClientFacade.sendRequest(Entity.RECEITA, Command.CREATE, args, responsePacket -> {
+                Map<String, Object> args = new HashMap<>();
+                args.put(Attributes.RECEITA.getDescription(), receita);
 
-                receitaView.getMainView().getMainViewController().setFilterStrategy(Strategy.PAGE);
-                receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
+                ClientFacade.sendRequest(Entity.RECEITA, Command.UPDATE, args, responsePacket -> {
 
-            });
+                    receitaView.getMainView().getMainViewController().setFilterStrategy(Strategy.PAGE);
+                    receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
+
+                });
+
+            } else {
+
+                Map<String, Object> args = new HashMap<>();
+                args.put(Attributes.RECEITA.getDescription(), receita);
+
+                ClientFacade.sendRequest(Entity.RECEITA, Command.CREATE, args, responsePacket -> {
+
+                    receitaView.getMainView().getMainViewController().setFilterStrategy(Strategy.PAGE);
+                    receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
+
+                });
+
+            }
 
         });
 
@@ -125,4 +141,5 @@ public class ReceitaController {
             }
         });
     }
+
 }

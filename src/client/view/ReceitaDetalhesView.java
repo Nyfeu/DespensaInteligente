@@ -185,7 +185,7 @@ public class ReceitaDetalhesView extends JDialog {
 
     // PRECISA ARRUMAR ESSE MÉTODO
     public void editarReceitaView(Receita receita) {
-        ReceitaView receitaView = new ReceitaView((MainView) getParent(), receita, bn);
+        ReceitaView receitaView = new ReceitaView((MainView) getParent(), receita, bn, false);
         receitaView.setVisible(true);
         atualizarDadosReceita(receita);
         pack();  

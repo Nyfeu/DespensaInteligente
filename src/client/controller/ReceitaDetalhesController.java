@@ -30,7 +30,7 @@ public class ReceitaDetalhesController {
     }
 
     private void abrirEdicaoReceita() {
-        ReceitaView receitaView = new ReceitaView((MainView) detalhesView.getParent(), receita, bn);
+        ReceitaView receitaView = new ReceitaView((MainView) detalhesView.getParent(), receita, bn, false);
         receitaView.setVisible(true);
 
         detalhesView.atualizarDadosReceita(receita);
