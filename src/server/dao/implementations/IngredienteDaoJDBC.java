@@ -46,7 +46,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
     public Ingrediente read(String name) {
 
         Connection conn = null;
-        String sqlCarregar = "SELECT Nome, Categoria FROM Ingrediente WHERE Nome = ?";
+        String sqlCarregar = "SELECT nome, categoria FROM ingrediente WHERE nome = ?";
         ResultSet rs = null;
         PreparedStatement stm = null;
 
@@ -78,7 +78,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
     public void update(Ingrediente ingrediente) {
 
         Connection conn = null;
-        String sqlUpdate = "UPDATE INGREDIENTE SET Categoria = ? WHERE Nome = ?";
+        String sqlUpdate = "UPDATE ingrediente SET categoria = ? WHERE nome = ?";
         PreparedStatement stm = null;
 
         try {
@@ -107,7 +107,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
     public void delete(String name) {
 
         Connection conn = null;
-        String sqlExcluir = "DELETE FROM INGREDIENTE WHERE Nome = ?";
+        String sqlExcluir = "DELETE FROM ingrediente WHERE nome = ?";
         PreparedStatement stm = null;
 
         try{
@@ -141,7 +141,7 @@ public class IngredienteDaoJDBC implements IngredienteDao {
 
             conn = DB.getConnection();
 
-            st = conn.prepareStatement("SELECT * FROM INGREDIENTE ORDER BY Nome");
+            st = conn.prepareStatement("SELECT * FROM ingrediente ORDER BY nome");
 
             rs = st.executeQuery();
             List<Ingrediente> ingredienteList = new ArrayList<>();

@@ -21,7 +21,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     public void create(Receita receita) {
 
         Connection conn = null;
-        String sqlInsert = "INSERT INTO RECEITA(titulo, descricao, modo_preparo, email_usuario) VALUES(?,?,?,?)";
+        String sqlInsert = "INSERT INTO receita(titulo, descricao, modo_preparo, email_usuario) VALUES(?,?,?,?)";
 
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -67,7 +67,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     public Receita read(Integer recipe_id) {
 
         Connection conn = null;
-        String sqlCarregar = "SELECT id, titulo, descricao, modo_preparo, email_usuario FROM RECEITA WHERE id = ?";
+        String sqlCarregar = "SELECT id, titulo, descricao, modo_preparo, email_usuario FROM receita WHERE id = ?";
         ResultSet rs1 = null, rs2 = null;
         PreparedStatement stm = null;
 
@@ -104,7 +104,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     public void update(Receita receita) {
 
         Connection conn = null;
-        String sqlUpdate = "UPDATE receita SET Titulo = ?, Descricao = ?, modo_preparo = ?, email_usuario = ? WHERE id = ?";
+        String sqlUpdate = "UPDATE receita SET titulo = ?, descricao = ?, modo_preparo = ?, email_usuario = ? WHERE id = ?";
         PreparedStatement stm = null;
 
         try{
@@ -149,7 +149,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     public void delete(Integer recipe_id) {
 
         Connection conn = null;
-        String sqlExcluir = "DELETE FROM RECEITA WHERE id = ?";
+        String sqlExcluir = "DELETE FROM receita WHERE id = ?";
         PreparedStatement stm = null;
 
         try{
@@ -188,7 +188,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
 
             conn = DB.getConnection();
 
-            st = conn.prepareStatement("SELECT * FROM RECEITA ORDER BY id");
+            st = conn.prepareStatement("SELECT * FROM receita ORDER BY id");
 
             rs1 = st.executeQuery();
             List<Receita> receitaList = new ArrayList<>();
@@ -225,7 +225,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         Connection conn = DB.getConnection();
 
         int count = 0;
-        String sql = "SELECT COUNT(*) FROM RECEITA";
+        String sql = "SELECT COUNT(*) FROM receita";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
 
