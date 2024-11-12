@@ -1,6 +1,7 @@
 package client.controller;
 
 import client.facade.ClientFacade;
+import client.view.utils.LanguageManager;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import client.view.ReceitaDetalhesView;
@@ -91,7 +92,7 @@ public class ReceitaDetalhesController {
 
     public void exportarReceitaTXT() {
     JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Escolha o diretório para salvar o arquivo TXT");
+    fileChooser.setDialogTitle(LanguageManager.getInstance().getResourceBundle().getString("diretoriotxt"));
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
     int userSelection = fileChooser.showSaveDialog(detalhesView);
@@ -125,7 +126,7 @@ public class ReceitaDetalhesController {
 
     public void exportarReceitaParaPDF() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Escolha o diretório para salvar o arquivo PDF");
+        fileChooser.setDialogTitle(LanguageManager.getInstance().getResourceBundle().getString("diretoriopdf"));
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         int userSelection = fileChooser.showSaveDialog(detalhesView);
