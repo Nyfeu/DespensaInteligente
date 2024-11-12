@@ -16,21 +16,21 @@ import shared.enums.Strategy;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ReceitaController {
 
     private ReceitaView receitaView;
-    private ArrayList<Ingrediente> ingredientes;
+    private List<Ingrediente> ingredientes;
     private static ResourceBundle bn;
 
     public ReceitaController(ReceitaView receitaView) {
         this.receitaView = receitaView;
         bn = LanguageManager.getInstance().getResourceBundle();
-        this.ingredientes = new ArrayList<>();
+
+        if (receitaView.isNewRecipe()) this.ingredientes = new ArrayList<>();
+        else this.ingredientes = receitaView.getReceita().getIngredientes();
+
         initButtonListeners();
     }
 
@@ -40,18 +40,15 @@ public class ReceitaController {
 
         receitaView.addPublicarButtonActionListener(e -> {
 
-            ReceitaBuilder receitaBuilder = new ReceitaBuilder();
-
-            receitaBuilder.titulo(receitaView.getTxtTitulo())
-                    .descricao(receitaView.getTxtDescricao())
-                    .instrucoes(receitaView.getTxtModoPreparo())
-                    .tempoPreparo(0.0)
-                    .ingredientes(ingredientes)
-                    .emailAutor(Authenticator.getAuthenticatedUser().getEmail());
-
-            Receita receita = receitaBuilder.build();
-
             if (!receitaView.isNewRecipe()) {
+
+                Receita receita = receitaView.getReceita();
+
+                receita.setTitulo(receitaView.getTxtTitulo());
+                receita.setDescricao(receitaView.getTxtDescricao());
+                receita.setModoPreparo(receitaView.getTxtModoPreparo());
+                receita.setTempoPreparo(0.0);
+                receita.setIngredientes(receitaView.getListaIngredientes());
 
                 Map<String, Object> args = new HashMap<>();
                 args.put(Attributes.RECEITA.getDescription(), receita);
@@ -60,10 +57,23 @@ public class ReceitaController {
 
                     receitaView.getMainView().getMainViewController().setFilterStrategy(Strategy.PAGE);
                     receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
+                    receitaView.dispose();
+                    receitaView.getReceitaDetalhesView().dispose();
 
                 });
 
             } else {
+
+                ReceitaBuilder receitaBuilder = new ReceitaBuilder();
+
+                receitaBuilder.titulo(receitaView.getTxtTitulo())
+                        .descricao(receitaView.getTxtDescricao())
+                        .instrucoes(receitaView.getTxtModoPreparo())
+                        .tempoPreparo(0.0)
+                        .ingredientes(ingredientes)
+                        .emailAutor(Authenticator.getAuthenticatedUser().getEmail());
+
+                Receita receita = receitaBuilder.build();
 
                 Map<String, Object> args = new HashMap<>();
                 args.put(Attributes.RECEITA.getDescription(), receita);
@@ -72,6 +82,7 @@ public class ReceitaController {
 
                     receitaView.getMainView().getMainViewController().setFilterStrategy(Strategy.PAGE);
                     receitaView.getMainView().getMainViewController().updateReceitasList(0, new HashMap<>());
+                    receitaView.dispose();
 
                 });
 

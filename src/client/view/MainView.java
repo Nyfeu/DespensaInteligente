@@ -165,7 +165,7 @@ public class MainView extends JFrame {
     private void configureMainView() {
         // Configurações gerais
         setTitle(bn.getString("main.titulo"));
-        setSize(1000,710);
+        setSize(1200,710);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         

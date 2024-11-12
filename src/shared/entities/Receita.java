@@ -4,7 +4,6 @@ import client.model.builder.ReceitaBuilder;
 import server.strategies.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Receita implements Filterable, Serializable {
@@ -46,7 +45,7 @@ public class Receita implements Filterable, Serializable {
         return ingredientes;
     }
 
-    public void setIngredientes(ArrayList<Ingrediente> ingredientes) {
+    public void setIngredientes(List<Ingrediente> ingredientes) {
         this.ingredientes = ingredientes;
     }
 

@@ -1,15 +1,11 @@
 package client.view;
 
 import client.controller.ReceitaController;
-import client.facade.ClientFacade;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import client.view.utils.IngredienteReceitaCellRenderer;
 import client.view.utils.LanguageManager;
 import client.view.utils.ViewUtils;
-import shared.enums.Attributes;
-import shared.enums.Command;
-import shared.enums.Entity;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,8 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ReceitaView extends JDialog {
@@ -31,14 +26,14 @@ public class ReceitaView extends JDialog {
     private JList<Ingrediente> listaIngredientes;
     private ResourceBundle bn;
     private Receita receita;
-    private boolean isNewRecipe;
+    private ReceitaDetalhesView receitaDetalhesView;
 
     public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn) {
         super(mainView, bn.getString("main.receita.botao.publicar.titulo"), true);
         this.mainView = mainView;
         this.receita = receita;
         this.bn = bn;
-        isNewRecipe = true;
+        this.receitaDetalhesView = null;
         initComponents(bn);
         setLocationRelativeTo(mainView);
 
@@ -47,12 +42,12 @@ public class ReceitaView extends JDialog {
         }
     }
 
-    public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn, boolean isNewRecipe) {
+    public ReceitaView(MainView mainView, Receita receita, ResourceBundle bn, ReceitaDetalhesView receitaDetalhesView) {
         super(mainView, bn.getString("main.receita.botao.publicar.titulo"), true);
         this.mainView = mainView;
         this.receita = receita;
         this.bn = bn;
-        this.isNewRecipe = isNewRecipe;
+        this.receitaDetalhesView = receitaDetalhesView;
         initComponents(bn);
         setLocationRelativeTo(mainView);
 
@@ -145,13 +140,6 @@ public class ReceitaView extends JDialog {
         btnPanel.setBorder(new EmptyBorder(0, 5, 5, 5));
         btnPanel.add(btnPublicar);
         btnPanel.add(btnCancelar);
-        btnPublicar.addActionListener(e -> {
-            if (receita != null) {
-                atualizarReceita();
-            } else {
-                salvarReceita();
-            }
-        });
 
         // Adicionando ao painel principal
         panelPrincipal.add(panelReceitaTitle, BorderLayout.NORTH);
@@ -171,41 +159,6 @@ public class ReceitaView extends JDialog {
         txtDescricao.setText(receita.getDescricao());
         txtModoPreparo.setText(receita.getModoPreparo());
         setListaIngredientesData(new ArrayList<>(receita.getIngredientes()));
-    }
-
-    private void atualizarReceita() {
-
-        if (receita != null) {
-
-            receita.setTitulo(txtTitulo.getText());
-            receita.setDescricao(txtDescricao.getText());
-            receita.setModoPreparo(txtModoPreparo.getText());
-            receita.setIngredientes(new ArrayList<>(listaIngredientes.getSelectedValuesList())); // ou conforme necessário
-
-            Map<String, Object> args = new HashMap<>();
-            args.put(Attributes.RECEITA.getDescription(), receita);
-
-            ClientFacade.sendRequest(Entity.RECEITA, Command.UPDATE, args, e -> dispose());
-
-        } else dispose();
-
-    }
-
-    private void salvarReceita() {
-
-        if (receita != null) {
-
-            receita.setTitulo(txtTitulo.getText());
-            receita.setDescricao(txtDescricao.getText());
-            receita.setModoPreparo(txtModoPreparo.getText());
-
-            Map<String, Object> args = new HashMap<>();
-            args.put(Attributes.RECEITA.getDescription(), receita);
-
-            ClientFacade.sendRequest(Entity.RECEITA, Command.UPDATE, args, e -> dispose());
-
-        } else dispose();
-
     }
 
     private void configureButtons() {
@@ -249,7 +202,28 @@ public class ReceitaView extends JDialog {
     public MainView getMainView() {
         return mainView;
     }
-    
+
+    public ReceitaDetalhesView getReceitaDetalhesView() {
+        return receitaDetalhesView;
+    }
+
+    public Receita getReceita() {
+        return receita;
+    }
+
+    public List<Ingrediente> getListaIngredientes() {
+
+        List<Ingrediente> list = new ArrayList<>();
+
+        ListModel<Ingrediente> model = listaIngredientes.getModel();
+        for (int i = 0; i < model.getSize(); i++) {
+            list.add(model.getElementAt(i));
+        }
+
+        return list;
+
+    }
+
     // SETTERS
     public void setTxtNome(String text) {
         txtNome.setText(text);
@@ -257,7 +231,7 @@ public class ReceitaView extends JDialog {
     public void setTxtQuantidade(String text) {
         txtQuantidade.setText(text);
     }
-    public void setListaIngredientesData(ArrayList<Ingrediente> ingredientes) {
+    public void setListaIngredientesData(List<Ingrediente> ingredientes) {
         DefaultListModel<Ingrediente> model = new DefaultListModel<>();
         for (Ingrediente ingrediente : ingredientes) {
             model.addElement(ingrediente);
@@ -266,6 +240,6 @@ public class ReceitaView extends JDialog {
     }
 
     public boolean isNewRecipe() {
-        return isNewRecipe;
+        return receitaDetalhesView == null;
     }
 }

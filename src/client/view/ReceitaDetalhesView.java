@@ -19,10 +19,12 @@ public class ReceitaDetalhesView extends JDialog {
     private JMenuItem exporta_txt, exporta_pdf;
     private ReceitaDetalhesController receitaDetalhesController;
     private ResourceBundle bn;
+    private MainView mainView;
 
-    public ReceitaDetalhesView(JFrame parent, Receita receita, ResourceBundle bn) {
+    public ReceitaDetalhesView(MainView parent, Receita receita, ResourceBundle bn) {
         super(parent, bn.getString("main.receita.detalhes.titulo"), true);
         this.bn = bn;
+        this.mainView = parent;
         initComponents(receita);
         setLocationRelativeTo(parent);
         setSize(400, 400);
@@ -130,5 +132,9 @@ public class ReceitaDetalhesView extends JDialog {
 
     public void setModoPreparo(String modoPreparo) {
         lblModoPreparo.setText(modoPreparo);
+    }
+
+    public MainView getMainView() {
+        return mainView;
     }
 }
