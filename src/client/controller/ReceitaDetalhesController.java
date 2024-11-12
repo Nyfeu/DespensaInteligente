@@ -77,7 +77,7 @@ public class ReceitaDetalhesController {
     }
 
     private void editarReceita() {
-        ReceitaView receitaView = new ReceitaView((MainView) detalhesView.getParent(), receita, bn, false);
+        ReceitaView receitaView = new ReceitaView((MainView) detalhesView.getParent(), receita, bn, detalhesView);
         receitaView.setVisible(true);
 
         atualizarDadosReceita(receita);

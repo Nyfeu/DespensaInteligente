@@ -83,7 +83,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
             stm.setInt(1, recipe_id);
             rs2 = stm.executeQuery();
 
-            if(rs1.next()) return instantiateReceita(rs1, rs2);
+            if(rs1.next()) return instantiateReceita(rs1, rs2, recipe_id);
             return null;
 
         } catch (SQLException e) {
@@ -104,7 +104,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
     public void update(Receita receita) {
 
         Connection conn = null;
-        String sqlUpdate = "UPDATE RECEITA SET Titulo = ?, Descricao = ?, modo_preparo = ?, email_usuario = ? WHERE id = ?";
+        String sqlUpdate = "UPDATE receita SET Titulo = ?, Descricao = ?, modo_preparo = ?, email_usuario = ? WHERE id = ?";
         PreparedStatement stm = null;
 
         try{
@@ -199,7 +199,7 @@ public class ReceitaDaoJDBC implements ReceitaDao {
                 st.setInt(1, rs1.getInt(1));
                 rs2 = st.executeQuery();
 
-                receitaList.add(instantiateReceita(rs1, rs2));
+                receitaList.add(instantiateReceita(rs1, rs2, rs1.getInt(1)));
             }
 
             return receitaList;
@@ -249,14 +249,15 @@ public class ReceitaDaoJDBC implements ReceitaDao {
         return filterStrategy.filter(LIMIT, OFFSET);
     }
 
-    private Receita instantiateReceita(ResultSet rs1, ResultSet rs2) throws SQLException {
+    private Receita instantiateReceita(ResultSet rs1, ResultSet rs2, int id) throws SQLException {
 
         ReceitaBuilder receitaBuilder = new ReceitaBuilder(rs1.getInt(1));
 
         receitaBuilder.titulo(rs1.getString(2))
                 .descricao(rs1.getString(3))
                 .instrucoes(rs1.getString(4))
-                .emailAutor(rs1.getString(5));
+                .emailAutor(rs1.getString(5))
+                .id(id);
 
         Receita receita = receitaBuilder.build();
 
