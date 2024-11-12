@@ -234,16 +234,7 @@ public class MainViewController {
 
         mainView.addSobreListener(e -> {
 
-            String text = """
-                    DespensaInteligente é um aplicativo intuitivo que organiza sua\s
-                    despensa e oferece receitas personalizadas com base nos ingredientes\s
-                    disponíveis. Gerencie sua despensa, descubra novas receitas e \s
-                    compartilhe suas criações com facilidade. Desfrute de uma experiência \s
-                    simplificada de culinária e organização de alimentos.
-                    
-                    Equipe: André Maiolini, Durval Consorti e Leonardo Amadio.
-                    
-                    Versão: 1.0 (2024).""";
+            String text = LanguageManager.getInstance().getResourceBundle().getString("aboutmsg");
 
             JOptionPane.showMessageDialog(mainView, text, JOptionPane.MESSAGE_PROPERTY, JOptionPane.INFORMATION_MESSAGE);
 

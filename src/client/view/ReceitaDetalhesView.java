@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.ResourceBundle;
 
 import client.controller.ReceitaDetalhesController;
+import client.view.utils.LanguageManager;
 import client.view.utils.ViewUtils;
 import shared.entities.Receita;
 import java.awt.event.ActionListener;
@@ -39,7 +40,7 @@ public class ReceitaDetalhesView extends JDialog {
         menuExportar = new JMenu(bn.getString("main.receita.botao.exportar"));
         menuBar.add(menuExportar);
         exporta_pdf = new JMenuItem("PDF");
-        exporta_txt = new JMenuItem("Texto");
+        exporta_txt = new JMenuItem(LanguageManager.getInstance().getResourceBundle().getString("txttexto"));
         menuExportar.add(exporta_pdf);
         menuExportar.add(exporta_txt);
 

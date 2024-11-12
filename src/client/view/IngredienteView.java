@@ -52,7 +52,7 @@ public class IngredienteView extends JDialog {
         txtDataValidade = new JTextField(validade,10);
 
         // Buttons
-        btnAdicionar = new JButton(isUpdate ? "Atualizar" : bn.getString("main.despensa.botao.adicionar.botao.adicionar"));
+        btnAdicionar = new JButton(isUpdate ? bn.getString("main.despensa.botao.atualizar") : bn.getString("main.despensa.botao.adicionar.botao.adicionar"));
         btnCancelar = new JButton(bn.getString("main.despensa.botao.adicionar.botao.cancelar"));
 
         // Adicionando aos paineis

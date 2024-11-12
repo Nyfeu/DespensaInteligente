@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.view.utils.LanguageManager;
 import shared.entities.Ingrediente;
 import shared.entities.Receita;
 import client.view.ReceitaDetalhesView;
@@ -9,7 +10,6 @@ import server.dao.DAOFactory;
 import server.dao.interfaces.ReceitaDao;
 import client.model.utils.Authenticator;
 import client.view.MainView;
-import client.view.utils.ViewUtils;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
@@ -17,7 +17,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import java.io.File;
@@ -88,7 +87,7 @@ public class ReceitaDetalhesController {
 
     public void exportarReceitaTXT() {
     JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Escolha o diretório para salvar o arquivo TXT");
+    fileChooser.setDialogTitle(LanguageManager.getInstance().getResourceBundle().getString("diretoriotxt"));
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
     int userSelection = fileChooser.showSaveDialog(detalhesView);
@@ -103,7 +102,7 @@ public class ReceitaDetalhesController {
         conteudoReceita.append(bn.getString("main.receita.renderer.titulo")).append(receita.getTitulo()).append("\n");
         conteudoReceita.append(bn.getString("main.receita.renderer.descricao")).append(receita.getDescricao()).append("\n");
 
-        conteudoReceita.append(bn.getString("main.receita.exibe.ingredientes") + "\n");
+        conteudoReceita.append(bn.getString("main.receita.exibe.ingredientes")).append("\n");
         for (Ingrediente ingrediente : receita.getIngredientes()) {
             conteudoReceita.append("- ").append(ingrediente.getNome())
                            .append(" : ")
@@ -111,7 +110,7 @@ public class ReceitaDetalhesController {
                            .append("\n");
         }
 
-        conteudoReceita.append(bn.getString("main.receita.exibe.modopreparo") + " ").append(receita.getModoPreparo()).append("\n");
+        conteudoReceita.append(bn.getString("main.receita.exibe.modopreparo")).append(" ").append(receita.getModoPreparo()).append("\n");
 
         handler.writeFile(conteudoReceita.toString(), false);
         JOptionPane.showMessageDialog(detalhesView, bn.getString("main.receita.exibe.msg") + " " + filePath, bn.getString("main.receita.exibe.msg.titulo"), JOptionPane.INFORMATION_MESSAGE);
@@ -122,7 +121,7 @@ public class ReceitaDetalhesController {
 
 public void exportarReceitaParaPDF() {
     JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Escolha o diretório para salvar o arquivo PDF");
+    fileChooser.setDialogTitle(LanguageManager.getInstance().getResourceBundle().getString("diretoriopdf"));
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
     int userSelection = fileChooser.showSaveDialog(detalhesView);
