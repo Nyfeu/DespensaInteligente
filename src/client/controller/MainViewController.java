@@ -48,7 +48,7 @@ public class MainViewController {
         ClientFacade.sendRequest(Entity.RECEITA, Command.COUNT_ALL, null, responsePacket -> {
 
             int totalReceitas = (int) responsePacket.getData().get(Attributes.RESULT.getDescription());
-            int totalPages = (int) Math.ceil((double) totalReceitas / receitasPorPagina);
+            int totalPages = Math.max(1, (totalReceitas + receitasPorPagina - 1) / receitasPorPagina);
             int currentPage = offset / receitasPorPagina + 1;
 
             // Atualizar a interface com o número de páginas
@@ -81,7 +81,7 @@ public class MainViewController {
                     mainView.setTotalPages(totalPages);
                     mainView.setCurrentPage(currentPage);
 
-                    boolean isLastPage = filterableList.size() < receitasPorPagina;
+                    boolean isLastPage = currentPage >= totalPages;
                     mainView.setRightButtonEnabled(!isLastPage);
                     mainView.setLeftButtonEnabled(offset > 0);
 
